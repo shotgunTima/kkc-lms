@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    html {
+        @apply scroll-smooth bg-gradient-to-b from-bgPrimary to-bgSecondary;
+    }
+}
