@@ -41,3 +41,7 @@ build/
 .project
 .settings
 .springBeans
+
+# Spring Boot конфиг
+src/main/resources/application.properties
+

@@ -3,7 +3,7 @@ import { fetchUsers, deleteUser, fetchRoles } from '../../api/UsersApi.js';
 import UserForm from './UserForm';
 import FilterBar from '../Filterbar.jsx';
 import SearchInput from '../SearchInput.jsx';
-import { CirclePlusIcon, Edit2Icon, TrashIcon, X, Check, Search } from "lucide-react";
+import { CirclePlusIcon, Edit2Icon, TrashIcon, X, Check } from "lucide-react";
 
 const UserTable = () => {
     const [users, setUsers] = useState([]);
@@ -107,42 +107,47 @@ const UserTable = () => {
             <h1 className="text-xl text-textPrimary font-medium mb-4">Список пользователей</h1>
 
             <div className="overflow-x-auto">
-                <table className="min-w-full border-collapse border border-bgSecondary rounded-lg overflow-hidden text-white shadow-md">
-                    <thead className="bg-bgSecondary">
-                    <tr>
-                        <th className="border p-2">ФИО</th>
-                        <th className="border p-2">Роль</th>
-                        <th className="border p-2">Логин</th>
-                        <th className="border p-2">Email</th>
-                        <th className="border p-2">Тел.</th>
-                        <th className="border p-2">Адрес</th>
-                        <th className="border p-2">Фото</th>
-                        <th className="border p-2">Действия</th>
+                <table className="min-w-full border-collapse rounded-xl overflow-hidden shadow-lg bg-tableColor">
+                    <thead>
+                    <tr className="bg-bgSecondary text-white text-sm uppercase ">
+                        <th className="p-3 text-left border-l border-l-blue-900">ФИО</th>
+                        <th className="p-3 text-left border-l border-l-blue-900">Роль</th>
+                        <th className="p-3 text-left border-l border-l-blue-900">Логин</th>
+                        <th className="p-3 text-left border-l border-l-blue-900">Email</th>
+                        <th className="p-3 text-left border-l border-l-blue-900">Тел.</th>
+                        <th className="p-3 text-left border-l border-l-blue-900">Адрес</th>
+                        <th className="p-3 text-center border-l border-l-blue-900">Фото</th>
+                        <th className="p-3 text-center border-l border-l-blue-900">Действия</th>
                     </tr>
                     </thead>
                     <tbody>
                     {filteredUsers.length > 0 ? (
                         filteredUsers.map((user) => (
-                            <tr key={user.id} className="text-center bg-tableColor hover:bg-gray-300 transition">
-                                <td className="border p-2 text-textPrimary">{user.fullname}</td>
-                                <td className="border p-2 text-textPrimary">{user.roleLabel}</td>
-                                <td className="border p-2 text-textPrimary">{user.username}</td>
-                                <td className="border p-2 text-textPrimary">{user.email}</td>
-                                <td className="border p-2 text-textPrimary">{user.phonenum}</td>
-                                <td className="border p-2 text-textPrimary">{user.address}</td>
-                                <td className="border p-2 text-center">
-                                    {user.profileImage
-                                        ? <Check className="w-6 h-6 text-green-500 mx-auto" />
-                                        : <X className="w-6 h-6 text-textSecondary mx-auto" />}
+                            <tr
+                                key={user.id}
+                                className="hover:bg-gray-300 transition-colors duration-200 text-sm"
+                            >
+                                <td className="p-3 border border-gray-300 text-textPrimary">{user.fullname}</td>
+                                <td className="p-3 border border-gray-300 text-textPrimary">{user.roleLabel}</td>
+                                <td className="p-3 border border-gray-300 text-textPrimary">{user.username}</td>
+                                <td className="p-3 border border-gray-300 text-textPrimary">{user.email}</td>
+                                <td className="p-3 border border-gray-300 text-textPrimary">{user.phonenum}</td>
+                                <td className="p-3 border border-gray-300 text-textPrimary">{user.address}</td>
+                                <td className="p-3 border border-gray-300 text-center">
+                                    {user.profileImage ? (
+                                        <Check className="w-5 h-5 text-green-500 mx-auto" />
+                                    ) : (
+                                        <X className="w-5 h-5 text-red-500 mx-auto" />
+                                    )}
                                 </td>
-                                <td className="border p-2 text-textPrimary">
-                                    <div className="flex justify-center items-center gap-3">
+                                <td className="p-3 border-b border-gray-300 text-center">
+                                    <div className="flex justify-center gap-4">
                                         <Edit2Icon
-                                            className="w-6 h-6 text-blue-800 hover:text-blue-600 cursor-pointer"
+                                            className="w-5 h-5 text-blue-500 hover:text-blue-400 cursor-pointer transition-colors"
                                             onClick={() => handleEdit(user.id)}
                                         />
                                         <TrashIcon
-                                            className="w-6 h-6 text-red-700 hover:text-red-500 cursor-pointer"
+                                            className="w-5 h-5 text-red-500 hover:text-red-400 cursor-pointer transition-colors"
                                             onClick={() => handleDelete(user.id)}
                                         />
                                     </div>
@@ -151,7 +156,7 @@ const UserTable = () => {
                         ))
                     ) : (
                         <tr>
-                            <td colSpan="8" className="text-center p-4 text-gray-500 bg-tableColor">
+                            <td colSpan="8" className="p-4 text-center text-gray-700 bg-tableColor">
                                 Нет пользователей
                             </td>
                         </tr>
@@ -159,6 +164,7 @@ const UserTable = () => {
                     </tbody>
                 </table>
             </div>
+
         </div>
     );
 };
