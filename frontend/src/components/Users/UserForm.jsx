@@ -166,7 +166,7 @@ const UserForm = ({ userId, onSuccess, onCancel }) => {
                         placeholder="ФИО"
                         value={formData.fullname}
                         onChange={handleChange}
-                        className={`w-full p-2 mb-3 border rounded ${errors.fullname ? 'border-red-500' : ''}`}
+                        className={`w-full p-2 mb-3 border rounded ${errors.fullname ? 'border-red-500' : 'focus:outline-none focus:border-bgSecondary'}`}
                     />
                     {errors.fullname && (
                         <p className="text-red-500 text-sm mb-2">{errors.fullname}</p>
@@ -177,7 +177,7 @@ const UserForm = ({ userId, onSuccess, onCancel }) => {
                         placeholder="Логин"
                         value={formData.username}
                         onChange={handleChange}
-                        className={`w-full p-2 mb-1 border rounded ${errors.username ? 'border-red-500' : ''}`}
+                        className={`w-full p-2 mb-1 border rounded ${errors.username ? 'border-red-500' : 'focus:outline-none focus:border-bgSecondary'}`}
                     />
                     {errors.username && (
                         <p className="text-red-500 text-sm mb-2">{errors.username}</p>
@@ -189,7 +189,7 @@ const UserForm = ({ userId, onSuccess, onCancel }) => {
                         placeholder="Почта"
                         value={formData.email}
                         onChange={handleChange}
-                        className={`w-full p-2 mb-1 border rounded ${errors.email ? 'border-red-500' : ''}`}
+                        className={`w-full p-2 mb-1 border rounded ${errors.email ? 'border-red-500' : 'focus:outline-none focus:border-bgSecondary'}`}
                     />
                     {errors.email && (
                         <p className="text-red-500 text-sm mb-2">{errors.email}</p>
@@ -203,7 +203,7 @@ const UserForm = ({ userId, onSuccess, onCancel }) => {
                             placeholder="Пароль"
                             value={formData.password}
                             onChange={handleChange}
-                            className={`w-full p-2 mb-1 border rounded ${errors.password ? 'border-red-500' : ''}`}
+                            className={`w-full p-2 mb-1 border rounded ${errors.password ? 'border-red-500' : 'focus:outline-none focus:border-bgSecondary'}`}
                         />
                         {errors.password && (
                             <p className="text-red-500 text-sm mb-2">{errors.password}</p>
@@ -212,8 +212,8 @@ const UserForm = ({ userId, onSuccess, onCancel }) => {
                 )}
 
                 <div className="mb-3">
-                    <div className="flex rounded border items-center overflow-hidden">
-                        <span className="bg-gray-200 px-3 py-2 text-gray-700 select-none">+996</span>
+                    <div className="flex rounded border items-center overflow-hidden focus:outline-none focus:border-bgSecondary ">
+                        <span className="bg-tableColor px-3 py-2 text-textPrimary select-none ">+996</span>
                         <input
                             type="text"
                             name="phonenum"
@@ -224,8 +224,8 @@ const UserForm = ({ userId, onSuccess, onCancel }) => {
                                     setFormData({ ...formData, phonenum: onlyDigits });
                                 }
                             }}
-                            placeholder="123456789"
-                            className={`flex-1 p-2 outline-none ${errors.phonenum ? 'border-red-500' : ''}`}
+                            placeholder="000000000"
+                            className={`flex-1 p-2 outline-none ${errors.phonenum ? 'border-red-500' : 'focus:outline-none focus:border-bgSecondary'}`}
                         />
                     </div>
                     {errors.phonenum && (
@@ -237,7 +237,7 @@ const UserForm = ({ userId, onSuccess, onCancel }) => {
                         name="role"
                         value={formData.role}
                         onChange={handleChange}
-                        className={`w-full p-2 mb-4 border rounded ${errors.role ? 'border-red-500' : ''}`}
+                        className={`w-full p-2 mb-4 border rounded ${errors.role ? 'border-red-500' : 'focus:outline-none focus:border-bgSecondary'}`}
                     >
                         {roles.map(role => (
                             <option key={role.value} value={role.value}>
@@ -254,7 +254,7 @@ const UserForm = ({ userId, onSuccess, onCancel }) => {
                     placeholder="Адрес"
                     value={formData.address}
                     onChange={handleChange}
-                    className={`w-full p-2 mb-3 border rounded ${errors.address ? 'border-red-500' : ''}`}
+                    className={`w-full p-2 mb-3 border rounded ${errors.address ? 'border-red-500' : 'focus:outline-none focus:border-bgSecondary'}`}
                 />
                 {errors.address && (
                     <p className="text-red-500 text-sm mb-2">{errors.address}</p>
