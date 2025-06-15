@@ -3,11 +3,15 @@ package com.kkc_lms.service.Group;
 import com.kkc_lms.dto.Group.GroupCreateDTO;
 import com.kkc_lms.dto.Group.GroupDTO;
 import com.kkc_lms.entity.Department;
+import com.kkc_lms.entity.Direction;
 import com.kkc_lms.repository.DepartmentRepository;
 import com.kkc_lms.entity.Group;
 import com.kkc_lms.entity.Teacher;
+import com.kkc_lms.repository.DirectionRepository;
 import com.kkc_lms.repository.GroupRepository;
 import com.kkc_lms.repository.TeacherRepository;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,36 +20,34 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class GroupServiceImpl implements GroupService {
 
     private final GroupRepository groupRepository;
-    private final DepartmentRepository departmentRepository;
     private final TeacherRepository teacherRepository;
-
-    @Autowired
-    public GroupServiceImpl(GroupRepository groupRepository,
-                            TeacherRepository teacherRepository,
-                            DepartmentRepository departmentRepository) {
-        this.groupRepository = groupRepository;
-        this.teacherRepository = teacherRepository;
-        this.departmentRepository = departmentRepository;
-    }
-
+    private final DirectionRepository directionRepository;
 
     @Override
     public GroupDTO saveGroup(GroupCreateDTO dto) {
-        Department department = departmentRepository.findById(dto.getDepartmentId())
-                .orElseThrow(() -> new IllegalArgumentException("Department not found"));
+        Direction direction = directionRepository.findById(dto.getDirectionId())
+                .orElseThrow(() -> new EntityNotFoundException("Направление не найдено"));
         Teacher curator = teacherRepository.findById(dto.getCuratorId())
-                .orElseThrow(() -> new IllegalArgumentException("Curator (teacher) not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Куратор (преподаватель) не найден"));
+
+        if (curator.getDepartment() == null ||
+                !curator.getDepartment().getId().equals(direction.getDepartment().getId())) {
+            throw new IllegalArgumentException("Куратор должен работать на той же кафедре, что и направление");
+        }
 
         Group group = new Group();
         group.setName(dto.getName());
-        group.setDepartment(department);
+        group.setDirection(direction);
         group.setCurator(curator);
 
-        return mapToDTO(groupRepository.save(group));
+        Group saved = groupRepository.save(group);
+        return mapToDTO(saved);
     }
+
 
 
     @Override
@@ -62,6 +64,9 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public void deleteGroupById(Long id) {
+        if (!groupRepository.existsById(id)) {
+            throw new EntityNotFoundException("Группа не найдена");
+        }
         groupRepository.deleteById(id);
     }
 
@@ -69,10 +74,18 @@ public class GroupServiceImpl implements GroupService {
         GroupDTO dto = new GroupDTO();
         dto.setId(group.getId());
         dto.setName(group.getName());
-        dto.setDepartmentId(group.getDepartment().getId());
-        dto.setDepartmentName(group.getDepartment().getName());
-        dto.setCuratorId(group.getCurator().getId());
-        dto.setCuratorFullName(group.getCurator().getUser().getFullname()); // Предполагается метод getFullName()
+
+        Direction dir = group.getDirection();
+        dto.setDirectionId(dir.getId());
+        dto.setDirectionName(dir.getName());
+        if (dir.getDepartment() != null) {
+            dto.setDepartmentId(dir.getDepartment().getId());
+            dto.setDepartmentName(dir.getDepartment().getName());
+        }
+
+        Teacher curator = group.getCurator();
+        dto.setCuratorId(curator.getId());
+        dto.setCuratorFullName(curator.getUser().getFullname()); // или getFullName()
         return dto;
     }
 }

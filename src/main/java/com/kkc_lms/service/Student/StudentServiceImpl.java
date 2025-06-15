@@ -8,11 +8,14 @@ import com.kkc_lms.entity.User;
 import com.kkc_lms.repository.GroupRepository;
 import com.kkc_lms.repository.StudentRepository;
 import com.kkc_lms.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,6 +32,27 @@ public class StudentServiceImpl implements StudentService {
         this.studentRepository = studentRepository;
         this.userRepository = userRepository;
         this.groupRepository = groupRepository;
+    }
+
+    @Transactional
+    public Student createForUser(User user) {
+        Student s = new Student();
+        s.setUser(user);
+        int currentYear = LocalDate.now().getYear();
+        s.setAdmissionYear(currentYear);
+        s.setTotalCredits(0);
+        String sid = generateUniqueStudentIdNumber();
+        s.setStudentIdNumber(sid);
+        return studentRepository.save(s);
+    }
+    private String generateUniqueStudentIdNumber() {
+        String candidate;
+        do {
+            int year = LocalDate.now().getYear();
+            int randomNum = ThreadLocalRandom.current().nextInt(0, 1_000_000);
+            candidate = String.format("%d%06d", year, randomNum);
+        } while (studentRepository.existsByStudentIdNumber(candidate));
+        return candidate;
     }
 
     @Override

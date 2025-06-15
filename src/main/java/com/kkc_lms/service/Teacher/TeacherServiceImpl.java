@@ -9,9 +9,12 @@ import com.kkc_lms.entity.User;
 import com.kkc_lms.repository.DepartmentRepository;
 import com.kkc_lms.repository.TeacherRepository;
 import com.kkc_lms.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -33,6 +36,14 @@ public class TeacherServiceImpl implements TeacherService {
         this.userRepository = userRepository;
         this.departmentRepository = departmentRepository;
     }
+    @Transactional
+    public Teacher createForUser(User user) {
+        Teacher t = new Teacher();
+        t.setUser(user);
+        t.setHireDate(LocalDate.now());
+        return teacherRepository.save(t);
+    }
+
 
     @Override
     public TeacherDTO saveTeacher(TeacherCreateDTO dto) {
