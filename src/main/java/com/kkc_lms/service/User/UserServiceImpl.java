@@ -1,8 +1,14 @@
 package com.kkc_lms.service.User;
 
 import com.kkc_lms.dto.User.*;
+import com.kkc_lms.entity.Role;
 import com.kkc_lms.entity.User;
 import com.kkc_lms.repository.UserRepository;
+import com.kkc_lms.service.Accontant.AccountantServiceImpl;
+import com.kkc_lms.service.Administrator.AdministratorServiceImpl;
+import com.kkc_lms.service.Methodist.MethodistServiceImpl;
+import com.kkc_lms.service.Student.StudentServiceImpl;
+import com.kkc_lms.service.Teacher.TeacherServiceImpl;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,6 +22,12 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
+    private final StudentServiceImpl studentService;
+    private final TeacherServiceImpl teacherService;
+    private final MethodistServiceImpl methodistService;
+    private final AccountantServiceImpl accountantService;
+    private final AdministratorServiceImpl administratorService;
 
     private UserDTO toDTO(User user) {
         return new UserDTO(
@@ -50,7 +62,28 @@ public class UserServiceImpl implements UserService {
         user.setAddress(dto.getAddress());
         user.setProfileImage(dto.getProfileImage());
 
-        return toDTO(userRepository.save(user));
+        User savedUser = userRepository.save(user);
+        Role role = savedUser.getRole();
+        switch (role) {
+            case STUDENT -> {
+                studentService.createForUser(savedUser);
+            }
+            case TEACHER -> {
+                teacherService.createForUser(savedUser);
+            }
+            case ADMIN -> {
+                administratorService.createForUser(savedUser);
+            }
+            case METHODIST -> {
+                methodistService.createForUser(savedUser);
+            }
+            case ACCOUNTANT -> {
+                accountantService.createForUser(savedUser);
+            }
+            default -> throw new IllegalArgumentException("Unsupported role: " + role);
+            }
+
+        return toDTO(savedUser);
     }
 
     @Override

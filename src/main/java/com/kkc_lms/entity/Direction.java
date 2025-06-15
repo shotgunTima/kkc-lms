@@ -3,10 +3,12 @@ package com.kkc_lms.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Entity
 @Data
-@Table(name = "groups")
-public class Group {
+@Table(name = "directions")
+public class Direction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,10 +18,11 @@ public class Group {
     private String name;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "direction_id", nullable = false)
-    private Direction direction;
+    @JoinColumn(name = "department_id")
+    private Department department;
 
-    @ManyToOne
-    @JoinColumn(name = "curator_id", nullable = false)
-    private Teacher curator;
+    @OneToMany(mappedBy = "direction", cascade = CascadeType.ALL)
+    private List<Group> groups;
+
 }
+
