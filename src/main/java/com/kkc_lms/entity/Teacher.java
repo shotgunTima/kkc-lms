@@ -18,11 +18,11 @@ public class Teacher {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(name = "academic_title", nullable = false)
+    @Column(name = "academic_title")
     private String academicTitle;
 
     @ManyToOne
-    @JoinColumn(name = "departament_id", nullable = false)
+    @JoinColumn(name = "departament_id")
     private Department department;
 
     @Column(name = "hire_date", nullable = false)

@@ -23,7 +23,7 @@ public class Student {
     @JoinColumn(name = "group_id")
     private Group group;
 
-    @Column(name = "total_credits", nullable = false)
+    @Column(name = "total_credits")
     private int totalCredits;
 
     @Column(name = "admission_year", nullable = false)

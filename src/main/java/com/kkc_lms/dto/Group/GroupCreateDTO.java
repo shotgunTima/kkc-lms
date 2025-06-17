@@ -11,7 +11,7 @@ public class GroupCreateDTO {
     private String name;
 
     @NotNull
-    private Long departmentId;
+    private Long directionId;
 
     @NotNull
     private Long curatorId;

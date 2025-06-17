@@ -24,4 +24,7 @@ public class Department {
     // Один отдел может содержать много преподавателей
     @OneToMany(mappedBy = "department")
     private List<Teacher> teachers;
+
+    @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
+    private List<Direction> directions;
 }
