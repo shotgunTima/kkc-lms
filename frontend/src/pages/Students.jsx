@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { fetchStudents, createStudent } from '../api/studentApi'
 import StudentTable from '../components/Students/StudentsTable.jsx'
-import StudentForm from '../components/Students/StudentsForm'
+
 
 const Students = () => {
     const [students, setStudents] = useState([])
@@ -30,7 +30,6 @@ const Students = () => {
 
     return (
         <div>
-            <StudentForm onSubmit={handleAddStudent} />
             <StudentTable students={students} />
         </div>
     )

@@ -19,11 +19,6 @@ export const deleteUser = (id) => {
     return axios.delete(`${BASE_URL}/${id}`);
 };
 
-export const searchUserByUsername = (username) => {
-    return axios.get(`${BASE_URL}/search`, {
-        params: { username }
-    });
-};
 
 export const updateUser = (id, userData) => {
     return axios.put(`${BASE_URL}/${id}`, userData);

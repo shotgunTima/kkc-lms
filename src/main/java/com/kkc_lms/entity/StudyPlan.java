@@ -13,7 +13,5 @@ public class StudyPlan {
     private String programName;
     @ManyToOne
     private Semester semester;
-    @ManyToOne
-    private Department department;
     private int totalCredits;
 }

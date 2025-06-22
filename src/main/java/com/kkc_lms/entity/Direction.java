@@ -17,9 +17,7 @@ public class Direction {
     @Column(nullable = false)
     private String name;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "department_id")
-    private Department department;
+
 
     @OneToMany(mappedBy = "direction", cascade = CascadeType.ALL)
     private List<Group> groups;

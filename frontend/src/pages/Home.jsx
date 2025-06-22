@@ -2,7 +2,8 @@ import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import Sidebar from '../components/Sidebar'
 import Students from './Students'
-import Users from "./Users.jsx"; // подключаем компонент со всем функционалом
+import Users from "./Users.jsx";
+import Groups from "./Groups.jsx";
 
 const Home = () => {
     const [selectedSection, setSelectedSection] = useState(null)
@@ -31,6 +32,12 @@ const Home = () => {
                                 return (
                                     <>
                                         <Students />
+                                    </>
+                                )
+                            case 'groups':
+                                return (
+                                    <>
+                                        <Groups />
                                     </>
                                 )
                             case 'teachers':

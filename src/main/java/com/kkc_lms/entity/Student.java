@@ -18,7 +18,7 @@ public class Student {
 
     @Column(name = "student_id_number", nullable = false, unique = true)
     private String studentIdNumber;
-
+//дирекшн
     @ManyToOne
     @JoinColumn(name = "group_id")
     private Group group;

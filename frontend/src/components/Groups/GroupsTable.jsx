@@ -1,105 +1,94 @@
 import { useEffect, useState } from 'react';
-import { fetchUsers, deleteUser, fetchRoles } from '../../api/UsersApi.js';
-import UserForm from './UserForm';
+import { fetchGroups } from '../../api/GroupsApi.js';
+import GroupsForm from './GroupsForm';
 import FilterBar from '../Filterbar.jsx';
 import SearchInput from '../SearchInput.jsx';
-import { CirclePlusIcon, Edit2Icon, TrashIcon, X, Check } from "lucide-react";
+import { CirclePlusIcon, Edit2Icon, TrashIcon} from "lucide-react";
 import DataTable from '../DataTable';
 
-const UserTable = () => {
-    const [users, setUsers] = useState([]);
-    const [roles, setRoles] = useState([]);
-    const [editingUserId, setEditingUserId] = useState(null);
+const GroupsTable = () => {
+    const [groups, setGroups] = useState([]);
+    const [updateGroup, setUpdateGroup] = useState(null);
     const [showForm, setShowForm] = useState(false);
     const [filters, setFilters] = useState({ role: '', search: '' });
 
     useEffect(() => {
-        loadUsers();
-        fetchRoles().then(res => setRoles(res.data)).catch(console.error);
-    }, [filters]);
+        loadGroups();
+        fetchGroups().then(res => setGroups(res.data)).catch(console.error);
+    }, []);
 
-    const loadUsers = () => {
-        fetchUsers({
-            role: filters.role,
-            search: filters.search
-        })
-            .then(res => setUsers(res.data))
+    const loadGroups = () => {
+        fetchGroups()
+            .then(res => setGroups(res.data))
             .catch(console.error);
     };
 
     const handleFilterChange = (name, value) => {
-        setFilters((prev) => ({ ...prev, [name]: value }));
+            setFilters((prev) => ({ ...prev, [name]: value }));
     };
 
     const handleDelete = async (id) => {
-        if (window.confirm('Удалить пользователя?')) {
-            await deleteUser(id);
-            loadUsers();
+        if (window.confirm('Удалить группу?')) {
+            await deleteGroup(id);
+            loadGroups();
         }
     };
 
     const handleEdit = (id) => {
-        setEditingUserId(id);
+        setUpdateGroup(id);
         setShowForm(true);
     };
 
     const handleCreate = () => {
-        setEditingUserId(null);
+        setUpdateGroup(null);
         setShowForm(true);
     };
 
     const handleSuccess = () => {
         setShowForm(false);
-        setEditingUserId(null);
+        setUpdateGroup(null);
         loadUsers();
     };
 
     const handleCancel = () => {
         setShowForm(false);
-        setEditingUserId(null);
+        setUpdateGroup(null);
     };
 
-    const filteredUsers = users.filter((user) => {
-        const matchesRole = !filters.role || user.role === filters.role;
-        const matchesSearch = !filters.search || user.fullname.toLowerCase().includes(filters.search.toLowerCase());
-        return matchesRole && matchesSearch;
+
+    const filteredGroups = groups.filter((group) => {
+        const matchesGroup = !filters.group || group.name === filters.name;
+        const matchesSearch = !filters.search || group.curator.toLowerCase().includes(filters.search.toLowerCase());
+        return matchesGroup && matchesSearch;
     });
 
     const columns = [
-        { header: 'ФИО', accessor: 'fullname' },
-        { header: 'Роль', accessor: 'roleLabel' },
-        { header: 'Логин', accessor: 'username' },
-        { header: 'Email', accessor: 'email' },
-        { header: 'Тел.', accessor: 'phonenum' },
-        { header: 'Адрес', accessor: 'address' },
+        {header: "Группа", accessor: "name"},
+        {header: "Направление", accessor: "direction"},
+        {header: "Куратор", accessor: "curator"},
         {
-            header: 'Фото',
-            accessor: 'profileImage',
-            render: (val) =>
-                val ? <Check className="w-5 h-5 text-green-500 mx-auto" /> : <X className="w-5 h-5 text-red-500 mx-auto" />,
-        },
-        {
-            header: 'Действия',
-            accessor: 'actions',
-            render: (_, user) => (
+            header:"Действия",
+            accessor: "actions",
+            render: (_, group) => (
                 <div className="flex justify-center gap-4">
                     <Edit2Icon
                         className="w-5 h-5 text-blue-500 hover:text-blue-400 cursor-pointer transition-colors"
-                        onClick={() => handleEdit(user.id)}
+                        onClick={() => handleEdit(group.id)}
                     />
                     <TrashIcon
                         className="w-5 h-5 text-red-500 hover:text-red-400 cursor-pointer transition-colors"
-                        onClick={() => handleDelete(user.id)}
+                        onClick={() => handleDelete(group.id)}
                     />
                 </div>
-            ),
-        },
-    ];
+            )
+        }
+
+    ]
 
     return (
         <div className="p-6">
             {showForm && (
-                <UserForm userId={editingUserId} onSuccess={handleSuccess} onCancel={handleCancel} />
+                <GroupsForm groupId={updateGroup} onSuccess={handleSuccess} onCancel={handleCancel} />
             )}
 
             <div className="flex justify-between items-center mb-6">
@@ -115,9 +104,9 @@ const UserTable = () => {
                     <FilterBar
                         filters={[
                             {
-                                name: 'role',
+                                name: 'group',
                                 type: 'select',
-                                options: [{ label: 'Все', value: '' }, ...roles.map(r => ({
+                                options: [{ label: 'Все', value: '' }, ...groups.map(r => ({
                                     label: r.label || r.name,
                                     value: r.name || r.value
                                 }))],
@@ -131,16 +120,18 @@ const UserTable = () => {
                         value={filters.search}
                         onChange={(newValue) => handleFilterChange('search', newValue)}
                         placeholder="Введите имя..."
-                        classname="placeholder:text-white"
+                        classname="placeholder: text-white"
                     />
                 </div>
+
+
             </div>
 
-            <h1 className="text-xl text-textPrimary font-medium mb-4">Список пользователей</h1>
+            <h1 className="text-xl text-textPrimary font-medium mb-4">Список групп</h1>
+            <DataTable columns={columns} data={filteredGroups} />
 
-            <DataTable columns={columns} data={filteredUsers} />
         </div>
     );
 };
 
-export default UserTable;
+export default GroupsTable;

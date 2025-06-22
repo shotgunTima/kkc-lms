@@ -8,7 +8,6 @@ const menuItems = [
     { label: 'Преподаватели', key: 'teachers' },
     { label: 'Кафедры', key: 'departments' },
     { label: 'Методист(-ы)', key: 'methodists' },
-    { label: 'Баптисты', key: '' },
     { label: 'Бухгалтер(-ы)', key: 'accountants' },
 ]
 
