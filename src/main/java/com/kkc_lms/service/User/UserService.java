@@ -10,5 +10,4 @@ public interface UserService {
     UserDTO getById(Long id);
     List<UserDTO> getAll();
     void delete(Long id);
-    List<UserDTO> searchByUsername(String username);
 }

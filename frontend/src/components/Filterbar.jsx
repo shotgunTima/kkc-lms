@@ -16,7 +16,7 @@ const FilterBar = ({ filters, values, onChange }) => {
                             <select
                                 value={value}
                                 onChange={(e) => onChange(name, e.target.value)}
-                                className="px-4 py-2 rounded-lg bg-bgSecondary text-white border focus:outline-none focus:border-blue-200"
+                                className="px-4 py-2 rounded-lg border border-bgSecondary text-textPrimary focus:outline-none focus:border-blue-200"
                             >
                                 {options.map((opt) => (
                                     <option key={opt.value} value={opt.value}>
@@ -45,7 +45,6 @@ const FilterBar = ({ filters, values, onChange }) => {
                     );
                 }
 
-                // можно добавить другие типы (date, checkbox и т.п.)
 
                 return null;
             })}
