@@ -65,11 +65,21 @@ public class UserServiceImpl implements UserService {
         User savedUser = userRepository.save(user);
         Role role = savedUser.getRole();
         switch (role) {
-            case STUDENT -> studentService.createForUser(savedUser);
-            case TEACHER -> teacherService.createForUser(savedUser);
-            case ADMIN ->   administratorService.createForUser(savedUser);
-            case METHODIST -> methodistService.createForUser(savedUser);
-            case ACCOUNTANT -> accountantService.createForUser(savedUser);
+            case STUDENT -> {
+                studentService.createForUser(savedUser);
+            }
+            case TEACHER -> {
+                teacherService.createForUser(savedUser);
+            }
+            case ADMIN -> {
+                administratorService.createForUser(savedUser);
+            }
+            case METHODIST -> {
+                methodistService.createForUser(savedUser);
+            }
+            case ACCOUNTANT -> {
+                accountantService.createForUser(savedUser);
+            }
             default -> throw new IllegalArgumentException("Unsupported role: " + role);
             }
 
@@ -118,5 +128,13 @@ public class UserServiceImpl implements UserService {
     public void delete(Long id) {
         if (!userRepository.existsById(id)) throw new EntityNotFoundException("User not found");
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public List<UserDTO> searchByUsername(String username) {
+        return userRepository.findAll().stream()
+                .filter(u -> u.getUsername().toLowerCase().contains(username.toLowerCase()))
+                .map(this::toDTO)
+                .toList();
     }
 }

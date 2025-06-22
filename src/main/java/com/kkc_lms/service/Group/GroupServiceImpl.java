@@ -2,7 +2,9 @@ package com.kkc_lms.service.Group;
 
 import com.kkc_lms.dto.Group.GroupCreateDTO;
 import com.kkc_lms.dto.Group.GroupDTO;
+import com.kkc_lms.entity.Department;
 import com.kkc_lms.entity.Direction;
+import com.kkc_lms.repository.DepartmentRepository;
 import com.kkc_lms.entity.Group;
 import com.kkc_lms.entity.Teacher;
 import com.kkc_lms.repository.DirectionRepository;
@@ -10,6 +12,7 @@ import com.kkc_lms.repository.GroupRepository;
 import com.kkc_lms.repository.TeacherRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -82,7 +85,7 @@ public class GroupServiceImpl implements GroupService {
 
         Teacher curator = group.getCurator();
         dto.setCuratorId(curator.getId());
-        dto.setCuratorFullName(curator.getUser().getFullname());
+        dto.setCuratorFullName(curator.getUser().getFullname()); // или getFullName()
         return dto;
     }
 }
