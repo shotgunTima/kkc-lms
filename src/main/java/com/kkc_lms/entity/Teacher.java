@@ -21,10 +21,6 @@ public class Teacher {
     @Column(name = "academic_title")
     private String academicTitle;
 
-    @ManyToOne
-    @JoinColumn(name = "departament_id")
-    private Department department;
-
     @Column(name = "hire_date", nullable = false)
     private LocalDate hireDate;
 }

@@ -3,13 +3,10 @@ package com.kkc_lms.service.Teacher;
 import com.kkc_lms.dto.Teacher.TeacherCreateDTO;
 import com.kkc_lms.dto.Teacher.TeacherDTO;
 import com.kkc_lms.dto.Teacher.TeacherUpdateDTO;
-import com.kkc_lms.entity.Department;
 import com.kkc_lms.entity.Teacher;
 import com.kkc_lms.entity.User;
-import com.kkc_lms.repository.DepartmentRepository;
 import com.kkc_lms.repository.TeacherRepository;
 import com.kkc_lms.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,17 +21,16 @@ public class TeacherServiceImpl implements TeacherService {
 
     private final TeacherRepository teacherRepository;
     private final UserRepository userRepository;
-    private final DepartmentRepository departmentRepository;
+
 
     @Autowired
     public TeacherServiceImpl(
             TeacherRepository teacherRepository,
-            UserRepository userRepository,
-            DepartmentRepository departmentRepository
+            UserRepository userRepository
+
     ) {
         this.teacherRepository = teacherRepository;
         this.userRepository = userRepository;
-        this.departmentRepository = departmentRepository;
     }
     @Transactional
     public Teacher createForUser(User user) {
@@ -50,13 +46,11 @@ public class TeacherServiceImpl implements TeacherService {
         User user = userRepository.findById(dto.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        Department departament = departmentRepository.findById(dto.getDepartamentId())
-                .orElseThrow(() -> new RuntimeException("Departament not found"));
+
 
         Teacher teacher = new Teacher();
         teacher.setUser(user);
         teacher.setAcademicTitle(dto.getAcademicTitle());
-        teacher.setDepartment(departament);
         teacher.setHireDate(dto.getHireDate());
 
         return mapToDTO(teacherRepository.save(teacher));
@@ -88,11 +82,10 @@ public class TeacherServiceImpl implements TeacherService {
 
         Teacher teacher = optionalTeacher.get();
 
-        Department department = departmentRepository.findById(dto.getDepartamentId())
-                .orElseThrow(() -> new RuntimeException("Departament not found"));
+
 
         teacher.setAcademicTitle(dto.getAcademicTitle());
-        teacher.setDepartment(department);
+
         teacher.setHireDate(dto.getHireDate());
 
         return Optional.of(mapToDTO(teacherRepository.save(teacher)));
@@ -103,7 +96,7 @@ public class TeacherServiceImpl implements TeacherService {
         dto.setId(teacher.getId());
         dto.setUserId(teacher.getUser().getId());
         dto.setAcademicTitle(teacher.getAcademicTitle());
-        dto.setDepartamentId(teacher.getDepartment().getId());
+
         dto.setHireDate(teacher.getHireDate());
         return dto;
     }
