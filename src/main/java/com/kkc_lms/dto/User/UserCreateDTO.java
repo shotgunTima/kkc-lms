@@ -43,4 +43,6 @@ public class UserCreateDTO {
 
         private String profileImage;
 
+        private Long directionId;
+
 }

@@ -18,7 +18,12 @@ public class Student {
 
     @Column(name = "student_id_number", nullable = false, unique = true)
     private String studentIdNumber;
-//дирекшн
+
+    //дирекшн
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "direction_id")
+    private Direction direction;
+
     @ManyToOne
     @JoinColumn(name = "group_id")
     private Group group;

@@ -52,6 +52,8 @@ public class UserServiceImpl implements UserService {
         if (userRepository.existsByEmail(dto.getEmail()))
             throw new IllegalArgumentException("Email already exists");
 
+
+
         User user = new User();
         user.setUsername(dto.getUsername());
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
@@ -62,11 +64,17 @@ public class UserServiceImpl implements UserService {
         user.setAddress(dto.getAddress());
         user.setProfileImage(dto.getProfileImage());
 
+        if (dto.getRole() == Role.STUDENT && dto.getDirectionId() == null) {
+            throw new IllegalArgumentException("Direction ID is required for student");
+        }
+
         User savedUser = userRepository.save(user);
+
+
         Role role = savedUser.getRole();
         switch (role) {
             case STUDENT -> {
-                studentService.createForUser(savedUser);
+                studentService.createForUser(savedUser,dto.getDirectionId());
             }
             case TEACHER -> {
                 teacherService.createForUser(savedUser);
