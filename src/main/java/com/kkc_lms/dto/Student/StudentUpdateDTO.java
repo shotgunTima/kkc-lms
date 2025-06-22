@@ -17,6 +17,9 @@ public class StudentUpdateDTO {
     @NotNull(message = "Group ID is required")
     private Long groupId;
 
+    @NotNull(message = "Direction ID is required")
+    private Long directionId;
+
     @Positive(message = "Total credits must be positive")
     private int totalCredits;
 

@@ -17,10 +17,11 @@ public class Direction {
     @Column(nullable = false)
     private String name;
 
-
-
     @OneToMany(mappedBy = "direction", cascade = CascadeType.ALL)
     private List<Group> groups;
+
+    @OneToMany(mappedBy = "direction")
+    private List<Student> students;
 
 }
 

@@ -9,6 +9,8 @@ public class StudentDTO {
     private String username;
     private String studentIdNumber;
     private Long groupId;
+    private Long directionId;
+    private String directionName;
     private String groupName;
     private int totalCredits;
     private int admissionYear;

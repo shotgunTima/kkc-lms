@@ -2,9 +2,11 @@ package com.kkc_lms.service.Student;
 
 import com.kkc_lms.dto.Student.StudentCreateDTO;
 import com.kkc_lms.dto.Student.StudentDTO;
+import com.kkc_lms.entity.Direction;
 import com.kkc_lms.entity.Group;
 import com.kkc_lms.entity.Student;
 import com.kkc_lms.entity.User;
+import com.kkc_lms.repository.DirectionRepository;
 import com.kkc_lms.repository.GroupRepository;
 import com.kkc_lms.repository.StudentRepository;
 import com.kkc_lms.repository.UserRepository;
@@ -24,26 +26,36 @@ public class StudentServiceImpl implements StudentService {
     private final StudentRepository studentRepository;
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
+    private final DirectionRepository directionRepository;
 
     @Autowired
     public StudentServiceImpl(StudentRepository studentRepository,
                               UserRepository userRepository,
-                              GroupRepository groupRepository) {
+                              GroupRepository groupRepository,DirectionRepository directionRepository) {
         this.studentRepository = studentRepository;
         this.userRepository = userRepository;
         this.groupRepository = groupRepository;
+        this.directionRepository = directionRepository;
     }
 
+    @Override
     @Transactional
-    public Student createForUser(User user) {
+    public StudentDTO createForUser(User user, Long directionId) {
+        // найдём направление
+        Direction direction = directionRepository.findById(directionId)
+                .orElseThrow(() -> new IllegalArgumentException("Direction not found"));
+
+        // создаём студента
         Student s = new Student();
         s.setUser(user);
-        int currentYear = LocalDate.now().getYear();
-        s.setAdmissionYear(currentYear);
+        s.setDirection(direction);           // <–– привязка направления
+        s.setAdmissionYear(LocalDate.now().getYear());
         s.setTotalCredits(0);
-        String sid = generateUniqueStudentIdNumber();
-        s.setStudentIdNumber(sid);
-        return studentRepository.save(s);
+        s.setStudentIdNumber(generateUniqueStudentIdNumber());
+        Student saved = studentRepository.save(s);
+
+        // конвертируем в DTO
+        return mapToDTO(saved);
     }
     private String generateUniqueStudentIdNumber() {
         String candidate;
@@ -102,10 +114,20 @@ public class StudentServiceImpl implements StudentService {
         dto.setUserId(student.getUser().getId());
         dto.setUsername(student.getUser().getUsername());
         dto.setStudentIdNumber(student.getStudentIdNumber());
-        dto.setGroupId(student.getGroup() != null ? student.getGroup().getId() : null);
-        dto.setGroupName(student.getGroup() != null ? student.getGroup().getName() : null);
+
+        if (student.getGroup() != null) {
+            dto.setGroupId(student.getGroup().getId());
+            dto.setGroupName(student.getGroup().getName());
+        }
+
+        if (student.getDirection() != null) {
+            dto.setDirectionId(student.getDirection().getId());
+            dto.setDirectionName(student.getDirection().getName());
+        }
+
         dto.setTotalCredits(student.getTotalCredits());
         dto.setAdmissionYear(student.getAdmissionYear());
         return dto;
     }
+
 }
