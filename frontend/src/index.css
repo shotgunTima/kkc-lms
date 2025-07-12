@@ -4,6 +4,6 @@
 
 @layer base {
     html {
-        @apply scroll-smooth bg-gradient-to-b from-bgPrimary to-bgSecondary;
+        @apply scroll-smooth bg-gradient-to-b from-bgSecondary to-bgPrimary
     }
 }

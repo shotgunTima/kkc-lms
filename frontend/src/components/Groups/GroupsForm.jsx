@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { createGroup, getGroupById, updateGroup } from '../../api/GroupsApi.js';
-import {getAllTeachers} from "../../api/TeachersApi";
-import {getAllDirections} from "../../api/DirectionApi.js";
-
-import { Check, Save, RefreshCcw, XCircle } from "lucide-react";
+import { getAllTeachers } from '../../api/TeachersApi';
+import { getAllDirections } from '../../api/DirectionApi.js';
 import { motion } from 'framer-motion';
-
+import FloatingLabelInput from '../Inputs/FloatingLabelInput.jsx';
+import SubmitButton from '../Buttons/SubmitButton.jsx';
+import CancelButton from '../Buttons/CancelButton.jsx';
 
 const GroupsForm = ({ groupId, onSuccess, onCancel }) => {
     const isEdit = Boolean(groupId);
@@ -14,14 +14,12 @@ const GroupsForm = ({ groupId, onSuccess, onCancel }) => {
         name: '',
         direction: '',
         curator: '',
-
     });
 
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState({});
     const [teachers, setTeachers] = useState([]);
-    const [directions, setDirection] = useState([]);
-
+    const [directions, setDirections] = useState([]);
 
     useEffect(() => {
         if (isEdit) {
@@ -43,36 +41,25 @@ const GroupsForm = ({ groupId, onSuccess, onCancel }) => {
 
     useEffect(() => {
         getAllTeachers()
-            .then(res=>setTeachers(res.data))
-            .catch(console.error)
+            .then(res => setTeachers(res.data))
+            .catch(console.error);
 
         getAllDirections()
-            .then(res=>setDirection(res.data))
-            .catch(console.error)
+            .then(res => setDirections(res.data))
+            .catch(console.error);
     }, []);
-
-
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-
     const validateForm = () => {
         const newErrors = {};
 
-        if (!formData.name.trim()) {
-            newErrors.username = 'Это поле обязательно';
-        }
-
-        if (!formData.direction.trim()) {
-            newErrors.email = 'Это поле обязательно';
-        }
-
-        if (!formData.curator.trim()) {
-            newErrors.fullname = 'Это обязательно';
-        }
+        if (!formData.name.trim()) newErrors.name = 'Это поле обязательно';
+        if (!formData.direction.trim()) newErrors.direction = 'Выберите направление группы';
+        if (!formData.curator.trim()) newErrors.curator = 'Выберите куратора группы';
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -80,38 +67,22 @@ const GroupsForm = ({ groupId, onSuccess, onCancel }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        if (!validateForm()) {
-            console.warn('Форма не прошла валидацию');
-            return;
-        }
+        if (!validateForm()) return;
 
         setLoading(true);
-
         try {
-
             const payload = {
                 name: formData.name,
                 direction: formData.direction,
                 curator: formData.curator,
             };
 
-
-            if (isEdit) {
-                await updateGroup(groupId, payload);
-            } else {
-                await createGroup(payload);
-            }
-
+            isEdit ? await updateGroup(groupId, payload) : await createGroup(payload);
             onSuccess?.();
         } catch (err) {
             const data = err.response?.data;
-
-            if (data && typeof data === 'object') {
-                setErrors(data);
-            } else {
-                alert('Ошибка при отправке данных');
-            }
+            if (data && typeof data === 'object') setErrors(data);
+            else alert('Ошибка при отправке данных');
         } finally {
             setLoading(false);
         }
@@ -124,91 +95,66 @@ const GroupsForm = ({ groupId, onSuccess, onCancel }) => {
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
         >
-            <form onSubmit={handleSubmit} className="mb-6 p-4 bg-white">
-
-                <h2 className="text-xl text-textPrimary font-medium mb-4">
-                    {isEdit ? 'Обновить группу' : 'Создать новую группу'}
+            <form onSubmit={handleSubmit} className="mb-40">
+                <h2 className="text-xl text-textPrimary mb-5 opacity-70">
+                    {isEdit ? 'ОБНОВИТЬ ГРУППУ' : 'СОЗДАТЬ ГРУППУ'}
                 </h2>
 
                 <div className="grid grid-cols-2 gap-4">
-
-                    <input
+                    <FloatingLabelInput
+                        id="name"
+                        label="Название группы"
                         name="name"
-                        placeholder="Название группы"
                         value={formData.name}
+                        error={errors.name}
                         onChange={handleChange}
-                        className={`w-full p-2 mb-3 border rounded ${errors.name ? 'border-red-500' : 'focus:outline-none focus:border-bgSecondary'}`}
                     />
-                    {errors.name && (
-                        <p className="text-red-500 text-sm mb-2">{errors.name}</p>
-                    )}
 
-                    <div>
+                    {/* Направление */}
+                    <div className="relative mb-4">
                         <select
+                            id="direction"
                             name="direction"
                             value={formData.direction}
                             onChange={handleChange}
-                            className={`w-full p-2 border rounded ${errors.direction ? 'border-red-500' : 'focus:outline-none focus:border-bgSecondary'}`}
+                            className={`peer w-full px-4 py-2 rounded-md border bg-white
+                                ${errors.direction ? 'border-red-500' : 'border-bgSecondary border-opacity-50'}
+                                focus:outline-none focus:border-bgSecondary text-textPrimary`}
                         >
-                            <option value="">Выберите направление</option>
-                            {directions.map(dir => (
-                                <option key={dir.id} value={dir.id}>
-                                    {dir.name}
+                            <option value="" disabled>Выберите направление</option>
+                            {directions.map((r, idx) => (
+                                <option key={idx} value={r.value || r.name}>
+                                    {r.label || r.name}
                                 </option>
                             ))}
                         </select>
-                        {errors.direction && <p className="text-red-500 text-sm">{errors.direction}</p>}
+
                     </div>
 
-                    <div>
+                    {/* Куратор */}
+                    <div className="relative mb-4">
                         <select
+                            id="curator"
                             name="curator"
                             value={formData.curator}
                             onChange={handleChange}
-                            className={`w-full p-2 border rounded ${errors.curator ? 'border-red-500' : 'focus:outline-none focus:border-bgSecondary'}`}
+                            className={`peer w-full px-4 py-2 rounded-md border bg-white
+                                ${errors.curator ? 'border-red-500' : 'border-bgSecondary border-opacity-50'}
+                                focus:outline-none focus:border-bgSecondary text-textPrimary`}
                         >
-                            <option value="">Выберите куратора</option>
-                            {teachers.map(teacher => (
-                                <option key={teacher.id} value={teacher.id}>
-                                    {teacher.fullname}
+                            <option value="" disabled>Выберите куратора</option>
+                            {teachers.map((t, idx) => (
+                                <option key={idx} value={t.fullname}>
+                                    {t.fullname}
                                 </option>
                             ))}
                         </select>
-                        {errors.curator && <p className="text-red-500 text-sm">{errors.curator}</p>}
+
                     </div>
 
-                    <div className="flex items-center gap-4">
-                        <button
-                            type="submit"
-                            className="bg-bgSecondary text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:text-bgSecondary transition hover:bg-bgPrimary"
-                            disabled={loading}
-                        >
-                            {loading ? (
-                                <>
-                                    <Save className="w-5 h-5" />
-                                    Сохранение...
-                                </>
-                            ) : isEdit ? (
-                                <>
-                                    <RefreshCcw className="w-5 h-5" />
-                                    Обновить
-                                </>
-                            ) : (
-                                <>
-                                    <Check className="w-5 h-5" />
-                                    Создать
-                                </>
-                            )}
-                        </button>
-
-                        <button
-                            type="button"
-                            onClick={onCancel}
-                            className="flex items-center gap-2 text-white bg-textSecondary hover:text-red-200 transition px-4 py-2 rounded-lg hover:bg-red-700"
-                        >
-                            <XCircle className="w-5 h-5" />
-                            <span>Закрыть</span>
-                        </button>
+                    <div className="flex items-center gap-4 col-span-2">
+                        <SubmitButton isEdit={isEdit} loading={loading} onClick={handleSubmit} />
+                        <CancelButton onClick={onCancel} />
                     </div>
                 </div>
             </form>

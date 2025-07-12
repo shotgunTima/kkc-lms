@@ -6,7 +6,7 @@ const menuItems = [
     { label: 'Студенты', key: 'students' },
     { label: 'Группы', key: 'groups' },
     { label: 'Преподаватели', key: 'teachers' },
-    { label: 'Кафедры', key: 'departments' },
+    { label: 'Направления', key: 'directions' },
     { label: 'Методист(-ы)', key: 'methodists' },
     { label: 'Бухгалтер(-ы)', key: 'accountants' },
 ]
@@ -28,7 +28,7 @@ const Sidebar = ({ selectedKey, onSelect }) => {
             </div>
 
 
-            <div className="bg-white rounded-tl-none rounded-2xl px-10 py-4 w-64">
+            <div className="bg-white rounded-tl-none rounded-md px-10 py-4 w-64">
                 <ul className="space-y-3">
                     {menuItems.map((item) => (
                         <li key={item.key}>
@@ -38,8 +38,8 @@ const Sidebar = ({ selectedKey, onSelect }) => {
                                 onClick={() => onSelect(item.key)}
                                 className={`block font-semibold text-left w-full text-l ${
                                     selectedKey === item.key
-                                        ? 'text-textSecondary'
-                                        : 'text-textPrimary hover:text-blue-700'
+                                        ? 'text-bgSecondary'
+                                        : 'text-textPrimary hover:text-bgSecondary'
                                 }`}
                             >
                                 {item.label}

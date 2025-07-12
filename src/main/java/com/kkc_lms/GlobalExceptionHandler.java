@@ -1,11 +1,14 @@
 package com.kkc_lms;
 
 import jakarta.persistence.EntityNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-
+import org.springframework.web.server.ResponseStatusException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -61,11 +64,22 @@ public class GlobalExceptionHandler {
         errors.put("error", "Ошибка базы данных: " + detail);
         return errors;
     }
+
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public Map<String, String> handleAllUncaughtException(Exception ex) {
+        logger.error("Unexpected error occurred", ex);
         Map<String, String> errors = new HashMap<>();
         errors.put("error", "Внутренняя ошибка сервера");
         return errors;
     }
+
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<Map<String, String>> handleResponseStatusException(ResponseStatusException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getReason() != null ? ex.getReason() : "Ошибка запроса");
+        return new ResponseEntity<>(error, ex.getStatusCode());
+    }
+
 }

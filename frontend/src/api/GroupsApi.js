@@ -22,8 +22,6 @@ export const getGroupById = (id) => {
     return axios.get(`${BASE_URL}/${id}`);
 }
 
-export const getAllGroups = () => { return axios.get(BASE_URL)}
-
 export const searchGroupByName = (name) => {
     return axios.get(`${BASE_URL}/search`, {
         params: { name }

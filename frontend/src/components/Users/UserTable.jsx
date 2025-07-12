@@ -3,8 +3,10 @@ import { fetchUsers, deleteUser, fetchRoles } from '../../api/UsersApi.js';
 import UserForm from './UserForm';
 import FilterBar from '../Filterbar.jsx';
 import SearchInput from '../SearchInput.jsx';
-import { CirclePlusIcon, Edit2Icon, TrashIcon, X, Check } from "lucide-react";
+import { PencilLine, Eraser, ImageOff, Image} from "lucide-react";
 import DataTable from '../DataTable';
+
+import AddButton from "../Buttons/AddButton.jsx";
 
 const UserTable = () => {
     const [users, setUsers] = useState([]);
@@ -76,19 +78,21 @@ const UserTable = () => {
             header: 'Фото',
             accessor: 'profileImage',
             render: (val) =>
-                val ? <Check className="w-5 h-5 text-green-500 mx-auto" /> : <X className="w-5 h-5 text-red-500 mx-auto" />,
+                val ? <Image className="w-5 h-5 mx-auto" /> : <ImageOff className="w-5 h-5 mx-auto" />,
         },
         {
             header: 'Действия',
             accessor: 'actions',
             render: (_, user) => (
                 <div className="flex justify-center gap-4">
-                    <Edit2Icon
-                        className="w-5 h-5 text-blue-500 hover:text-blue-400 cursor-pointer transition-colors"
+                    <PencilLine
+                        title="Изменить"
+                        className="w-6 h-6 text-textPrimary hover:text-blue-500 cursor-pointer transition-colors"
                         onClick={() => handleEdit(user.id)}
                     />
-                    <TrashIcon
-                        className="w-5 h-5 text-red-500 hover:text-red-400 cursor-pointer transition-colors"
+                    <Eraser
+                        title="Удалить"
+                        className="w-6 h-6 text-textSecondary hover:text-red-500 cursor-pointer transition-colors"
                         onClick={() => handleDelete(user.id)}
                     />
                 </div>
@@ -103,13 +107,8 @@ const UserTable = () => {
             )}
 
             <div className="flex justify-between items-center mb-6">
-                <button
-                    onClick={handleCreate}
-                    className="flex items-center gap-2 text-white bg-bgSecondary hover:text-bgSecondary transition px-4 py-2 rounded-lg hover:bg-bgPrimary"
-                >
-                    <CirclePlusIcon className="w-5 h-5" />
-                    <span>Добавить</span>
-                </button>
+
+                <AddButton onClick={handleCreate} />
 
                 <div className="flex items-center gap-4">
                     <FilterBar
@@ -131,12 +130,12 @@ const UserTable = () => {
                         value={filters.search}
                         onChange={(newValue) => handleFilterChange('search', newValue)}
                         placeholder="Введите имя..."
-                        classname="placeholder:text-white"
+                        className="placeholder-opacity-50"
                     />
                 </div>
             </div>
 
-            <h1 className="text-xl text-textPrimary font-medium mb-4">Список пользователей</h1>
+            <h1 className="text-xl text-textPrimary mb-2 opacity-70">СПИСОК ПОЛЬЗОВАТЕЛЕЙ</h1>
 
             <DataTable columns={columns} data={filteredUsers} />
         </div>

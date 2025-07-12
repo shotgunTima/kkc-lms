@@ -6,6 +6,4 @@ import lombok.Data;
 public class DirectionDTO {
     private Long id;
     private String name;
-    private Long departmentId;
-    private String departmentName;
 }

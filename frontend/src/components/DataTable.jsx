@@ -1,12 +1,23 @@
+import { Card, Typography } from "@material-tailwind/react";
+
 const DataTable = ({ columns, data }) => {
     return (
-        <div className="overflow-x-auto">
-            <table className="min-w-full border-collapse rounded-xl overflow-hidden shadow-lg bg-tableColor">
+        <Card className="h-full w-full shadow-soft-gray-around">
+            <table className="w-full text-left border-separate border-spacing-0">
                 <thead>
-                <tr className="bg-bgSecondary text-white text-sm uppercase">
+                <tr>
                     {columns.map((col, idx) => (
-                        <th key={idx} className="p-3 text-left border-l border-l-blue-900">
-                            {col.header}
+                        <th
+                            key={idx}
+                            className={`border-r border-gray-300 bg-bgSecondary p-4 first:rounded-tl-md last:rounded-tr-md`}
+                        >
+                            <Typography
+                                variant="small"
+                                color="white"
+                                className="font-normal leading-none"
+                            >
+                                {col.header || col.accessor || `Колонка ${idx + 1}`}
+                            </Typography>
                         </th>
                     ))}
                 </tr>
@@ -16,27 +27,38 @@ const DataTable = ({ columns, data }) => {
                     data.map((item, rowIndex) => (
                         <tr
                             key={item.id || rowIndex}
-                            className="hover:bg-gray-300 transition-colors duration-200 text-sm"
+                            className="group relative z-0 bg-tableColor transition-all duration-150 transform hover:scale-[1.01] hover:z-10 hover:shadow-soft-gray-around hover:bg-white"
                         >
-                            {columns.map((col, colIndex) => (
-                                <td key={colIndex} className="p-3 border border-gray-300 text-textPrimary text-left">
-                                    {col.render
-                                        ? col.render(item[col.accessor], item)
-                                        : item[col.accessor]}
-                                </td>
-                            ))}
+                            {columns.map((col, colIndex) => {
+                                const value = item[col.accessor];
+                                const rendered = col.render ? col.render(value, item) : value;
+
+                                return (
+                                    <td
+                                        key={colIndex}
+                                        className="p-3 border-r border-b border-gray-300 text-left text-sm text-gray-800 transition-colors duration-150"
+                                    >
+                                        {typeof rendered === "string" || typeof rendered === "number"
+                                            ? <span>{rendered}</span>
+                                            : rendered}
+                                    </td>
+                                );
+                            })}
                         </tr>
                     ))
                 ) : (
                     <tr>
-                        <td colSpan={columns.length} className="p-4 text-center text-gray-700 bg-tableColor">
-                            Нет данных :'(
+                        <td
+                            colSpan={columns.length}
+                            className="p-4 text-center text-gray-700 bg-tableColor rounded-b-md"
+                        >
+                            Нет данных.
                         </td>
                     </tr>
                 )}
                 </tbody>
             </table>
-        </div>
+        </Card>
     );
 };
 
