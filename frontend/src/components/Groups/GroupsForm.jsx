@@ -6,10 +6,11 @@ import { motion } from 'framer-motion';
 import FloatingLabelInput from '../Inputs/FloatingLabelInput.jsx';
 import SubmitButton from '../Buttons/SubmitButton.jsx';
 import CancelButton from '../Buttons/CancelButton.jsx';
+import { useTranslation } from 'react-i18next';
 
 const GroupsForm = ({ groupId, onSuccess, onCancel }) => {
     const isEdit = Boolean(groupId);
-
+    const { t } = useTranslation();
     const [formData, setFormData] = useState({
         name: '',
         direction: '',
@@ -57,9 +58,9 @@ const GroupsForm = ({ groupId, onSuccess, onCancel }) => {
     const validateForm = () => {
         const newErrors = {};
 
-        if (!formData.name.trim()) newErrors.name = 'Это поле обязательно';
-        if (!formData.direction.trim()) newErrors.direction = 'Выберите направление группы';
-        if (!formData.curator.trim()) newErrors.curator = 'Выберите куратора группы';
+        if (!formData.name.trim()) newErrors.name = t("is_required");
+        if (!formData.direction.trim()) newErrors.direction = t("select_group_direction");
+        if (!formData.curator.trim()) newErrors.curator = t("select_group_curator");
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -96,21 +97,20 @@ const GroupsForm = ({ groupId, onSuccess, onCancel }) => {
             transition={{ duration: 0.3 }}
         >
             <form onSubmit={handleSubmit} className="mb-40">
-                <h2 className="text-xl text-textPrimary mb-5 opacity-70">
-                    {isEdit ? 'ОБНОВИТЬ ГРУППУ' : 'СОЗДАТЬ ГРУППУ'}
+                <h2 className="text-xl text-textPrimary mb-5 opacity-70 dark:text-blue-200">
+                    {isEdit ? t("update_group") : t("create_group")}
                 </h2>
 
                 <div className="grid grid-cols-2 gap-4">
                     <FloatingLabelInput
                         id="name"
-                        label="Название группы"
+                        label={t("group_name")}
                         name="name"
                         value={formData.name}
                         error={errors.name}
                         onChange={handleChange}
                     />
 
-                    {/* Направление */}
                     <div className="relative mb-4">
                         <select
                             id="direction"
@@ -118,10 +118,11 @@ const GroupsForm = ({ groupId, onSuccess, onCancel }) => {
                             value={formData.direction}
                             onChange={handleChange}
                             className={`peer w-full px-4 py-2 rounded-md border bg-white
+                            dark:bg-gray-800 dark:border-gray-500 dark:placeholder:text-gray-400 dark:text-gray-300 
                                 ${errors.direction ? 'border-red-500' : 'border-bgSecondary border-opacity-50'}
                                 focus:outline-none focus:border-bgSecondary text-textPrimary`}
                         >
-                            <option value="" disabled>Выберите направление</option>
+                            <option value="" disabled>{t("select_direction")}</option>
                             {directions.map((r, idx) => (
                                 <option key={idx} value={r.value || r.name}>
                                     {r.label || r.name}
@@ -131,7 +132,6 @@ const GroupsForm = ({ groupId, onSuccess, onCancel }) => {
 
                     </div>
 
-                    {/* Куратор */}
                     <div className="relative mb-4">
                         <select
                             id="curator"
@@ -139,10 +139,11 @@ const GroupsForm = ({ groupId, onSuccess, onCancel }) => {
                             value={formData.curator}
                             onChange={handleChange}
                             className={`peer w-full px-4 py-2 rounded-md border bg-white
+                            dark:bg-gray-800 dark:border-gray-500 dark:placeholder:text-gray-400 dark:text-gray-300 
                                 ${errors.curator ? 'border-red-500' : 'border-bgSecondary border-opacity-50'}
                                 focus:outline-none focus:border-bgSecondary text-textPrimary`}
                         >
-                            <option value="" disabled>Выберите куратора</option>
+                            <option value="" disabled>{t("select_group_curator")}</option>
                             {teachers.map((t, idx) => (
                                 <option key={idx} value={t.fullname}>
                                     {t.fullname}

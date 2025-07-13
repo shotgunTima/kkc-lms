@@ -1,26 +1,30 @@
 
 import { Search } from 'lucide-react';
+import FloatingLabelInput from "./FloatingLabelInput.jsx";
+import { useTranslation } from "react-i18next";
 
 const SearchInput = ({ value, onChange, placeholder }) => {
+    const { t } = useTranslation();
     return (
         <div className="relative group flex items-center space-x-2">
 
-            <div className="p-2.5 rounded-md bg-bgSecondary transition group-hover:bg-opacity-80">
-                <Search className="w-5 h-5 text-white" />
+            <div className="p-2.5 rounded-full shadow-black-around bg-bgSecondary
+            dark:bg-gray-700 ">
+                <Search className="w-6 h-6 text-white dark:text-gray-200 " />
             </div>
 
             <div
                 className={`
-          overflow-hidden transition-all duration-300
+           transition-all duration-300
           w-0 opacity-0 scale-95 group-hover:w-64 group-hover:opacity-100 group-hover:scale-100
         `}
             >
-                <input
+                <FloatingLabelInput
+                    label={t("enter_name")}
                     type="text"
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
                     placeholder={placeholder}
-                    className="px-4 py-2 rounded-md text-textPrimary border border-bgSecondary border-opacity-50 placeholder:text-textPrimary opacity-70 focus:outline-none focus:border-bgSecondary w-full"
                 />
             </div>
         </div>

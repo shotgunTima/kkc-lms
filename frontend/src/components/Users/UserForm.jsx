@@ -5,16 +5,19 @@ import SubmitButton from "../Buttons/SubmitButton.jsx";
 import CancelButton from "../Buttons/CancelButton.jsx";
 import FloatingLabelInput from "../Inputs/FloatingLabelInput.jsx";
 import {getAllDirections} from "../../api/DirectionApi.js";
+import { useTranslation } from 'react-i18next';
+
 
 const UserForm = ({ userId, onSuccess, onCancel }) => {
     const isEdit = Boolean(userId);
+    const { t } = useTranslation();
 
     const [formData, setFormData] = useState({
         username: '',
         password: '',
         email: '',
         fullname: '',
-        role: 'STUDENT',
+        role: '',
         phonenum: '',
         address: '',
         profileImage: null,
@@ -74,14 +77,13 @@ const UserForm = ({ userId, onSuccess, onCancel }) => {
 
     const validateForm = () => {
         const newErrors = {};
-        if (!formData.username.trim()) newErrors.username = 'Имя пользователя обязательно';
-        if (!formData.email.trim()) newErrors.email = 'Email обязателен';
-        if (!formData.fullname.trim()) newErrors.fullname = 'Полное имя обязательно';
-        if (!isEdit && !formData.password.trim()) newErrors.password = 'Пароль обязателен при создании';
-        if (!formData.role.trim()) newErrors.role = 'Роль обязательна';
-        if (!formData.phonenum || formData.phonenum.length !== 9) newErrors.phonenum = 'Введите 9 цифр после +996';
-        if (!formData.address.trim()) newErrors.address = 'Введите адрес';
-        if (formData.role === 'STUDENT' && !formData.directionId) newErrors.directionId = 'Выберите направление';
+        if (!formData.username.trim()) newErrors.username = t('username_required');
+        if (!formData.email.trim()) newErrors.email = t('email_required');
+        if (!formData.fullname.trim()) newErrors.fullname = t('fullname_required');
+        if (!isEdit && !formData.password.trim()) newErrors.password = t('password_required');
+        if (!formData.role.trim()) newErrors.role = t('role_required');
+        if (!formData.phonenum || formData.phonenum.length !== 9) newErrors.phonenum = t('phone_required');
+        if (formData.role === 'STUDENT' && !formData.directionId) newErrors.directionId = t('direction_required');
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -121,14 +123,15 @@ const UserForm = ({ userId, onSuccess, onCancel }) => {
             transition={{ duration: 0.3 }}
         >
             <form onSubmit={handleSubmit} className="mb-40">
-                <h2 className="text-xl text-textPrimary mb-5 opacity-70 ">
-                    {isEdit ? 'ОБНОВИТЬ ПОЛЬЗОВАТЕЛЯ' : 'СОЗДАТЬ ПОЛЬЗОВАТЕЛЯ'}
+                <h2 className="text-xl text-textPrimary mb-5 opacity-70 dark:text-blue-200">
+                    {isEdit ? t('update_user') : t('create_user')}
                 </h2>
+
 
                 <div className="grid grid-cols-2 gap-4">
                     <FloatingLabelInput
                         id="fullname"
-                        label="ФИО"
+                        label={t('fullname')}
                         name="fullname"
                         value={formData.fullname}
                         error={errors.fullname}
@@ -136,7 +139,7 @@ const UserForm = ({ userId, onSuccess, onCancel }) => {
                     />
                     <FloatingLabelInput
                         id="username"
-                        label="Логин"
+                        label={t('username')}
                         name="username"
                         value={formData.username}
                         error={errors.username}
@@ -144,7 +147,7 @@ const UserForm = ({ userId, onSuccess, onCancel }) => {
                     />
                     <FloatingLabelInput
                         id="email"
-                        label="Почта"
+                        label={t('email')}
                         name="email"
                         type="email"
                         value={formData.email}
@@ -154,7 +157,7 @@ const UserForm = ({ userId, onSuccess, onCancel }) => {
                     {!isEdit && (
                         <FloatingLabelInput
                             id="password"
-                            label="Пароль"
+                            label={t('password')}
                             name="password"
                             type="password"
                             value={formData.password}
@@ -164,7 +167,7 @@ const UserForm = ({ userId, onSuccess, onCancel }) => {
                     )}
                     <FloatingLabelInput
                         id="phonenum"
-                        label="Номер телефона"
+                        label={t('phone')}
                         name="phonenum"
                         value={formData.phonenum}
                         error={errors.phonenum}
@@ -173,7 +176,8 @@ const UserForm = ({ userId, onSuccess, onCancel }) => {
                             if (digits.length <= 9)
                                 setFormData(prev => ({ ...prev, phonenum: digits }));
                         }}
-                        leftAddon={<span className="bg-bgSecondary px-3 py-2 text-white select-none rounded-l-md">+996</span>}
+                        leftAddon={<span className="bg-bgSecondary px-3 py-2 text-white select-none rounded-l-md
+                        dark:bg-gray-700">+996</span>}
                     />
                     <div className="relative mb-4">
                         <select
@@ -182,14 +186,15 @@ const UserForm = ({ userId, onSuccess, onCancel }) => {
                             value={formData.role}
                             onChange={handleChange}
                             className={`peer w-full px-4 py-2 rounded-md border bg-white text-textPrimary text-opacity-60
-                                hover:text-textPrimary hover:text-opacity-100
+                                hover:text-textPrimary hover:text-opacity-100 
+                                dark:text-gray-300 dark:bg-gray-800 dark:border-gray-500 dark:placeholder:text-gray-400
                                 ${errors.role ? 'border-red-500' : 'border-bgSecondary border-opacity-50'}
                                 focus:outline-none focus:border-bgSecondary`}
                         >
-                            <option value="" disabled hidden />
+                            <option value="">{t('select_role')}</option>
                             {roles.map(r => (
                                 <option  key={r.value} value={r.value}>
-                                    {r.label}
+                                    {t(`role.${r.value.toLowerCase()}`)}
                                 </option>
                             ))}
                         </select>
@@ -204,10 +209,11 @@ const UserForm = ({ userId, onSuccess, onCancel }) => {
                                 onChange={handleChange}
                                 className={`peer w-full px-4 py-2 rounded-md border bg-white text-textPrimary text-opacity-60
                                 hover:text-textPrimary hover:text-opacity-100
+                                dark:text-gray-300 dark:bg-gray-800 dark:border-gray-500 dark:placeholder:text-gray-400
                                 ${errors.directionId ? 'border-red-500' : 'border-bgSecondary border-opacity-50'}
                                 focus:outline-none focus:border-bgSecondary`}
                             >
-                                <option value="">Выберите направление</option>
+                                <option value="">{t('select_direction')}</option>
                                 {directions.map(dir => (
                                     <option key={dir.id} value={dir.id}>
                                         {dir.name}
@@ -218,7 +224,7 @@ const UserForm = ({ userId, onSuccess, onCancel }) => {
                     )}
                     <FloatingLabelInput
                         id="address"
-                        label="Адрес"
+                        label={t('address')}
                         name="address"
                         value={formData.address}
                         error={errors.address}
@@ -232,7 +238,8 @@ const UserForm = ({ userId, onSuccess, onCancel }) => {
                             type="file"
                             accept="image/*"
                             onChange={handleFileChange}
-                            className="px-4 py-2 rounded-md border border-bgSecondary text-textPrimary"
+                            className="px-4 py-2 rounded-md border border-bgSecondary text-textPrimary
+                            dark:text-gray-300 dark:bg-gray-800 dark:border-gray-500 dark:placeholder:text-gray-400"
                         />
                     </div>
 

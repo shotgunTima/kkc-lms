@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react';
 import { getAllDirections, deleteDirection } from '../../api/DirectionApi.js';
 import DirectionForm from './DirectionForm.jsx';
-import SearchInput from '../SearchInput.jsx';
-import { PencilLine, Eraser} from "lucide-react";
+import SearchInput from '../Inputs/SearchInput.jsx';
+import ActionButtons from "../Buttons/ActionButtons.jsx";
 import DataTable from '../DataTable';
 import AddButton from "../Buttons/AddButton.jsx";
+import { useTranslation } from "react-i18next";
+
 
 const DirectionTable = () => {
+    const { t } = useTranslation();
     const [directions, setDirections] = useState([]);
     // const [roles, setRoles] = useState([]);
     const [editingDirectionId, setEditingDirectionsId] = useState(null);
@@ -31,7 +34,7 @@ const DirectionTable = () => {
     };
 
     const handleDelete = async (id) => {
-        if (window.confirm('Удалить направление?')) {
+        if (window.confirm(t("delete_direction_confirm"))) {
             await deleteDirection(id);
             loadDirections();
         }
@@ -63,27 +66,19 @@ const DirectionTable = () => {
     );
 
     const columns = [
-        { header: 'Направление', accessor: 'name' },
-
+        { header: t('direction'), accessor: 'name' },
         {
-            header: 'Действия',
+            header: t('actions'),
             accessor: 'actions',
             render: (_, direction) => (
-                <div className="flex justify-center gap-4">
-                    <PencilLine
-                        title="Изменить"
-                        className="w-6 h-6 text-textPrimary hover:text-blue-500 cursor-pointer transition-colors"
-                        onClick={() => handleEdit(direction.id)}
-                    />
-                    <Eraser
-                        title="Удалить"
-                        className="w-6 h-6 text-textSecondary hover:text-red-500 cursor-pointer transition-colors"
-                        onClick={() => handleDelete(directions.id)}
-                    />
-                </div>
+                <ActionButtons
+                    onEdit={() => handleEdit(direction.id)}
+                    onDelete={() => handleDelete(direction.id)}
+                />
             ),
         },
     ];
+
 
     return (
         <div className="p-6">
@@ -101,13 +96,17 @@ const DirectionTable = () => {
                     <SearchInput
                         value={filters.search}
                         onChange={(newValue) => handleFilterChange('search', newValue)}
-                        placeholder="Введите название..."
+                        placeholder={t("enter_direction_name")}
                         className="placeholder-opacity-50"
                     />
+
                 </div>
             </div>
 
-            <h1 className="text-xl text-textPrimary mb-2 opacity-70">СПИСОК НАПРАВЛЕНИЙ</h1>
+            <h1 className="text-xl text-textPrimary mb-2 opacity-70 dark:text-blue-200">
+                {t('direction_list')}
+            </h1>
+
 
             <DataTable columns={columns} data={filteredDirections} />
         </div>

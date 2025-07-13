@@ -14,7 +14,9 @@ const FilterBar = ({ filters, values, onChange }) => {
                             <select
                                 value={value}
                                 onChange={(e) => onChange(name, e.target.value)}
-                                className="px-4 py-2 rounded-md border border-bgSecondary border-opacity-50 text-textPrimary focus:outline-none focus:border-bgSecondary"
+                                className="px-4 py-2 rounded-lg border border-bgSecondary border-opacity-50 text-textPrimary
+                                focus:outline-none focus:border-bgSecondary
+                                dark:text-gray-300 dark:bg-gray-800 dark:border-gray-500 dark:placeholder:text-gray-400"
                             >
                                 {options.map((opt) => (
                                     <option key={opt.value} value={opt.value}>

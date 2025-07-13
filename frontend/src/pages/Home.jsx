@@ -5,10 +5,11 @@ import Students from './Students'
 import Users from "./Users.jsx";
 import Groups from "./Groups.jsx";
 import Directions from "./Directions.jsx";
+import {useTranslation} from "react-i18next";
 
 const Home = () => {
     const [selectedSection, setSelectedSection] = useState(null)
-
+    const {t} = useTranslation();
     const renderContent = () => {
         const sectionKey = selectedSection || 'default'
 
@@ -42,15 +43,15 @@ const Home = () => {
                                     </>
                                 )
                             case 'teachers':
-                                return <p className="text-lg text-gray-700">Список преподавателей (пока заглушка)</p>
+                                return <p className="text-lg text-gray-500 dark:text-gray-400">Список преподавателей (пока заглушка)</p>
                             case 'directions':
                                 return (
                                     <Directions />
                                 )
                             case 'accountants':
-                                return <p className="text-lg text-gray-700">Бухгалтеры (пока заглушка)</p>
+                                return <p className="text-lg text-gray-500 dark:text-gray-400">Бухгалтеры (пока заглушка)</p>
                             default:
-                                return <p className="text-lg text-gray-500">Выберите раздел</p>
+                                return <p className="text-lg text-gray-500 dark:text-gray-400">{t("select_section")}</p>
                         }
                     })()}
                 </motion.div>
@@ -66,7 +67,8 @@ const Home = () => {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, y: -30 }}
                 transition={{ duration: 0.3 }}
-                className="bg-white bg-opacity-90 rounded-md p-5 w-full hover:shadow-blue-around cursor-pointer"
+                className="bg-white bg-opacity-100 rounded-xl p-5 w-full hover:shadow-white-around
+                 dark:bg-gray-800 dark:bg-opacity-90 dark:hover:shadow-blue-around"
 
             >
 

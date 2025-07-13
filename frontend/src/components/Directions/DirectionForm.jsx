@@ -4,10 +4,12 @@ import { motion } from 'framer-motion';
 import SubmitButton from '../Buttons/SubmitButton.jsx';
 import CancelButton from '../Buttons/CancelButton.jsx';
 import FloatingLabelInput from '../Inputs/FloatingLabelInput.jsx';
+import { useTranslation } from "react-i18next";
+
 
 const DirectionForm = ({ directionId, onSuccess, onCancel }) => {
     const isEdit = Boolean(directionId);
-
+    const { t } = useTranslation();
     const [formData, setFormData] = useState({ name: '' });
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState({});
@@ -33,8 +35,9 @@ const DirectionForm = ({ directionId, onSuccess, onCancel }) => {
     const validateForm = () => {
         const newErrors = {};
         if (!formData.name.trim()) {
-            newErrors.name = 'Это поле обязательно';
+            newErrors.name = t("direction_required");
         }
+
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
@@ -53,7 +56,7 @@ const DirectionForm = ({ directionId, onSuccess, onCancel }) => {
         } catch (err) {
             const data = err.response?.data;
             if (err.response?.status === 409) {
-                setErrors({ name: 'Такое направление уже существует' });
+                setErrors({ name: t("direction_exists") });
             } else if (data && typeof data === 'object') {
                 setErrors(data);
             } else {
@@ -72,14 +75,15 @@ const DirectionForm = ({ directionId, onSuccess, onCancel }) => {
             transition={{ duration: 0.3 }}
         >
             <form onSubmit={handleSubmit} className="mb-40">
-                <h2 className="text-xl text-textPrimary mb-5 opacity-70 ">
-                    {isEdit ? 'ОБНОВИТЬ НАПРАВЛЕНИЕ' : 'СОЗДАТЬ НАПРАВЛЕНИЕ'}
+                <h2 className="text-xl text-textPrimary mb-5 opacity-70 dark:text-blue-200">
+                    {isEdit ? t('update_direction') : t('create_direction')}
                 </h2>
+
 
                 <div className="grid grid-cols-2 gap-4">
                     <FloatingLabelInput
                         id="name"
-                        label="Направление"
+                        label={t("direction")}
                         name="name"
                         value={formData.name}
                         error={errors.name}

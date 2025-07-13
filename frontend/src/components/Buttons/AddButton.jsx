@@ -1,8 +1,10 @@
-
 import AnimatedButton from "./AnimatedButton";
 import { CirclePlusIcon } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
-const AddButton = ({ onClick, children = "Добавить", ...props }) => {
+const AddButton = ({ onClick, children, ...props }) => {
+    const { t } = useTranslation();
+
     return (
         <AnimatedButton
             icon={CirclePlusIcon}
@@ -10,7 +12,7 @@ const AddButton = ({ onClick, children = "Добавить", ...props }) => {
             iconAnimation="rotate"
             {...props}
         >
-            {children}
+            {children || t("add")}
         </AnimatedButton>
     );
 };
