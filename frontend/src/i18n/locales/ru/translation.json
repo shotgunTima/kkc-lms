@@ -1,5 +1,5 @@
 {
-  "hello": "Привет",
+  "hello": "привет",
   "users": "Пользователи",
   "students": "Студенты",
   "groups": "Группы",
@@ -63,5 +63,10 @@
   "group": "Группа",
   "enter_curator_name": "Введите имя куратора",
   "group_list": "СПИСОК ГРУПП",
-  "settings": "Настройки"
+  "settings": "Настройки",
+  "confirm_delete_title": "Вы уверены?",
+  "confirm_delete_description": "Это действие нельзя отменить.",
+  "delete": "Удалить"
+
+
 }

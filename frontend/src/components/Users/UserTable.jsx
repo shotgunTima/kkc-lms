@@ -8,10 +8,14 @@ import DataTable from '../DataTable';
 import AddButton from "../Buttons/AddButton.jsx";
 import ActionButtons from "../Buttons/ActionButtons.jsx";
 import { useTranslation } from 'react-i18next';
+import ConfirmModal from "../ConfirmModal.jsx";
+
 
 
 const UserTable = () => {
     const { t } = useTranslation();
+    const [showConfirm, setShowConfirm] = useState(false);
+    const [userToDelete, setUserToDelete] = useState(null);
     const [users, setUsers] = useState([]);
     const [roles, setRoles] = useState([]);
     const [editingUserId, setEditingUserId] = useState(null);
@@ -36,12 +40,20 @@ const UserTable = () => {
         setFilters((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleDelete = async (id) => {
-        if (window.confirm('Удалить пользователя?')) {
-            await deleteUser(id);
+    const confirmDelete = (id) => {
+        setUserToDelete(id);
+        setShowConfirm(true);
+    };
+
+    const handleConfirmDelete = async () => {
+        if (userToDelete !== null) {
+            await deleteUser(userToDelete);
             loadUsers();
+            setShowConfirm(false);
+            setUserToDelete(null);
         }
     };
+
 
     const handleEdit = (id) => {
         setEditingUserId(id);
@@ -93,8 +105,9 @@ const UserTable = () => {
             render: (_, user) => (
                 <ActionButtons
                     onEdit={() => handleEdit(user.id)}
-                    onDelete={() => handleDelete(user.id)}
+                    onDelete={() => confirmDelete(user.id)}
                 />
+
             ),
         },
     ];
@@ -138,6 +151,16 @@ const UserTable = () => {
             <h1 className="text-xl text-textPrimary mb-2 opacity-70 dark:text-blue-200">{t('user_list')}</h1>
 
             <DataTable columns={columns} data={filteredUsers} />
+            <ConfirmModal
+                isOpen={showConfirm}
+                onCancel={() => setShowConfirm(false)}
+                onConfirm={handleConfirmDelete}
+                title={t("confirm_delete_title")}
+                description={t("confirm_delete_description")}
+                confirmText={t("delete")}
+                cancelText={t("cancel")}
+            />
+
         </div>
     );
 };

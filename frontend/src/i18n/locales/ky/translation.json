@@ -1,5 +1,5 @@
 {
-  "hello": "Салам",
+  "hello": "cалам",
   "users": "Колдонуучулар",
   "students": "Студенттер",
   "groups": "Топтор",
@@ -63,5 +63,9 @@
   "group": "Топ",
   "enter_curator_name": "Куратордун атын киргизиңиз",
   "group_list": "ТОПТОР ТИЗМЕСИ",
-  "settings": "Орнотуулар"
+  "settings": "Орнотуулар",
+  "confirm_delete_title": "Ишенип жатасызбы?",
+  "confirm_delete_description": "Бул аракетти артка кайтарууга болбойт.",
+  "delete": "Өчүрүү"
+
 }

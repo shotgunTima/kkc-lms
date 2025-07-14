@@ -1,5 +1,5 @@
 {
-  "hello": "Hello",
+  "hello": "hello",
   "users": "Users",
   "students": "Students",
   "groups": "Groups",
@@ -63,6 +63,11 @@
   "group": "Group",
   "enter_curator_name": "Enter curator name",
   "group_list": "GROUP LIST",
-  "settings": "Settings"
+  "settings": "Settings",
+  "confirm_delete_title": "Are you sure?",
+  "confirm_delete_description": "This action cannot be undone.",
+  "delete": "Delete"
+
+
 }
 

@@ -63,5 +63,10 @@
   "group": "그룹",
   "enter_curator_name": "관리자 이름을 입력하세요",
   "group_list": "그룹 목록",
-  "settings": "설정"
+  "settings": "설정",
+  "confirm_delete_title": "정말 삭제하시겠습니까?",
+  "confirm_delete_description": "이 작업은 취소할 수 없습니다.",
+  "delete": "삭제"
+
+
 }

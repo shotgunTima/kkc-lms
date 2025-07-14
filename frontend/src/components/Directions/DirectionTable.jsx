@@ -1,15 +1,19 @@
 import { useEffect, useState } from 'react';
-import { getAllDirections, deleteDirection } from '../../api/DirectionApi.js';
+import { getAllDirections} from '../../api/DirectionApi.js';
 import DirectionForm from './DirectionForm.jsx';
 import SearchInput from '../Inputs/SearchInput.jsx';
 import ActionButtons from "../Buttons/ActionButtons.jsx";
 import DataTable from '../DataTable';
 import AddButton from "../Buttons/AddButton.jsx";
 import { useTranslation } from "react-i18next";
+import ConfirmModal from "../ConfirmModal.jsx";
+import {deleteUser} from "../../api/UsersApi.js";
 
 
 const DirectionTable = () => {
     const { t } = useTranslation();
+    const [showConfirm, setShowConfirm] = useState(false);
+    const [directionToDelete, setDirectionToDelete] = useState(null);
     const [directions, setDirections] = useState([]);
     // const [roles, setRoles] = useState([]);
     const [editingDirectionId, setEditingDirectionsId] = useState(null);
@@ -33,10 +37,17 @@ const DirectionTable = () => {
         setFilters((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleDelete = async (id) => {
-        if (window.confirm(t("delete_direction_confirm"))) {
-            await deleteDirection(id);
+    const confirmDelete = (id) => {
+        setDirectionToDelete(id);
+        setShowConfirm(true);
+    };
+
+    const handleConfirmDelete = async () => {
+        if (directionToDelete !== null) {
+            await deleteUser(directionToDelete);
             loadDirections();
+            setShowConfirm(false);
+            setDirectionToDelete(null);
         }
     };
 
@@ -73,7 +84,7 @@ const DirectionTable = () => {
             render: (_, direction) => (
                 <ActionButtons
                     onEdit={() => handleEdit(direction.id)}
-                    onDelete={() => handleDelete(direction.id)}
+                    onDelete={() => confirmDelete(direction.id)}
                 />
             ),
         },
@@ -109,6 +120,15 @@ const DirectionTable = () => {
 
 
             <DataTable columns={columns} data={filteredDirections} />
+            <ConfirmModal
+                isOpen={showConfirm}
+                onCancel={() => setShowConfirm(false)}
+                onConfirm={handleConfirmDelete}
+                title={t("confirm_delete_title")}
+                description={t("confirm_delete_description")}
+                confirmText={t("delete")}
+                cancelText={t("cancel")}
+            />
         </div>
     );
 };
