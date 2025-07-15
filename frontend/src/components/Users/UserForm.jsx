@@ -6,6 +6,7 @@ import CancelButton from "../Buttons/CancelButton.jsx";
 import FloatingLabelInput from "../Inputs/FloatingLabelInput.jsx";
 import {getAllDirections} from "../../api/DirectionApi.js";
 import { useTranslation } from 'react-i18next';
+import SelectField from "../Inputs/SelectField.jsx";
 
 
 const UserForm = ({ userId, onSuccess, onCancel }) => {
@@ -179,49 +180,20 @@ const UserForm = ({ userId, onSuccess, onCancel }) => {
                         leftAddon={<span className="bg-bgSecondary px-3 py-2 text-white select-none rounded-l-md
                         dark:bg-gray-700">+996</span>}
                     />
-                    <div className="relative mb-4">
-                        <select
-                            id="role"
-                            name="role"
-                            value={formData.role}
-                            onChange={handleChange}
-                            className={`peer w-full px-4 py-2 rounded-md border bg-white text-textPrimary text-opacity-60
-                                hover:text-textPrimary hover:text-opacity-100 
-                                dark:text-gray-300 dark:bg-gray-800 dark:border-gray-500 dark:placeholder:text-gray-400
-                                ${errors.role ? 'border-red-500' : 'border-bgSecondary border-opacity-50'}
-                                focus:outline-none focus:border-bgSecondary`}
-                        >
-                            <option value="">{t('select_role')}</option>
-                            {roles.map(r => (
-                                <option  key={r.value} value={r.value}>
-                                    {t(`role.${r.value.toLowerCase()}`)}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                    {formData.role === 'STUDENT' && (
-                        <div className="relative mb-4 col-span-2">
-
-                            <select
-                                id="directionId"
-                                name="directionId"
-                                value={formData.directionId}
-                                onChange={handleChange}
-                                className={`peer w-full px-4 py-2 rounded-md border bg-white text-textPrimary text-opacity-60
-                                hover:text-textPrimary hover:text-opacity-100
-                                dark:text-gray-300 dark:bg-gray-800 dark:border-gray-500 dark:placeholder:text-gray-400
-                                ${errors.directionId ? 'border-red-500' : 'border-bgSecondary border-opacity-50'}
-                                focus:outline-none focus:border-bgSecondary`}
-                            >
-                                <option value="">{t('select_direction')}</option>
-                                {directions.map(dir => (
-                                    <option key={dir.id} value={dir.id}>
-                                        {dir.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                    )}
+                    <SelectField
+                        id="role"
+                        name="role"
+                        value={formData.role}
+                        onChange={handleChange}
+                        options={[
+                            { value: '', label: t('select_role') },
+                            ...roles.map(r => ({
+                                value: r.value,
+                                label: t(`role.${r.value.toLowerCase()}`)
+                            }))
+                        ]}
+                        error={errors.role}
+                    />
                     <FloatingLabelInput
                         id="address"
                         label={t('address')}
@@ -230,6 +202,24 @@ const UserForm = ({ userId, onSuccess, onCancel }) => {
                         error={errors.address}
                         onChange={handleChange}
                     />
+                    {formData.role === 'STUDENT' && (
+                        <SelectField
+                            id="directionId"
+                            name="directionId"
+
+                            value={formData.directionId}
+                            onChange={handleChange}
+                            options={[
+                                { value: '', label: t('select_direction') },
+                                ...directions.map(dir => ({
+                                    value: dir.id,
+                                    label: dir.name
+                                }))
+                            ]}
+                            error={errors.directionId}
+                        />
+                    )}
+
 
                     <div className="relative mb-4 col-span-2">
                         <input

@@ -6,6 +6,7 @@ import Users from "./Users.jsx";
 import Groups from "./Groups.jsx";
 import Directions from "./Directions.jsx";
 import {useTranslation} from "react-i18next";
+import Teachers from "./Teachers.jsx";
 
 const Home = () => {
     const [selectedSection, setSelectedSection] = useState(null)
@@ -43,7 +44,7 @@ const Home = () => {
                                     </>
                                 )
                             case 'teachers':
-                                return <p className="text-lg text-gray-500 dark:text-gray-400">Список преподавателей (пока заглушка)</p>
+                                return <Teachers/>
                             case 'directions':
                                 return (
                                     <Directions />

@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -23,4 +25,15 @@ public class Teacher {
 
     @Column(name = "hire_date", nullable = false)
     private LocalDate hireDate;
+
+    @Enumerated(EnumType.STRING)
+    private TeacherStatus status;
+
+    public enum TeacherStatus {
+        ACTIVE, ON_LEAVE, DISMISSED
+    }
+
+    @ManyToMany(mappedBy = "teachers")
+    private List<Subject> subjects = new ArrayList<>();
+
 }

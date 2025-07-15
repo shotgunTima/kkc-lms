@@ -1,16 +1,17 @@
 package com.kkc_lms.service.Teacher;
 
 import com.kkc_lms.dto.Teacher.TeacherCreateDTO;
-import com.kkc_lms.dto.Teacher.TeacherDTO;
+import com.kkc_lms.dto.Teacher.TeacherOutputDTO;
 import com.kkc_lms.dto.Teacher.TeacherUpdateDTO;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface TeacherService {
-    TeacherDTO saveTeacher(TeacherCreateDTO dto);
-    Optional<TeacherDTO> getTeacherById(Long id);
-    List<TeacherDTO> getAllTeachers();
-    void deleteTeacherById(Long id);
-    Optional<TeacherDTO> updateTeacher(Long id, TeacherUpdateDTO dto);
+    TeacherOutputDTO create(TeacherCreateDTO dto);
+    List<TeacherOutputDTO> getAll();
+    TeacherOutputDTO getById(Long id);
+    void delete(Long id);
+    void createForUser(com.kkc_lms.entity.User user);
+    TeacherOutputDTO update(Long id, TeacherUpdateDTO dto);
+
 }

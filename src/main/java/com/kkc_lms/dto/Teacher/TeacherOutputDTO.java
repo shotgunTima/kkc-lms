@@ -6,10 +6,11 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Data
-public class TeacherCreateDTO {
-    private Long userId;
+public class TeacherOutputDTO {
+    private Long id;
+    private String fullName;
     private String academicTitle;
     private LocalDate hireDate;
     private String status;
-    private List<Long> subjectIds;
+    private List<String> subjects;
 }
