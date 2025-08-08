@@ -1,16 +1,20 @@
 import AnimatedButton from "./AnimatedButton";
-import { XCircle } from "lucide-react";
+import { X } from "lucide-react";
+import { useTranslation } from "react-i18next";
+
+
 
 const CancelButton = ({ onClick, ...props }) => {
+    const { t } = useTranslation();
     return (
         <AnimatedButton
-            icon={XCircle}
+            icon={X}
             onClick={onClick}
             variant="secondary"
             iconAnimation="rotate"
             {...props}
         >
-            Отменить
+            {t("cancel")}
         </AnimatedButton>
     );
 };

@@ -2,13 +2,20 @@ import { useEffect, useState } from 'react';
 import { fetchUsers, deleteUser, fetchRoles } from '../../api/UsersApi.js';
 import UserForm from './UserForm';
 import FilterBar from '../Filterbar.jsx';
-import SearchInput from '../SearchInput.jsx';
-import { PencilLine, Eraser, ImageOff, Image} from "lucide-react";
+import SearchInput from '../Inputs/SearchInput.jsx';
+import { ImageOff, Image} from "lucide-react";
 import DataTable from '../DataTable';
-
 import AddButton from "../Buttons/AddButton.jsx";
+import ActionButtons from "../Buttons/ActionButtons.jsx";
+import { useTranslation } from 'react-i18next';
+import ConfirmModal from "../ConfirmModal.jsx";
+
+
 
 const UserTable = () => {
+    const { t } = useTranslation();
+    const [showConfirm, setShowConfirm] = useState(false);
+    const [userToDelete, setUserToDelete] = useState(null);
     const [users, setUsers] = useState([]);
     const [roles, setRoles] = useState([]);
     const [editingUserId, setEditingUserId] = useState(null);
@@ -33,12 +40,20 @@ const UserTable = () => {
         setFilters((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleDelete = async (id) => {
-        if (window.confirm('Удалить пользователя?')) {
-            await deleteUser(id);
+    const confirmDelete = (id) => {
+        setUserToDelete(id);
+        setShowConfirm(true);
+    };
+
+    const handleConfirmDelete = async () => {
+        if (userToDelete !== null) {
+            await deleteUser(userToDelete);
             loadUsers();
+            setShowConfirm(false);
+            setUserToDelete(null);
         }
     };
+
 
     const handleEdit = (id) => {
         setEditingUserId(id);
@@ -68,37 +83,35 @@ const UserTable = () => {
     });
 
     const columns = [
-        { header: 'ФИО', accessor: 'fullname' },
-        { header: 'Роль', accessor: 'roleLabel' },
-        { header: 'Логин', accessor: 'username' },
-        { header: 'Email', accessor: 'email' },
-        { header: 'Тел.', accessor: 'phonenum' },
-        { header: 'Адрес', accessor: 'address' },
+        { header: t('fullname'), accessor: 'fullname' },
         {
-            header: 'Фото',
+            header: t('role_'),
+            accessor: 'role',
+            render: (val) => t(`role.${val.toLowerCase()}`)
+        },
+        { header: t('login'), accessor: 'username' },
+        { header: t('email'), accessor: 'email' },
+        { header: t('phone'), accessor: 'phonenum' },
+        { header: t('address'), accessor: 'address' },
+        {
+            header: t('photo'),
             accessor: 'profileImage',
             render: (val) =>
                 val ? <Image className="w-5 h-5 mx-auto" /> : <ImageOff className="w-5 h-5 mx-auto" />,
         },
         {
-            header: 'Действия',
+            header: t('actions'),
             accessor: 'actions',
             render: (_, user) => (
-                <div className="flex justify-center gap-4">
-                    <PencilLine
-                        title="Изменить"
-                        className="w-6 h-6 text-textPrimary hover:text-blue-500 cursor-pointer transition-colors"
-                        onClick={() => handleEdit(user.id)}
-                    />
-                    <Eraser
-                        title="Удалить"
-                        className="w-6 h-6 text-textSecondary hover:text-red-500 cursor-pointer transition-colors"
-                        onClick={() => handleDelete(user.id)}
-                    />
-                </div>
+                <ActionButtons
+                    onEdit={() => handleEdit(user.id)}
+                    onDelete={() => confirmDelete(user.id)}
+                />
+
             ),
         },
     ];
+
 
     return (
         <div className="p-6">
@@ -116,8 +129,8 @@ const UserTable = () => {
                             {
                                 name: 'role',
                                 type: 'select',
-                                options: [{ label: 'Все', value: '' }, ...roles.map(r => ({
-                                    label: r.label || r.name,
+                                options: [{ label: t("all"), value: '' }, ...roles.map(r => ({
+                                    label: t(`role.${(r.name || r.value).toLowerCase()}`),
                                     value: r.name || r.value
                                 }))],
                             },
@@ -129,15 +142,25 @@ const UserTable = () => {
                     <SearchInput
                         value={filters.search}
                         onChange={(newValue) => handleFilterChange('search', newValue)}
-                        placeholder="Введите имя..."
+                        placeholder={t('search_by_name')}
                         className="placeholder-opacity-50"
                     />
                 </div>
             </div>
 
-            <h1 className="text-xl text-textPrimary mb-2 opacity-70">СПИСОК ПОЛЬЗОВАТЕЛЕЙ</h1>
+            <h1 className="text-xl text-textPrimary mb-2 opacity-70 dark:text-blue-200">{t('user_list')}</h1>
 
             <DataTable columns={columns} data={filteredUsers} />
+            <ConfirmModal
+                isOpen={showConfirm}
+                onCancel={() => setShowConfirm(false)}
+                onConfirm={handleConfirmDelete}
+                title={t("confirm_delete_title")}
+                description={t("confirm_delete_description")}
+                confirmText={t("delete")}
+                cancelText={t("cancel")}
+            />
+
         </div>
     );
 };

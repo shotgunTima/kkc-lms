@@ -2,13 +2,15 @@ import { useEffect, useState } from 'react';
 import { deleteGroup, fetchGroups } from '../../api/GroupsApi.js';
 import GroupsForm from './GroupsForm';
 import FilterBar from '../Filterbar.jsx';
-import SearchInput from '../SearchInput.jsx';
+import SearchInput from '../Inputs/SearchInput.jsx';
 import { Eraser, PencilLine } from 'lucide-react';
 import DataTable from '../DataTable';
 import AddButton from '../Buttons/AddButton.jsx';
 import { getAllDirections } from '../../api/DirectionApi.js';
+import { useTranslation } from 'react-i18next';
 
 const GroupsTable = () => {
+    const { t } = useTranslation();
     const [groups, setGroups] = useState([]);
     const [directions, setDirections] = useState([]);
     const [updateGroup, setUpdateGroup] = useState(null);
@@ -36,7 +38,7 @@ const GroupsTable = () => {
     };
 
     const handleDelete = async (id) => {
-        if (window.confirm('Удалить группу?')) {
+        if (window.confirm(t("delete_group_confirm"))) {
             await deleteGroup(id);
             loadGroups();
         }
@@ -64,11 +66,11 @@ const GroupsTable = () => {
     };
 
     const columns = [
-        { header: 'Группа', accessor: 'name' },
-        { header: 'Направление', accessor: 'direction' },
-        { header: 'Куратор', accessor: 'curator' },
+        { header: t("group_name"), accessor: 'name' },
+        { header: t("direction"), accessor: 'direction' },
+        { header: t("curator"), accessor: 'curator' },
         {
-            header: 'Действия',
+            header: t("actions"),
             accessor: 'actions',
             render: (_, group) => (
                 <div className="flex justify-center gap-4">
@@ -107,7 +109,7 @@ const GroupsTable = () => {
                                 name: 'direction',
                                 type: 'select',
                                 options: [
-                                    { label: 'Все', value: '' },
+                                    { label: t("all"), value: '' },
                                     ...directions.map((r, i) => ({
                                         label: r.label || r.name,
                                         value: r.name || r.value,
@@ -123,13 +125,13 @@ const GroupsTable = () => {
                     <SearchInput
                         value={filters.search}
                         onChange={val => handleFilterChange('search', val)}
-                        placeholder="Введите имя куратора..."
+                        placeholder={t("enter_curator_name")}
                         className="placeholder-opacity-50"
                     />
                 </div>
             </div>
 
-            <h1 className="text-xl text-textPrimary mb-2 opacity-70">СПИСОК ГРУПП</h1>
+            <h1 className="text-xl text-textPrimary mb-2 opacity-70 dark:text-blue-200">{t("group_list")}</h1>
 
             <DataTable columns={columns} data={groups} />
         </div>

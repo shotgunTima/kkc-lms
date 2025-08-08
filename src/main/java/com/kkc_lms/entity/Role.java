@@ -1,20 +1,18 @@
 package com.kkc_lms.entity;
 
+import lombok.Getter;
+
+@Getter
 public enum Role {
-    STUDENT("Студент"),
-    TEACHER("Учитель"),
-    ADMIN("Администратор"),
-    METHODIST("Методист"),
-    ACCOUNTANT("Бухгалтер");
+    STUDENT("role.student"),
+    TEACHER("role.teacher"),
+    ADMIN("role.admin"),
+    METHODIST("role.methodist"),
+    ACCOUNTANT("role.accountant");
 
     private final String label;
 
     Role(String label) {
         this.label = label;
     }
-
-    public String getLabel() {
-        return label;
-    }
 }
-
