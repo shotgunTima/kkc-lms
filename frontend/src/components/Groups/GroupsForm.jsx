@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { createGroup, getGroupById, updateGroup } from '../../api/GroupsApi.js';
-import { fetchAllTeachers } from '../../api/TeachersApi.js';
+import { fetchTeachers } from '../../api/TeachersApi.js';
 import { getAllDirections } from '../../api/DirectionApi.js';
 import { motion } from 'framer-motion';
 import FloatingLabelInput from '../Inputs/FloatingLabelInput.jsx';
@@ -41,7 +41,7 @@ const GroupsForm = ({ groupId, onSuccess, onCancel }) => {
     }, [groupId, isEdit]);
 
     useEffect(() => {
-        fetchAllTeachers()
+        fetchTeachers()
             .then(res => setTeachers(res.data))
             .catch(console.error);
 

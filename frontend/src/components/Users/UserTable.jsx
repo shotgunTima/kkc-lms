@@ -153,7 +153,7 @@ const UserTable = () => {
                     <SearchInput
                         value={filters.search}
                         onChange={(newValue) => handleFilterChange('search', newValue)}
-                        placeholder={t('search_by_name')}
+                        placeholder={t('enter_name')}
                         className="placeholder-opacity-50"
                     />
                 </div>

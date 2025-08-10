@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
 import { createUser, fetchUserById, updateUser, fetchRoles } from '../../api/UsersApi.js';
+import { fetchTeacherStatuses, fetchAcademicTitles } from '../../api/TeachersApi.js';
 import { motion } from 'framer-motion';
 import SubmitButton from "../Buttons/SubmitButton.jsx";
 import CancelButton from "../Buttons/CancelButton.jsx";
 import FloatingLabelInput from "../Inputs/FloatingLabelInput.jsx";
-import {getAllDirections} from "../../api/DirectionApi.js";
-import { useTranslation } from 'react-i18next';
 import SelectField from "../Inputs/SelectField.jsx";
+import { getAllDirections } from "../../api/DirectionApi.js";
+import { useTranslation } from 'react-i18next';
 
-
-const UserForm = ({ userId, onSuccess, onCancel }) => {
+const UserForm = ({ userId, onSuccess, onCancel, fixedRole }) => {
     const isEdit = Boolean(userId);
     const { t } = useTranslation();
 
@@ -18,53 +18,78 @@ const UserForm = ({ userId, onSuccess, onCancel }) => {
         password: '',
         email: '',
         fullname: '',
-        role: '',
+        role: fixedRole || '',
         phonenum: '',
         address: '',
         profileImage: null,
         directionId: '',
+        academicTitle: '',
+        teacherStatus: '',
+        hireDate: new Date().toISOString().split('T')[0],
     });
 
     const [roles, setRoles] = useState([]);
     const [directions, setDirections] = useState([]);
+    const [teacherStatusOptions, setTeacherStatusOptions] = useState([]);
+    const [academicTitleOptions, setAcademicTitleOptions] = useState([]);
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState({});
+
+    useEffect(() => {
+        fetchRoles()
+            .then(res => setRoles(res.data))
+            .catch(err => console.error("Ошибка при получении ролей:", err));
+
+        getAllDirections()
+            .then(res => setDirections(res.data))
+            .catch(err => console.error("Ошибка при получении направлений", err));
+
+        fetchTeacherStatuses()
+            .then(res => {
+                const options = res.data.map(item => ({
+                    value: item.value,
+                    label: t(item.label)
+                }));
+                setTeacherStatusOptions([{ value: '', label: t('select_teacher_status') }, ...options]);
+            })
+            .catch(console.error);
+
+        fetchAcademicTitles()
+            .then(res => {
+                const options = res.data.map(item => ({
+                    value: item.value,
+                    label: t(item.label)
+                }));
+                setAcademicTitleOptions([{ value: '', label: t('select_academic_title') }, ...options]);
+            })
+            .catch(console.error);
+    }, [t]);
 
     useEffect(() => {
         if (isEdit) {
             setLoading(true);
             fetchUserById(userId)
                 .then(res => {
-                    const { username, email, fullname, role, phonenum, address } = res.data;
-                    setFormData({
-                        username,
-                        email,
-                        fullname,
-                        role,
-                        phonenum: phonenum?.startsWith('+996') ? phonenum.slice(4) : phonenum || '',
-                        address: address || '',
+                    const data = res.data;
+                    setFormData(prev => ({
+                        ...prev,
+                        username: data.username || '',
+                        email: data.email || '',
+                        fullname: data.fullname || '',
+                        role: data.role || prev.role,
+                        phonenum: data.phonenum?.startsWith('+996') ? data.phonenum.slice(4) : data.phonenum || '',
+                        address: data.address || '',
                         password: '',
-                        profileImage: null,
-                    });
-                    setErrors({});
+                        directionId: data.directionId || '',
+                        academicTitle: data.academicTitle || '',
+                        teacherStatus: data.teacherStatus || '',
+                        hireDate: data.hireDate || prev.hireDate,
+                    }));
                 })
                 .catch(console.error)
                 .finally(() => setLoading(false));
         }
     }, [userId, isEdit]);
-
-    useEffect(() => {
-        fetchRoles()
-            .then(res => setRoles(res.data))
-            .catch(err => console.error("Ошибка при получении ролей:", err));
-    }, []);
-
-    useEffect(() => {
-        getAllDirections()
-            .then(res => setDirections(res.data))
-            .catch(err => console.error("Ошибка при получении направлений", err));
-
-    })
 
     const handleChange = e => {
         const { name, value } = e.target;
@@ -85,6 +110,11 @@ const UserForm = ({ userId, onSuccess, onCancel }) => {
         if (!formData.role.trim()) newErrors.role = t('role_required');
         if (!formData.phonenum || formData.phonenum.length !== 9) newErrors.phonenum = t('phone_required');
         if (formData.role === 'STUDENT' && !formData.directionId) newErrors.directionId = t('direction_required');
+        if (formData.role === 'TEACHER') {
+            if (!formData.academicTitle) newErrors.academicTitle = t('academic_title_required');
+            if (!formData.teacherStatus) newErrors.teacherStatus = t('teacher_status_required');
+            if (!formData.hireDate) newErrors.hireDate = t('hire_date_required');
+        }
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -104,8 +134,14 @@ const UserForm = ({ userId, onSuccess, onCancel }) => {
                 address: formData.address,
                 ...(formData.password && { password: formData.password }),
                 ...(formData.role === 'STUDENT' && { directionId: formData.directionId }),
+                ...(formData.role === 'TEACHER' && {
+                    academicTitle: formData.academicTitle,
+                    teacherStatus: formData.teacherStatus,
+                    hireDate: formData.hireDate,
+                }),
             };
-            isEdit ? await updateUser(userId, payload) : await createUser(payload);
+            if (isEdit) await updateUser(userId, payload);
+            else await createUser(payload);
             onSuccess?.();
         } catch (err) {
             const data = err.response?.data;
@@ -125,9 +161,11 @@ const UserForm = ({ userId, onSuccess, onCancel }) => {
         >
             <form onSubmit={handleSubmit} className="mb-40">
                 <h2 className="text-xl text-textPrimary mb-5 opacity-70 dark:text-blue-200">
-                    {isEdit ? t('update_user') : t('create_user')}
+                    {fixedRole === 'TEACHER'
+                        ? (isEdit ? t('update_teacher') : t('create_teacher'))
+                        : (isEdit ? t('update_user') : t('create_user'))
+                    }
                 </h2>
-
 
                 <div className="grid grid-cols-2 gap-4">
                     <FloatingLabelInput
@@ -177,23 +215,25 @@ const UserForm = ({ userId, onSuccess, onCancel }) => {
                             if (digits.length <= 9)
                                 setFormData(prev => ({ ...prev, phonenum: digits }));
                         }}
-                        leftAddon={<span className="bg-bgSecondary px-3 py-2 text-white select-none rounded-l-md
-                        dark:bg-gray-700">+996</span>}
+                        leftAddon={<span className="bg-bgSecondary px-3 py-2 text-white select-none rounded-l-md dark:bg-gray-700">+996</span>}
                     />
-                    <SelectField
-                        id="role"
-                        name="role"
-                        value={formData.role}
-                        onChange={handleChange}
-                        options={[
-                            { value: '', label: t('select_role') },
-                            ...roles.map(r => ({
-                                value: r.value,
-                                label: t(`role.${r.value.toLowerCase()}`)
-                            }))
-                        ]}
-                        error={errors.role}
-                    />
+                    {!fixedRole && (
+                        <SelectField
+                            id="role"
+                            name="role"
+                            value={formData.role}
+                            onChange={handleChange}
+                            options={[
+                                { value: '', label: t('select_role') },
+                                ...roles.map(r => ({
+                                    value: r.value,
+                                    label: t(`role.${r.value.toLowerCase()}`)
+                                }))
+                            ]}
+                            error={errors.role}
+                        />
+                    )}
+
                     <FloatingLabelInput
                         id="address"
                         label={t('address')}
@@ -206,7 +246,6 @@ const UserForm = ({ userId, onSuccess, onCancel }) => {
                         <SelectField
                             id="directionId"
                             name="directionId"
-
                             value={formData.directionId}
                             onChange={handleChange}
                             options={[
@@ -216,10 +255,38 @@ const UserForm = ({ userId, onSuccess, onCancel }) => {
                                     label: dir.name
                                 }))
                             ]}
-                            error={errors.directionId}
                         />
                     )}
 
+                    {formData.role === 'TEACHER' && (
+                        <>
+                            <SelectField
+                                id="academicTitle"
+                                name="academicTitle"
+                                value={formData.academicTitle}
+                                onChange={handleChange}
+                                options={academicTitleOptions}
+                                error={errors.academicTitle}
+                            />
+                            <SelectField
+                                id="teacherStatus"
+                                name="teacherStatus"
+                                value={formData.teacherStatus}
+                                onChange={handleChange}
+                                options={teacherStatusOptions}
+                                error={errors.teacherStatus}
+                            />
+                            <FloatingLabelInput
+                                id="hireDate"
+                                label={t('hire_date')}
+                                name="hireDate"
+                                type="date"
+                                value={formData.hireDate}
+                                error={errors.hireDate}
+                                onChange={handleChange}
+                            />
+                        </>
+                    )}
 
                     <div className="relative mb-4 col-span-2">
                         <input

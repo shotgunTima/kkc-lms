@@ -66,7 +66,46 @@
   "settings": "Settings",
   "confirm_delete_title": "Are you sure?",
   "confirm_delete_description": "This action cannot be undone.",
-  "delete": "Delete"
+
+  "academic_titles": {
+    "senior": "Senior Lecturer",
+    "teacher": "Teacher",
+    "graduate_student": "Graduate Student",
+    "trainee": "Trainee"
+  },
+  "teacher_status": {
+    "active": "Active",
+    "on_leave": "On Leave",
+    "retired": "Retired",
+    "fired": "Fired"
+  },
+  "delete": "Delete",
+  "active": "Active",
+  "subjects": "Subjects",
+  "academic_title": "Academic title",
+  "status": "Status",
+  "hire_date": "Hire date",
+  "name": "Name",
+  "credits": "Credits",
+  "teacher_list": "TEACHER LIST",
+  "subject_list": "SUBJECT LIST",
+  "search_by_subject_name": "Enter subject",
+  "subject": "Subject",
+  "teacher_s": "Teacher(s)",
+  "select_academic_title": "Select academic title",
+  "select_teacher_status": "Select teacher status",
+  "academic_title_required": "Academic title is required",
+  "teacher_status_required": "Teacher status is required",
+  "hire_date_required": "Specify hire date",
+  "update_teacher": "UPDATE TEACHER",
+  "create_teacher": "CREATE TEACHER",
+  "create_subject": "CREATE SUBJECT",
+  "update_subject": "UPDATE SUBJECT",
+  "name_required": "This field is required",
+  "credits_required": "Select number of credits",
+  "teachers_required": "Select teacher(s)",
+  "hold_ctrl_to_select": "Hold ctrl to select multiple",
+  "no_teachers": "No teacher selected"
 
 
 }
