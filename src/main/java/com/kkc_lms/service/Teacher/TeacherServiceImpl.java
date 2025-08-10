@@ -58,20 +58,6 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     @Transactional
-    public void createForUser(User user) {
-        if (teacherRepository.findByUserId(user.getId()).isPresent()) {
-            return;
-        }
-        Teacher teacher = new Teacher();
-        teacher.setUser(user);
-        teacher.setHireDate(LocalDate.now());
-        teacher.setAcademicTitle(AcademicTitles.TEACHER);
-        teacher.setTeacherStatus(TeacherStatus.ACTIVE);
-        teacherRepository.save(teacher);
-    }
-
-    @Override
-    @Transactional
     public void createForUserWithDetails(User user, AcademicTitles academicTitle, TeacherStatus teacherStatus, LocalDate hireDate) {
         if (teacherRepository.findByUserId(user.getId()).isPresent()) {
             return;
