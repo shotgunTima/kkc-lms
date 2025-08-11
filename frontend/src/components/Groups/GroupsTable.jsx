@@ -4,7 +4,7 @@ import GroupsForm from './GroupsForm';
 import FilterBar from '../Filterbar.jsx';
 import SearchInput from '../Inputs/SearchInput.jsx';
 import { Eraser, PencilLine } from 'lucide-react';
-import DataTable from '../DataTable';
+import DataTable from '../DataTable.jsx';
 import AddButton from '../Buttons/AddButton.jsx';
 import { getAllDirections } from '../../api/DirectionApi.js';
 import { useTranslation } from 'react-i18next';

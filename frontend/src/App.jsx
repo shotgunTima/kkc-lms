@@ -5,6 +5,7 @@ import Teachers from './pages/Teachers'
 import Users from './pages/Users'
 import Navbar from './components/Navbar'
 import Directions from "./pages/Directions.jsx";
+import Subjects from "./pages/Subjects.jsx";
 
 function App() {
     return (
@@ -18,6 +19,7 @@ function App() {
                         <Route path="/teachers" element={<Teachers />} />
                         <Route path="/users" element={<Users />} />
                         <Route path="/directions" element={<Directions />} />
+                        <Route path="/subjects" element={<Subjects />} />
                     </Routes>
 
 

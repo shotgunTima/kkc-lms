@@ -10,6 +10,7 @@ import com.kkc_lms.service.Methodist.MethodistServiceImpl;
 import com.kkc_lms.service.Student.StudentServiceImpl;
 import com.kkc_lms.service.Teacher.TeacherServiceImpl;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -46,13 +47,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserDTO create(UserCreateDTO dto) {
         if (userRepository.existsByUsername(dto.getUsername()))
             throw new IllegalArgumentException("Username already exists");
         if (userRepository.existsByEmail(dto.getEmail()))
             throw new IllegalArgumentException("Email already exists");
-
-
 
         User user = new User();
         user.setUsername(dto.getUsername());
@@ -70,31 +70,21 @@ public class UserServiceImpl implements UserService {
 
         User savedUser = userRepository.save(user);
 
-
         Role role = savedUser.getRole();
         switch (role) {
-            case STUDENT -> {
-                studentService.createForUser(savedUser,dto.getDirectionId());
-            }
-            case TEACHER -> {
-                teacherService.createForUser(savedUser);
-            }
-            case ADMIN -> {
-                administratorService.createForUser(savedUser);
-            }
-            case METHODIST -> {
-                methodistService.createForUser(savedUser);
-            }
-            case ACCOUNTANT -> {
-                accountantService.createForUser(savedUser);
-            }
+            case STUDENT -> studentService.createForUser(savedUser, dto.getDirectionId());
+            case TEACHER -> teacherService.createForUserWithDetails(savedUser, dto.getAcademicTitle(), dto.getTeacherStatus(), dto.getHireDate());
+            case ADMIN -> administratorService.createForUser(savedUser);
+            case METHODIST -> methodistService.createForUser(savedUser);
+            case ACCOUNTANT -> accountantService.createForUser(savedUser);
             default -> throw new IllegalArgumentException("Unsupported role: " + role);
-            }
+        }
 
         return toDTO(savedUser);
     }
 
     @Override
+    @Transactional
     public UserDTO update(Long id, UserUpdateDTO dto) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
@@ -106,6 +96,8 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("Email already exists");
         }
 
+        Role oldRole = user.getRole();
+
         user.setUsername(dto.getUsername());
         user.setEmail(dto.getEmail());
         user.setFullname(dto.getFullname());
@@ -114,8 +106,20 @@ public class UserServiceImpl implements UserService {
         user.setAddress(dto.getAddress());
         user.setProfileImage(dto.getProfileImage());
 
+        User savedUser = userRepository.save(user);
 
-        return toDTO(userRepository.save(user));
+        Role newRole = savedUser.getRole();
+        if (oldRole != newRole) {
+            if (oldRole != Role.TEACHER && newRole == Role.TEACHER) {
+                teacherService.createForUserWithDetails(savedUser, dto.getAcademicTitle(), dto.getTeacherStatus(), dto.getHireDate());
+            } else if (oldRole == Role.TEACHER && newRole != Role.TEACHER) {
+                teacherService.deleteByUserId(savedUser.getId());
+            }
+        } else if (newRole == Role.TEACHER) {
+            teacherService.updateTeacherDetails(savedUser.getId(), dto.getAcademicTitle(), dto.getTeacherStatus(), dto.getHireDate());
+        }
+
+        return toDTO(savedUser);
     }
 
     @Override

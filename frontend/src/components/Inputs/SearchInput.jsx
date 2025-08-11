@@ -4,7 +4,6 @@ import FloatingLabelInput from "./FloatingLabelInput.jsx";
 import { useTranslation } from "react-i18next";
 
 const SearchInput = ({ value, onChange, placeholder }) => {
-    const { t } = useTranslation();
     return (
         <div className="relative group flex items-center space-x-2">
 
@@ -20,7 +19,7 @@ const SearchInput = ({ value, onChange, placeholder }) => {
         `}
             >
                 <FloatingLabelInput
-                    label={t("enter_name")}
+                    label={placeholder}
                     type="text"
                     value={value}
                     onChange={(e) => onChange(e.target.value)}

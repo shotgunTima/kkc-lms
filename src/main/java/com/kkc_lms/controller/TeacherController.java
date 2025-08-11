@@ -4,54 +4,41 @@ import com.kkc_lms.dto.Teacher.TeacherCreateDTO;
 import com.kkc_lms.dto.Teacher.TeacherDTO;
 import com.kkc_lms.dto.Teacher.TeacherUpdateDTO;
 import com.kkc_lms.service.Teacher.TeacherService;
-import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/teachers")
+@RequestMapping("/api/teachers")
+@RequiredArgsConstructor
 public class TeacherController {
 
     private final TeacherService teacherService;
 
-    @Autowired
-    public TeacherController(TeacherService teacherService) {
-        this.teacherService = teacherService;
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public TeacherDTO createTeacher(@ModelAttribute TeacherCreateDTO dto) {
+        return teacherService.createTeacher(dto);
     }
 
-    @GetMapping
-    public ResponseEntity<List<TeacherDTO>> getAllTeachers() {
-        return ResponseEntity.ok(teacherService.getAllTeachers());
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public TeacherDTO updateTeacher(@PathVariable Long id, @ModelAttribute TeacherUpdateDTO dto) {
+        return teacherService.updateTeacher(id, dto);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TeacherDTO> getTeacherById(@PathVariable Long id) {
-        Optional<TeacherDTO> teacher = teacherService.getTeacherById(id);
-        return teacher.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public TeacherDTO getTeacher(@PathVariable Long id) {
+        return teacherService.getTeacherById(id);
     }
 
-    @PostMapping
-    public ResponseEntity<TeacherDTO> createTeacher(@Valid @RequestBody TeacherCreateDTO dto) {
-        TeacherDTO savedTeacher = teacherService.saveTeacher(dto);
-        return ResponseEntity.ok(savedTeacher);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<TeacherDTO> updateTeacher(@PathVariable Long id, @Valid @RequestBody TeacherUpdateDTO dto) {
-        Optional<TeacherDTO> updatedTeacher = teacherService.updateTeacher(id, dto);
-        return updatedTeacher.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    @GetMapping
+    public List<TeacherDTO> getAllTeachers() {
+        return teacherService.getAllTeachers();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTeacher(@PathVariable Long id) {
-        if (teacherService.getTeacherById(id).isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        teacherService.deleteTeacherById(id);
-        return ResponseEntity.noContent().build();
+    public void deleteTeacher(@PathVariable Long id) {
+        teacherService.deleteTeacher(id);
     }
 }

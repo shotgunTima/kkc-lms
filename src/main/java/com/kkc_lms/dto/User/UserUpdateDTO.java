@@ -1,8 +1,12 @@
 package com.kkc_lms.dto.User;
 
+import com.kkc_lms.entity.AcademicTitles;
 import com.kkc_lms.entity.Role;
+import com.kkc_lms.entity.TeacherStatus;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+
+import java.time.LocalDate;
 
 @Data
 public class UserUpdateDTO {
@@ -31,5 +35,10 @@ public class UserUpdateDTO {
         private String address;
 
         private String profileImage;
+
+        private Long directionId;
+        private AcademicTitles academicTitle;
+        private TeacherStatus teacherStatus;
+        private LocalDate hireDate;
 
 }

@@ -1,14 +1,14 @@
 package com.kkc_lms.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Entity
 @Data
 @Table(name = "users")
-
-
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,7 +33,7 @@ public class User {
     private LocalDateTime createdAt;
 
     @PrePersist
-    public void prePersist() {//ставит текущую дату есчо
+    public void prePersist() {
         this.createdAt = LocalDateTime.now();
     }
 
@@ -47,4 +47,9 @@ public class User {
     private String phonenum;
 
     private String address;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @EqualsAndHashCode.Exclude
+    @JsonBackReference
+    private Teacher teacher;
 }

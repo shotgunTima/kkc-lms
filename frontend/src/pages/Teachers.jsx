@@ -1,10 +1,12 @@
+
+import TeacherTable from "../components/Teachers/TeacherTable.jsx";
+
 const Teachers = () => {
     return (
         <div>
-            <h2 className="text-2xl font-bold text-primary mb-4">Список преподавателей</h2>
-            {}
+            <TeacherTable/>
         </div>
-    )
-}
+    );
+};
 
-export default Teachers
+export default Teachers;

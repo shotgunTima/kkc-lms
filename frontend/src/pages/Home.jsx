@@ -6,6 +6,8 @@ import Users from "./Users.jsx";
 import Groups from "./Groups.jsx";
 import Directions from "./Directions.jsx";
 import {useTranslation} from "react-i18next";
+import Teachers from "./Teachers.jsx";
+import Subjects from "./Subjects.jsx";
 
 const Home = () => {
     const [selectedSection, setSelectedSection] = useState(null)
@@ -25,31 +27,19 @@ const Home = () => {
                     {(() => {
                         switch (selectedSection) {
                             case 'users':
-                                return (
-                                    <>
-                                        <Users/>
-                                    </>
-                                )
+                                return <Users/>
+
                             case 'students':
-                                return (
-                                    <>
-                                        <Students />
-                                    </>
-                                )
+                                return <Students />
+
                             case 'groups':
-                                return (
-                                    <>
-                                        <Groups />
-                                    </>
-                                )
+                                return <Groups />
                             case 'teachers':
-                                return <p className="text-lg text-gray-500 dark:text-gray-400">Список преподавателей (пока заглушка)</p>
+                                return <Teachers/>
                             case 'directions':
-                                return (
-                                    <Directions />
-                                )
-                            case 'accountants':
-                                return <p className="text-lg text-gray-500 dark:text-gray-400">Бухгалтеры (пока заглушка)</p>
+                                return <Directions />
+                            case 'subjects':
+                                return <Subjects />
                             default:
                                 return <p className="text-lg text-gray-500 dark:text-gray-400">{t("select_section")}</p>
                         }

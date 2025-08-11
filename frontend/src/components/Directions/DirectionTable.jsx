@@ -3,7 +3,7 @@ import { getAllDirections} from '../../api/DirectionApi.js';
 import DirectionForm from './DirectionForm.jsx';
 import SearchInput from '../Inputs/SearchInput.jsx';
 import ActionButtons from "../Buttons/ActionButtons.jsx";
-import DataTable from '../DataTable';
+import DataTable from '../DataTable.jsx';
 import AddButton from "../Buttons/AddButton.jsx";
 import { useTranslation } from "react-i18next";
 import ConfirmModal from "../ConfirmModal.jsx";

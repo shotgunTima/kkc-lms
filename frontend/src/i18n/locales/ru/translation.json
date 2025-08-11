@@ -52,7 +52,7 @@
   "direction_required": "Название направления обязательно",
   "direction_exists": "Такое направление уже существует",
   "delete_direction_confirm": "Удалить это направление?",
-  "enter_direction_name": "Введите название направления...",
+  "enter_direction_name": "Введите направление",
   "is_required": "Это поле обязательно",
   "select_group_direction": "Выберите направление группы",
   "select_group_curator": "Выберите куратора группы",
@@ -66,7 +66,48 @@
   "settings": "Настройки",
   "confirm_delete_title": "Вы уверены?",
   "confirm_delete_description": "Это действие нельзя отменить.",
-  "delete": "Удалить"
+  "delete": "Удалить",
 
+  "academic_titles": {
+    "senior": "Старший преподаватель",
+    "teacher": "Преподаватель",
+    "graduate_student": "Аспирант",
+    "trainee": "Стажёр"
+  },
+  "teacher_status": {
+    "active": "Активный",
+    "on_leave": "В отпуске",
+    "retired": "На пенсии",
+    "fired": "Уволен"
+  },
+  "active": "Активен",
+  "subjects": "Предметы",
+  "academic_title": "Академическое звание",
+  "status": "Статус",
+  "hire_date": "Дата найма",
+  "name": "Название",
+  "credits": "Кредиты",
+
+
+
+  "teacher_list": "СПИСОК ПРЕПОДАВАТЕЛЕЙ",
+  "subject_list": "СПИСОК ПРЕДМЕТОВ",
+  "search_by_subject_name": "Введите предмет",
+  "subject": "Предмет",
+  "teacher_s": "Преподаватель(-и)",
+  "select_academic_title": "Выберите академическое звание",
+  "select_teacher_status": "Выберите статус преподавателя",
+  "academic_title_required": "Выберите академическое звание",
+  "teacher_status_required": "Выберите статус преподавателя",
+  "hire_date_required": "Укажите дату найма",
+  "update_teacher": "ОБНОВИТЬ ПРЕПОДАВАТЕЛЯ",
+  "create_teacher": "СОЗДАТЬ ПРЕПОДАВАТЕЛЯ",
+  "create_subject": "СОЗДАТЬ ПРЕДМЕТ",
+  "update_subject": "ОБНОВИТЬ ПРЕДМЕТ",
+  "name_required": "Это поле обязательно",
+  "credits_required": "Выберите количесвто кредитов",
+  "teachers_required": "Выберите преподвателя",
+  "hold_ctrl_to_select": "Удерживайте ctrl чтобы выбрать несколько",
+  "no_teachers": "Преподаватель не выбран"
 
 }

@@ -66,6 +66,44 @@
   "settings": "Орнотуулар",
   "confirm_delete_title": "Ишенип жатасызбы?",
   "confirm_delete_description": "Бул аракетти артка кайтарууга болбойт.",
-  "delete": "Өчүрүү"
+  "delete": "Өчүрүү",
+  "academic_titles": {
+    "senior": "Улук окутуучу",
+    "teacher": "Окутуучу",
+    "graduate_student": "Аспирант",
+    "trainee": "Тажрыйбадан өтүүчү"
+  },
+  "teacher_status": {
+    "active": "Активдүү",
+    "on_leave": "Эс алууда",
+    "retired": "Пенсияда",
+    "fired": "Иштен алынган"
+  },
+  "active": "Активдүү",
+  "subjects": "Предметтер",
+  "academic_title": "Академиялык наам",
+  "status": "Статус",
+  "hire_date": "Ишке алынган күнү",
+  "name": "Аты",
+  "credits": "Кредиттер",
+  "teacher_list": "МУГАЛИМДЕРДИН ТИЗМЕСИ",
+  "subject_list": "ПРЕДМЕТТЕРДИН ТИЗМЕСИ",
+  "search_by_subject_name": "Предметти киргизиңиз",
+  "subject": "Предмет",
+  "teacher_s": "Мугалим(дер)",
+  "select_academic_title": "Академиялык даражаны тандаңыз",
+  "select_teacher_status": "Мугалимдин статусун тандаңыз",
+  "academic_title_required": "Академиялык даража зарыл",
+  "teacher_status_required": "Мугалимдин статусу зарыл",
+  "hire_date_required": "Ишке алуу күнүн көрсөтүңүз",
+  "update_teacher": "МУГАЛИМДИ ЖАНЫРТУУ",
+  "create_teacher": "МУГАЛИМДИ ЖАРАТУУ",
+  "create_subject": "ПРЕДМЕТТИ ЖАРАТУУ",
+  "update_subject": "ПРЕДМЕТТИ ЖАНЫРТУУ",
+  "name_required": "Бул талаа толтурулушу керек",
+  "credits_required": "Кредиттердин санын тандаңыз",
+  "teachers_required": "Мугалимди тандаңыз",
+  "hold_ctrl_to_select": "Бир нече тандоо үчүн ctrl басыңыз",
+  "no_teachers": "Мугалим тандалган жок"
 
 }

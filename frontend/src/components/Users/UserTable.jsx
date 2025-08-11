@@ -4,17 +4,17 @@ import UserForm from './UserForm';
 import FilterBar from '../Filterbar.jsx';
 import SearchInput from '../Inputs/SearchInput.jsx';
 import { ImageOff, Image} from "lucide-react";
-import DataTable from '../DataTable';
+import DataTable from '../DataTable.jsx';
 import AddButton from "../Buttons/AddButton.jsx";
 import ActionButtons from "../Buttons/ActionButtons.jsx";
 import { useTranslation } from 'react-i18next';
 import ConfirmModal from "../ConfirmModal.jsx";
 
-
-
 const UserTable = () => {
     const { t } = useTranslation();
     const [showConfirm, setShowConfirm] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const PAGE_SIZE = 10;
     const [userToDelete, setUserToDelete] = useState(null);
     const [users, setUsers] = useState([]);
     const [roles, setRoles] = useState([]);
@@ -36,9 +36,25 @@ const UserTable = () => {
             .catch(console.error);
     };
 
+
+
     const handleFilterChange = (name, value) => {
         setFilters((prev) => ({ ...prev, [name]: value }));
+        setCurrentPage(1); // сброс при новом фильтре
     };
+
+    const filteredUsers = users.filter((user) => {
+        const matchesRole = !filters.role || user.role === filters.role;
+        const matchesSearch = !filters.search || user.fullname.toLowerCase().includes(filters.search.toLowerCase());
+        return matchesRole && matchesSearch;
+    });
+
+    const totalPages = Math.ceil(filteredUsers.length / PAGE_SIZE);
+    const paginatedUsers = filteredUsers.slice(
+        (currentPage - 1) * PAGE_SIZE,
+        currentPage * PAGE_SIZE
+    );
+
 
     const confirmDelete = (id) => {
         setUserToDelete(id);
@@ -76,11 +92,6 @@ const UserTable = () => {
         setEditingUserId(null);
     };
 
-    const filteredUsers = users.filter((user) => {
-        const matchesRole = !filters.role || user.role === filters.role;
-        const matchesSearch = !filters.search || user.fullname.toLowerCase().includes(filters.search.toLowerCase());
-        return matchesRole && matchesSearch;
-    });
 
     const columns = [
         { header: t('fullname'), accessor: 'fullname' },
@@ -142,7 +153,7 @@ const UserTable = () => {
                     <SearchInput
                         value={filters.search}
                         onChange={(newValue) => handleFilterChange('search', newValue)}
-                        placeholder={t('search_by_name')}
+                        placeholder={t('enter_name')}
                         className="placeholder-opacity-50"
                     />
                 </div>
@@ -150,7 +161,14 @@ const UserTable = () => {
 
             <h1 className="text-xl text-textPrimary mb-2 opacity-70 dark:text-blue-200">{t('user_list')}</h1>
 
-            <DataTable columns={columns} data={filteredUsers} />
+            <DataTable
+                columns={columns}
+                data={paginatedUsers}
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+            />
+
             <ConfirmModal
                 isOpen={showConfirm}
                 onCancel={() => setShowConfirm(false)}

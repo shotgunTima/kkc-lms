@@ -1,9 +1,14 @@
 package com.kkc_lms.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Data
@@ -14,13 +19,27 @@ public class Teacher {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
+    @OneToOne
+    @JoinColumn(
+            name = "user_id",
+            nullable = false,
+            foreignKey = @ForeignKey(name = "fk_teacher_user", foreignKeyDefinition = "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE")
+    )
+    @EqualsAndHashCode.Exclude
+    @JsonManagedReference
     private User user;
 
-    @Column(name = "academic_title")
-    private String academicTitle;
+    @Enumerated(EnumType.STRING)
+    private AcademicTitles academicTitle;
 
     @Column(name = "hire_date", nullable = false)
     private LocalDate hireDate;
+
+    @Enumerated(EnumType.STRING)
+    private TeacherStatus teacherStatus;
+
+    @ManyToMany(mappedBy = "teachers")
+    @EqualsAndHashCode.Exclude
+    @JsonBackReference
+    private Set<Subject> subjects = new HashSet<>();
 }

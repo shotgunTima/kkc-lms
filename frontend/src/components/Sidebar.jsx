@@ -8,8 +8,7 @@ const menuItems = [
     { key: 'groups' },
     { key: 'teachers' },
     { key: 'directions' },
-    { key: 'methodists' },
-    { key: 'accountants' },
+    { key: 'subjects' },
 ];
 
 
@@ -26,7 +25,7 @@ const Sidebar = ({ selectedKey, onSelect }) => {
                 <img src={helloIcon} alt="icon" className="-mx-3 w-12 h-12 dark:opacity-80 " />
                 <div className="flex flex-col leading-tight text-white dark:text-opacity-70 font-semibold text-xl">
                     <span>{t("hello")},</span>
-                    <span>Шарли ду Бронкс</span>
+                    <span>Фамилия Имя</span>
                 </div>
             </div>
 
