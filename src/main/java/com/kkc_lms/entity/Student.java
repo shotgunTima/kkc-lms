@@ -33,4 +33,18 @@ public class Student {
 
     @Column(name = "admission_year", nullable = false)
     private int admissionYear;
+
+    @Column(name = "contract_paid", nullable = false)
+    private boolean contractPaid;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private StudentStatus status;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "course")
+    private Course course;
+
+
+
 }
