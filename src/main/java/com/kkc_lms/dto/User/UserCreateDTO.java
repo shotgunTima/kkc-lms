@@ -51,5 +51,6 @@ public class UserCreateDTO {
         private AcademicTitles academicTitle;
         private TeacherStatus teacherStatus;
         private LocalDate hireDate;
+        private Integer courseNumber;
 
 }

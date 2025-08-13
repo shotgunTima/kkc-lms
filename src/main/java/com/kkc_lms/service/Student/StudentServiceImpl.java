@@ -2,10 +2,7 @@ package com.kkc_lms.service.Student;
 
 import com.kkc_lms.dto.Student.StudentCreateDTO;
 import com.kkc_lms.dto.Student.StudentDTO;
-import com.kkc_lms.entity.Direction;
-import com.kkc_lms.entity.Group;
-import com.kkc_lms.entity.Student;
-import com.kkc_lms.entity.User;
+import com.kkc_lms.entity.*;
 import com.kkc_lms.repository.DirectionRepository;
 import com.kkc_lms.repository.GroupRepository;
 import com.kkc_lms.repository.StudentRepository;
@@ -40,23 +37,28 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     @Transactional
-    public StudentDTO createForUser(User user, Long directionId) {
-        // найдём направление
+    public StudentDTO createForUser(User user, Long directionId, Integer courseNumber) {
         Direction direction = directionRepository.findById(directionId)
                 .orElseThrow(() -> new IllegalArgumentException("Direction not found"));
 
-        // создаём студента
         Student s = new Student();
         s.setUser(user);
-        s.setDirection(direction);           // <–– привязка направления
+        s.setDirection(direction);
         s.setAdmissionYear(LocalDate.now().getYear());
         s.setTotalCredits(0);
         s.setStudentIdNumber(generateUniqueStudentIdNumber());
-        Student saved = studentRepository.save(s);
+        s.setContractPaid(false);
+        s.setStatus(StudentStatus.ACTIVE);
 
-        // конвертируем в DTO
+        // Устанавливаем курс (можно делать обязательным ранее)
+        if (courseNumber != null) {
+            s.setCourse(Course.fromNumber(courseNumber));
+        } // иначе оставляем null или ставим Course.FIRST, если нужно по умолчанию
+
+        Student saved = studentRepository.save(s);
         return mapToDTO(saved);
     }
+
     private String generateUniqueStudentIdNumber() {
         String candidate;
         do {
