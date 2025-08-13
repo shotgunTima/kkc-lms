@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface StudentService {
-    StudentDTO createForUser(User user, Long directionId);
+    StudentDTO createForUser(User user, Long directionId, Integer courseNumber);
     StudentDTO saveStudent(StudentCreateDTO dto);
     Optional<StudentDTO> getStudentById(Long id);
     Optional<StudentDTO> getByStudentIdNumber(String studentIdNumber);

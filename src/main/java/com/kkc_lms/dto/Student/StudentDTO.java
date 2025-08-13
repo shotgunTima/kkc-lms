@@ -1,5 +1,6 @@
 package com.kkc_lms.dto.Student;
 
+import com.kkc_lms.entity.Course;
 import lombok.Data;
 
 @Data
@@ -14,4 +15,5 @@ public class StudentDTO {
     private String groupName;
     private int totalCredits;
     private int admissionYear;
+    private Course course;
 }
