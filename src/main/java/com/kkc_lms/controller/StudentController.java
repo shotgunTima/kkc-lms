@@ -2,12 +2,14 @@ package com.kkc_lms.controller;
 
 import com.kkc_lms.dto.Student.StudentDTO;
 import com.kkc_lms.dto.Student.StudentCreateDTO;
+import com.kkc_lms.entity.Student;
 import com.kkc_lms.service.Student.StudentService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +23,43 @@ public class StudentController {
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
     }
+
+
+    @GetMapping("/by-course-and-direction")
+    public ResponseEntity<List<StudentDTO>> getStudentsByCourseAndDirection(
+            @RequestParam(value = "courseNumber", required = false) Integer courseNumber,
+            @RequestParam(value = "course", required = false) Integer courseAlias,
+            @RequestParam("directionId") Long directionId
+    ) {
+        Integer courseNum = courseNumber != null ? courseNumber : courseAlias;
+        if (courseNum == null) {
+            return ResponseEntity.badRequest()
+                    .body(Collections.emptyList()); // либо throw new ResponseStatusException(...)
+        }
+
+        List<Student> students = studentService.getStudentsByCourseAndDirection(courseNum, directionId);
+
+        List<StudentDTO> dtos = students.stream().map(student -> {
+            StudentDTO dto = new StudentDTO();
+            dto.setId(student.getId());
+            dto.setStudentIdNumber(student.getStudentIdNumber());
+            dto.setCourse(student.getCourse());
+            if (student.getDirection() != null) {
+                dto.setDirectionId(student.getDirection().getId());
+                dto.setDirectionName(student.getDirection().getName());
+            }
+            if (student.getGroup() != null) {
+                dto.setGroupId(student.getGroup().getId());
+                dto.setGroupName(student.getGroup().getName());
+            }
+            dto.setTotalCredits(student.getTotalCredits());
+            dto.setAdmissionYear(student.getAdmissionYear());
+            return dto;
+        }).toList();
+
+        return ResponseEntity.ok(dtos);
+    }
+
 
     @GetMapping
     public ResponseEntity<List<StudentDTO>> getAllStudents() {
