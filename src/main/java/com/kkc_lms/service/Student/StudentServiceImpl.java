@@ -7,7 +7,9 @@ import com.kkc_lms.repository.DirectionRepository;
 import com.kkc_lms.repository.GroupRepository;
 import com.kkc_lms.repository.StudentRepository;
 import com.kkc_lms.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,12 +20,14 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 @Service
+
 public class StudentServiceImpl implements StudentService {
 
     private final StudentRepository studentRepository;
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
     private final DirectionRepository directionRepository;
+
 
     @Autowired
     public StudentServiceImpl(StudentRepository studentRepository,
@@ -34,6 +38,15 @@ public class StudentServiceImpl implements StudentService {
         this.groupRepository = groupRepository;
         this.directionRepository = directionRepository;
     }
+    @Override
+    public List<Student> getStudentsByCourseAndDirection(Integer courseNumber, Long directionId) {
+        Direction direction = directionRepository.findById(directionId)
+                .orElseThrow(() -> new EntityNotFoundException("Направление не найдено"));
+
+        Course course = Course.fromNumber(courseNumber);
+        return studentRepository.findByCourseAndDirection(course, direction);
+    }
+
 
     @Override
     @Transactional
