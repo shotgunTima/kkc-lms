@@ -20,6 +20,9 @@ public class Group {
     private Direction direction;
 
     @ManyToOne
-    @JoinColumn(name = "curator_id", nullable = false)
+    @JoinColumn(name = "curator_id", nullable = true)
     private Teacher curator;
+
+    @Column(name = "student_count", nullable = false)
+    private int studentCount = 0;
 }
