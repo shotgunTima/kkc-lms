@@ -1,5 +1,7 @@
 package com.kkc_lms.entity;
+import lombok.Getter;
 
+@Getter
 public enum StudentStatus {
     ACTIVE("student_status.active"),
     EXPELLED("student_status.expelled"),

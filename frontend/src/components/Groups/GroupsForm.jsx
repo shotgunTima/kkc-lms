@@ -27,11 +27,11 @@ const GroupsForm = ({ groupId, onSuccess, onCancel }) => {
             setLoading(true);
             getGroupById(groupId)
                 .then(res => {
-                    const { name, direction, curator } = res.data;
+                    const { name, directionId, curatorId } = res.data;
                     setFormData({
                         name,
-                        direction,
-                        curator,
+                        direction: directionId,
+                        curator: curatorId,
                     });
                     setErrors({});
                 })
@@ -55,6 +55,7 @@ const GroupsForm = ({ groupId, onSuccess, onCancel }) => {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
+
     const validateForm = () => {
         const newErrors = {};
 
@@ -74,10 +75,9 @@ const GroupsForm = ({ groupId, onSuccess, onCancel }) => {
         try {
             const payload = {
                 name: formData.name,
-                direction: formData.direction,
-                curator: formData.curator,
+                directionId: formData.direction,
+                curatorId: formData.curator,
             };
-
             isEdit ? await updateGroup(groupId, payload) : await createGroup(payload);
             onSuccess?.();
         } catch (err) {
@@ -124,8 +124,8 @@ const GroupsForm = ({ groupId, onSuccess, onCancel }) => {
                         >
                             <option value="" disabled>{t("select_direction")}</option>
                             {directions.map((r, idx) => (
-                                <option key={idx} value={r.value || r.name}>
-                                    {r.label || r.name}
+                                <option key={r.id} value={r.id}>
+                                    {r.name}
                                 </option>
                             ))}
                         </select>
@@ -145,9 +145,10 @@ const GroupsForm = ({ groupId, onSuccess, onCancel }) => {
                         >
                             <option value="" disabled>{t("select_group_curator")}</option>
                             {teachers.map((t, idx) => (
-                                <option key={idx} value={t.fullname}>
+                                <option key={t.id} value={t.id}>
                                     {t.fullname}
                                 </option>
+
                             ))}
                         </select>
 

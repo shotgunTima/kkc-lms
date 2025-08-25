@@ -67,8 +67,8 @@ const GroupsTable = () => {
 
     const columns = [
         { header: t("group_name"), accessor: 'name' },
-        { header: t("direction"), accessor: 'direction' },
-        { header: t("curator"), accessor: 'curator' },
+        { header: t("direction"), accessor: 'directionName' },
+        { header: t("curator"), accessor: 'curatorFullName' },
         {
             header: t("actions"),
             accessor: 'actions',
@@ -88,6 +88,7 @@ const GroupsTable = () => {
             ),
         },
     ];
+
 
     return (
         <div className="p-6">
