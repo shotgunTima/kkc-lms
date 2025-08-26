@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { createUser, fetchUserById, updateUser, fetchRoles } from '../../api/UsersApi.js';
 import { fetchTeacherStatuses, fetchAcademicTitles } from '../../api/TeachersApi.js';
+import {fetchStudentStatuses, fetchCourses} from "../../api/StudentApi.js";
+import {fetchGroups} from "../../api/GroupsApi.js";
 import { motion } from 'framer-motion';
 import SubmitButton from "../Buttons/SubmitButton.jsx";
 import CancelButton from "../Buttons/CancelButton.jsx";
@@ -24,14 +26,25 @@ const UserForm = ({ userId, onSuccess, onCancel, fixedRole }) => {
         profileImage: null,
         directionId: '',
         academicTitle: '',
-        teacherStatus: '',
+        teacherStatus: 'ACTIVE',
         hireDate: new Date().toISOString().split('T')[0],
+
+        groupId: '',
+        admissionYear: new Date().getFullYear(),
+        contractPaid: false,
+        studentStatus: '',
+        course: '',
     });
 
     const [roles, setRoles] = useState([]);
     const [directions, setDirections] = useState([]);
     const [teacherStatusOptions, setTeacherStatusOptions] = useState([]);
+    const [selectedTeacherStatus, setSelectedTeacherStatus] = useState(null);
+    const [groupOptions, setGroupOptions] = useState([])
     const [academicTitleOptions, setAcademicTitleOptions] = useState([]);
+    const [studentStatusOptions, setStudentStatusOptions] = useState([]);
+    const [selectedStudentStatus, setSelectedStudentStatus] = useState(null);
+    const [courseOptions, setCourseOptions] = useState([]);
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState({});
 
@@ -50,7 +63,8 @@ const UserForm = ({ userId, onSuccess, onCancel, fixedRole }) => {
                     value: item.value,
                     label: t(item.label)
                 }));
-                setTeacherStatusOptions([{ value: '', label: t('select_teacher_status') }, ...options]);
+                setTeacherStatusOptions(options);
+
             })
             .catch(console.error);
 
@@ -58,38 +72,88 @@ const UserForm = ({ userId, onSuccess, onCancel, fixedRole }) => {
             .then(res => {
                 const options = res.data.map(item => ({
                     value: item.value,
-                    label: t(item.label)
+                    label: t(item.label),
                 }));
                 setAcademicTitleOptions([{ value: '', label: t('select_academic_title') }, ...options]);
             })
             .catch(console.error);
-    }, [t]);
 
-    useEffect(() => {
-        if (isEdit) {
-            setLoading(true);
-            fetchUserById(userId)
-                .then(res => {
-                    const data = res.data;
-                    setFormData(prev => ({
-                        ...prev,
-                        username: data.username || '',
-                        email: data.email || '',
-                        fullname: data.fullname || '',
-                        role: data.role || prev.role,
-                        phonenum: data.phonenum?.startsWith('+996') ? data.phonenum.slice(4) : data.phonenum || '',
-                        address: data.address || '',
-                        password: '',
-                        directionId: data.directionId || '',
-                        academicTitle: data.academicTitle || '',
-                        teacherStatus: data.teacherStatus || '',
-                        hireDate: data.hireDate || prev.hireDate,
-                    }));
-                })
-                .catch(console.error)
-                .finally(() => setLoading(false));
-        }
-    }, [userId, isEdit]);
+
+        fetchStudentStatuses()
+            .then(res => {
+                const options = res.data.map(item => ({
+                    value: item.value ?? item.id,
+                    label: t(item.label ?? item.name)
+                }));
+                setStudentStatusOptions(options);
+                if (options.length > 0) {
+                    setFormData(prev => ({...prev, studentStatus: prev.studentStatus || options[0].value}));
+                }
+            })
+            .catch(err => console.error("Ошибка при получении статусов студента", err));
+
+        fetchCourses()
+            .then(res => {
+                const options = res.data.map(item => ({
+                    value: item.value,
+                    label: t(item.label)
+                }));
+                setCourseOptions(options);
+                if (options.length > 0) {
+                    setFormData(prev => ({...prev, course: prev.course || options[0].value}));
+                }
+            })
+            .catch(console.error);
+
+
+        fetchGroups()
+            .then(res =>{
+                const options = res.data.map(item => ({
+                    value: item.id,
+                    label: t(item.name)
+                }));
+                setGroupOptions(options);
+                if(options.length > 0) {
+                    setFormData(prev => ({...prev, groupId: prev.groupId || options[0].value}));
+                }
+            })
+            .catch(console.error);
+    }, []);
+
+        useEffect(() => {
+            if (isEdit) {
+                setLoading(true);
+                fetchUserById(userId)
+                    .then(res => {
+                        const data = res.data;
+                        setFormData(prev => ({
+                            ...prev,
+                            username: data.username || '',
+                            email: data.email || '',
+                            fullname: data.fullname || '',
+                            role: data.role || prev.role,
+                            phonenum: data.phonenum?.startsWith('+996') ? data.phonenum.slice(4) : data.phonenum || '',
+                            address: data.address || '',
+                            password: '',
+                            directionId: data.directionId || '',
+                            academicTitle: data.academicTitle || '',
+                            teacherStatus: data.teacherStatus && data.teacherStatus !== "" ? data.teacherStatus : 'ACTIVE',
+                            hireDate: data.hireDate || prev.hireDate,
+                            admissionYear: data.admissionYear || prev.admissionYear,
+                            contractPaid: data.contractPaid !== undefined && data.contractPaid !== null
+                                ? data.contractPaid
+                                : prev.contractPaid,
+
+                            studentStatus: data.studentStatus || prev.studentStatus,
+                            course: data.course || prev.course,
+                            profileImage: data.profileImage || prev.profileImage,
+                            groupId: data.groupId || prev.groupId,
+                        }));
+                    })
+                    .catch(console.error)
+                    .finally(() => setLoading(false));
+            }
+        }, [userId, isEdit]);
 
     const handleChange = e => {
         const { name, value } = e.target;
@@ -109,10 +173,13 @@ const UserForm = ({ userId, onSuccess, onCancel, fixedRole }) => {
         if (!isEdit && !formData.password.trim()) newErrors.password = t('password_required');
         if (!formData.role.trim()) newErrors.role = t('role_required');
         if (!formData.phonenum || formData.phonenum.length !== 9) newErrors.phonenum = t('phone_required');
-        if (formData.role === 'STUDENT' && !formData.directionId) newErrors.directionId = t('direction_required');
+        if (formData.role === 'STUDENT') {
+            if (!formData.directionId) newErrors.directionId = t('direction_required');
+            if (!formData.admissionYear) newErrors.admissionYear = t('admission_year_required');
+            if (!formData.course) newErrors.course = t('course_required');
+        }
         if (formData.role === 'TEACHER') {
             if (!formData.academicTitle) newErrors.academicTitle = t('academic_title_required');
-            if (!formData.teacherStatus) newErrors.teacherStatus = t('teacher_status_required');
             if (!formData.hireDate) newErrors.hireDate = t('hire_date_required');
         }
 
@@ -124,6 +191,7 @@ const UserForm = ({ userId, onSuccess, onCancel, fixedRole }) => {
         e.preventDefault();
         if (!validateForm()) return;
         setLoading(true);
+
         try {
             const payload = {
                 username: formData.username,
@@ -133,15 +201,33 @@ const UserForm = ({ userId, onSuccess, onCancel, fixedRole }) => {
                 phonenum: `+996${formData.phonenum}`,
                 address: formData.address,
                 ...(formData.password && { password: formData.password }),
-                ...(formData.role === 'STUDENT' && { directionId: formData.directionId }),
-                ...(formData.role === 'TEACHER' && {
-                    academicTitle: formData.academicTitle,
-                    teacherStatus: formData.teacherStatus,
-                    hireDate: formData.hireDate,
-                }),
             };
-            if (isEdit) await updateUser(userId, payload);
-            else await createUser(payload);
+
+            if (formData.role === 'STUDENT') {
+                payload.groupId = formData.groupId;
+                payload.directionId = Number(formData.directionId);
+                payload.admissionYear = formData.admissionYear;
+                payload.contractPaid = formData.contractPaid;
+                payload.studentStatus = formData.studentStatus;
+                payload.course = formData.course;
+
+                if (isEdit) await updateUser(userId, payload);
+                else await createUser(payload);
+            } else {
+                // Для остальных ролей (TEACHER, ADMIN, METHODIST)
+                if (formData.role === 'TEACHER') {
+                    payload.academicTitle = formData.academicTitle;
+                    payload.teacherStatus =
+                        formData.teacherStatus && formData.teacherStatus.trim() !== ""
+                            ? formData.teacherStatus
+                            : "ACTIVE";
+                    payload.hireDate = formData.hireDate;
+                }
+
+                if (isEdit) await updateUser(userId, payload);
+                else await createUser(payload);
+            }
+
             onSuccess?.();
         } catch (err) {
             const data = err.response?.data;
@@ -151,6 +237,7 @@ const UserForm = ({ userId, onSuccess, onCancel, fixedRole }) => {
             setLoading(false);
         }
     };
+
 
     return (
         <motion.div
@@ -242,21 +329,6 @@ const UserForm = ({ userId, onSuccess, onCancel, fixedRole }) => {
                         error={errors.address}
                         onChange={handleChange}
                     />
-                    {formData.role === 'STUDENT' && (
-                        <SelectField
-                            id="directionId"
-                            name="directionId"
-                            value={formData.directionId}
-                            onChange={handleChange}
-                            options={[
-                                { value: '', label: t('select_direction') },
-                                ...directions.map(dir => ({
-                                    value: dir.id,
-                                    label: dir.name
-                                }))
-                            ]}
-                        />
-                    )}
 
                     {formData.role === 'TEACHER' && (
                         <>
@@ -287,6 +359,72 @@ const UserForm = ({ userId, onSuccess, onCancel, fixedRole }) => {
                             />
                         </>
                     )}
+
+                    {formData.role === 'STUDENT' && (
+                        <>
+                            <SelectField
+                                id="directionId"
+                                name="directionId"
+                                value={formData.directionId}
+                                onChange={handleChange}
+                                options={[
+                                    { value: '', label: t('select_direction') },
+                                    ...directions.map(dir => ({
+                                        value: dir.id,
+                                        label: dir.name
+                                    }))
+                                ]}
+                                error={errors.directionId}
+                            />
+                            <FloatingLabelInput
+                                id="admissionYear"
+                                label={t('admission_year')}
+                                name="admissionYear"
+                                type="number"
+                                value={formData.admissionYear}
+                                error={errors.admissionYear}
+                                onChange={handleChange}
+                            />
+
+                            <SelectField
+                                id="studentStatus"
+                                name="studentStatus"
+                                value={formData.studentStatus}
+                                onChange={handleChange}
+                                options={studentStatusOptions}
+                                error={errors.studentStatus}
+                            />
+
+                            <SelectField
+                                id="course"
+                                name="course"
+                                value={formData.course}
+                                onChange={handleChange}
+                                options={courseOptions}
+                                error={errors.course}
+                            />
+                            <SelectField
+                                id="groupId"
+                                name="groupId"
+                                value={formData.groupId}
+                                onChange={handleChange}
+                                options={groupOptions}
+                                error={errors.groupId}
+                            />
+                            <label className="flex items-center gap-2">
+                                <input
+                                    type="checkbox"
+                                    name="contractPaid"
+                                    checked={formData.contractPaid}
+                                    onChange={e => setFormData(prev => ({ ...prev, contractPaid: e.target.checked }))}
+                                />
+                                {t('contract_paid')}
+                            </label>
+
+
+                        </>
+                    )}
+
 
                     <div className="relative mb-4 col-span-2">
                         <input

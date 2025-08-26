@@ -105,7 +105,30 @@
   "credits_required": "Select number of credits",
   "teachers_required": "Select teacher(s)",
   "hold_ctrl_to_select": "Hold ctrl to select multiple",
-  "no_teachers": "No teacher selected"
+  "no_teachers": "No teacher selected",
+
+  "student_status": {
+    "active": "Active",
+    "expelled": "Expelled",
+    "academic_leave": "Academic left",
+    "suspended": "Suspended",
+    "graduated": "Graduated"
+  },
+  "course": {
+    "1": "1st course",
+    "2": "2nd course",
+    "3": "3rd course",
+    "4": "4th course"
+  },
+  "courses": "Course",
+  "student_list": "STUDENT LIST",
+  "student_id": "Student ID",
+  "admission_year": "Admission year",
+  "contract_paid": "Contract paid",
+  "create_student": "CREATE STUDENT",
+  "update_student": "UPDATE STUDENT",
+  "yes": "✔",
+  "no": "✘"
 
 
 }

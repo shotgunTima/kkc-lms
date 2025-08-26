@@ -88,13 +88,23 @@ public class GroupController {
                 .orElseThrow(() -> new RuntimeException("Group not found"));
     }
 
-    @GetMapping
-    public List<GroupDTO> getAllGroups() {
-        return groupService.getAllGroups();
-    }
-
     @DeleteMapping("/{id}")
     public void deleteGroup(@PathVariable Long id) {
         groupService.deleteGroupById(id);
     }
+
+    @PutMapping("/{id}")
+    public GroupDTO updateGroup(@PathVariable Long id, @Valid @RequestBody GroupCreateDTO dto) {
+        return groupService.updateGroup(id, dto);
+    }
+
+    @GetMapping
+    public List<GroupDTO> getAllGroups(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false, name = "directionName") String directionName) {
+        return groupService.searchGroups(search, directionName);
+    }
+
+
+
 }

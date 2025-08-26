@@ -18,7 +18,7 @@ const StudentTable = () => {
     const PAGE_SIZE = 10;
     const [studentToDelete, setStudentToDelete] = useState(null);
     const [students, setStudents] = useState([]);
-    const [editingStudentId, setEditingStudentId] = useState(null);
+    const [editingStudent, setEditingStudent] = useState(null);
     const [showForm, setShowForm] = useState(false);
     const [filters, setFilters] = useState({ search: '' });
 
@@ -69,24 +69,24 @@ const StudentTable = () => {
     };
 
     const handleEdit = (student) => {
-        setEditingStudentId(student.id);
+        setEditingStudent(student);
         setShowForm(true);
     };
 
     const handleCreate = () => {
-        setEditingStudentId(null);
+        setEditingStudent(null);
         setShowForm(true);
     };
 
     const handleSuccess = () => {
         setShowForm(false);
-        setEditingStudentId(null);
+        setEditingStudent(null);
         loadStudents();
     };
 
     const handleCancel = () => {
         setShowForm(false);
-        setEditingStudentId(null);
+        setEditingStudent(null);
     };
 
     const columns = [
@@ -112,13 +112,18 @@ const StudentTable = () => {
             render: val => t(`student_status.${val?.toLowerCase()}`)
         },
         {
-            header: t('course'),
+            header: t('courses'),
             accessor: 'course',
-            render: val => t(`courses.${val?.toLowerCase()}`)
+            render: val => val ? t(val) : ''
         },
         {
             header: t('admission_year'),
             accessor: 'admissionYear'
+        },
+        {
+            header: t('contract_paid'),
+            accessor: 'contractPaid',
+            render: val => val ? t('yes') : t('no')
         },
         {
             header: t('actions'),
@@ -136,7 +141,8 @@ const StudentTable = () => {
         <div className="p-6">
             {showForm && (
                 <UserForm
-                    userId={editingStudentId}
+                    userId={editingStudent?.userId}
+                    studentId={editingStudent?.id}
                     fixedRole="STUDENT"
                     onSuccess={handleSuccess}
                     onCancel={handleCancel}

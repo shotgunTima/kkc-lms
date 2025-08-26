@@ -104,6 +104,29 @@
   "credits_required": "학점 수를 선택하세요",
   "teachers_required": "교수를 선택하세요",
   "hold_ctrl_to_select": "여러 개 선택하려면 Ctrl 키를 누르세요",
-  "no_teachers": "선택된 교수가 없습니다"
+  "no_teachers": "선택된 교수가 없습니다",
+
+  "student_status": {
+    "active": "활동 중",
+    "expelled": "퇴학",
+    "academic_leave": "학업 휴학",
+    "suspended": "정학",
+    "graduated": "졸업"
+  },
+  "course": {
+    "1": "1학년",
+    "2": "2학년",
+    "3": "3학년",
+    "4": "4학년"
+  },
+  "courses": "강의",
+  "student_list": "학생 목록",
+  "student_id": "학번",
+  "admission_year": "입학 연도",
+  "contract_paid": "계약 납부됨",
+  "create_student": "학생 생성",
+  "update_student": "학생 수정",
+  "yes": "✔",
+  "no": "✘"
 
 }

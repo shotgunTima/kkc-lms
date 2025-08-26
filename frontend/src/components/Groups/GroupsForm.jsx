@@ -59,13 +59,19 @@ const GroupsForm = ({ groupId, onSuccess, onCancel }) => {
     const validateForm = () => {
         const newErrors = {};
 
-        if (!formData.name.trim()) newErrors.name = t("is_required");
-        if (!formData.direction.trim()) newErrors.direction = t("select_group_direction");
-        if (!formData.curator.trim()) newErrors.curator = t("select_group_curator");
+        if (!formData.name || formData.name.trim() === '')
+            newErrors.name = t("is_required");
+
+        if (!formData.direction)  // <- убрал .trim(), теперь работает с id
+            newErrors.direction = t("select_group_direction");
+
+        if (!formData.curator)  // <- тоже убрал .trim()
+            newErrors.curator = t("select_group_curator");
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -75,8 +81,8 @@ const GroupsForm = ({ groupId, onSuccess, onCancel }) => {
         try {
             const payload = {
                 name: formData.name,
-                directionId: formData.direction,
-                curatorId: formData.curator,
+                directionId: Number(formData.direction),
+                curatorId: Number(formData.curator),
             };
             isEdit ? await updateGroup(groupId, payload) : await createGroup(payload);
             onSuccess?.();

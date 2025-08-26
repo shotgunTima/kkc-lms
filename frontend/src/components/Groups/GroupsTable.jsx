@@ -87,8 +87,8 @@ const GroupsTable = () => {
                 </div>
             ),
         },
+        { header: t("students_amount"), accessor: 'studentsCount' },
     ];
-
 
     return (
         <div className="p-6">
@@ -111,10 +111,9 @@ const GroupsTable = () => {
                                 type: 'select',
                                 options: [
                                     { label: t("all"), value: '' },
-                                    ...directions.map((r, i) => ({
-                                        label: r.label || r.name,
-                                        value: r.name || r.value,
-                                        key: i,
+                                    ...directions.map(r => ({
+                                        label: r.name,
+                                        value: r.name,
                                     }))
                                 ],
                             },

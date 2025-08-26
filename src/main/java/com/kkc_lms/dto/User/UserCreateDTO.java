@@ -1,10 +1,8 @@
 package com.kkc_lms.dto.User;
 
-import com.kkc_lms.entity.AcademicTitles;
-import com.kkc_lms.entity.TeacherStatus;
+import com.kkc_lms.entity.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
-import com.kkc_lms.entity.Role;
 
 import java.time.LocalDate;
 
@@ -51,6 +49,13 @@ public class UserCreateDTO {
         private AcademicTitles academicTitle;
         private TeacherStatus teacherStatus;
         private LocalDate hireDate;
-        private Integer courseNumber;
+
+        private String studentIdNumber;
+        private Long groupId;
+        private int totalCredits;
+        private int admissionYear;
+        private boolean contractPaid;
+        private StudentStatus studentStatus;
+        private Course course;
 
 }

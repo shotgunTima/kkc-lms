@@ -105,7 +105,7 @@ public class GroupServiceImpl implements GroupService {
         dto.setStudentIdNumber(student.getStudentIdNumber());
         dto.setTotalCredits(student.getTotalCredits());
         dto.setAdmissionYear(student.getAdmissionYear());
-        dto.setCourse(student.getCourse());
+        dto.setCourse(String.valueOf(student.getCourse()));
 
         if (student.getDirection() != null) {
             dto.setDirectionId(student.getDirection().getId());
@@ -200,6 +200,7 @@ public class GroupServiceImpl implements GroupService {
         dto.setName(group.getName());
         dto.setStudentCount(group.getStudentCount());
 
+
         Direction dir = group.getDirection();
         if (dir != null) {
             dto.setDirectionId(dir.getId());
@@ -207,12 +208,27 @@ public class GroupServiceImpl implements GroupService {
         }
 
         Teacher curator = group.getCurator();
-        if (curator != null && curator.getUser() != null) {
+        String curatorName = "Без куратора";
+        if (curator != null) {
+            if (curator.getUser() != null) {
+                curatorName = curator.getUser().getFullname();
+            } else {
+                curatorName = "Преподаватель без пользователя";
+            }
             dto.setCuratorId(curator.getId());
-            dto.setCuratorFullName(curator.getUser().getFullname());
         }
+        dto.setCuratorFullName(curatorName);
+
+        List<StudentDTO> students = studentRepository.findByGroup(group)
+                .stream()
+                .map(this::mapStudentToDTO)
+                .toList();
+        dto.setStudents(students);
+
         return dto;
     }
+
+
 
     @Transactional
     public List<GroupDTO> distributeStudentsByCourseAndDirection(Integer courseNumber, Long directionId) {
@@ -275,4 +291,49 @@ public class GroupServiceImpl implements GroupService {
 
         return response;
     }
+
+    @Override
+    public GroupDTO updateGroup(Long id, GroupCreateDTO dto) {
+        Group group = groupRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Группа не найдена"));
+
+        Direction direction = directionRepository.findById(dto.getDirectionId())
+                .orElseThrow(() -> new EntityNotFoundException("Направление не найдено"));
+
+        Teacher curator = teacherRepository.findById(dto.getCuratorId())
+                .orElseThrow(() -> new EntityNotFoundException("Куратор (преподаватель) не найден"));
+
+        group.setName(dto.getName());
+        group.setDirection(direction);
+        group.setCurator(curator);
+
+        Group saved = groupRepository.save(group);
+        return mapToDTO(saved);
+    }
+
+    @Override
+    public List<GroupDTO> searchGroups(String search, String directionName) {
+        List<Group> groups = groupRepository.findAll();
+
+        if (search != null && !search.isBlank()) {
+            String lowerSearch = search.toLowerCase();
+            groups = groups.stream()
+                    .filter(g -> g.getCurator() != null
+                            && g.getCurator().getUser() != null
+                            && g.getCurator().getUser().getFullname().toLowerCase().contains(lowerSearch))
+                    .toList();
+        }
+
+        if (directionName != null && !directionName.isBlank()) {
+            groups = groups.stream()
+                    .filter(g -> g.getDirection() != null
+                            && g.getDirection().getName().equals(directionName))
+                    .toList();
+        }
+
+        return groups.stream().map(this::mapToDTO).toList();
+    }
+
+
+
 }
