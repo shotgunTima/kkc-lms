@@ -7,11 +7,13 @@ import java.time.LocalDate;
 
 @Entity
 @Data
-@Table(name="semesters")
+@Table(name="semesters", uniqueConstraints = @UniqueConstraint(columnNames = {"term","year"}))
 public class Semester {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Enumerated(EnumType.STRING)
+    private SemesterTerm term; // SPRING, FALL, SUMMER ,WINTER
     private String name;
     private int year;
     @Column(name = "start_date", nullable = false)
