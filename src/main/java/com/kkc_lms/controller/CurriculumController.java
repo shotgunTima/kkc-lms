@@ -103,5 +103,6 @@ public class CurriculumController {
     public OfferingWithAssignmentsDTO assignTeacher(@RequestBody AssignTeacherDTO dto) {
         SubjectOffering offering = curriculumService.assignTeacherToComponent(dto);
         return offering.toWithAssignmentsDto();
+
     }
 }
