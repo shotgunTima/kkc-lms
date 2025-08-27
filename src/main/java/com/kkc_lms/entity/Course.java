@@ -24,4 +24,16 @@ public enum Course {
         }
         throw new IllegalArgumentException("Invalid course number: " + number + ". Expected 1..4");
     }
+
+    public static Course fromFlexible(String input) {
+        if (input == null) throw new IllegalArgumentException("Course cannot be null");
+
+        // Если число
+        try {
+            return fromNumber(Integer.parseInt(input));
+        } catch (NumberFormatException ignored) {}
+
+        // Если название (FIRST, SECOND, …)
+        return Course.valueOf(input.toUpperCase());
+    }
 }

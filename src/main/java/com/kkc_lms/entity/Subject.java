@@ -1,5 +1,6 @@
 package com.kkc_lms.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -16,11 +17,17 @@ public class Subject {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, unique = true)
+    private String code; // например "CS101"
+
     @Column(nullable = false)
     private String name; // Название предмета
 
     @Column(nullable = false)
     private int credits; // Кол-во кредитов
+
+    @Column(length = 2000)
+    private String description;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
@@ -28,6 +35,6 @@ public class Subject {
             joinColumns = @JoinColumn(name = "subject_id"),
             inverseJoinColumns = @JoinColumn(name = "teacher_id")
     )
-    @JsonManagedReference
+    @JsonIgnoreProperties("subjects")
     private Set<Teacher> teachers = new HashSet<>();
 }

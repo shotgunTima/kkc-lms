@@ -1,5 +1,7 @@
 package com.kkc_lms.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -18,6 +20,7 @@ public class Direction {
     private String name;
 
     @OneToMany(mappedBy = "direction", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("direction")
     private List<Group> groups;
 
     @OneToMany(mappedBy = "direction")
