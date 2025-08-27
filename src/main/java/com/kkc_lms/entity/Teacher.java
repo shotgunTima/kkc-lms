@@ -1,6 +1,7 @@
 package com.kkc_lms.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -40,6 +41,6 @@ public class Teacher {
 
     @ManyToMany(mappedBy = "teachers")
     @EqualsAndHashCode.Exclude
-    @JsonBackReference
+    @JsonIgnoreProperties("teachers")
     private Set<Subject> subjects = new HashSet<>();
 }

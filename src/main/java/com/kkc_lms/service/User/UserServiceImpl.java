@@ -67,19 +67,32 @@ public class UserServiceImpl implements UserService {
         if (dto.getRole() == Role.STUDENT && dto.getDirectionId() == null) {
             throw new IllegalArgumentException("Direction ID is required for student");
         }
-        if (dto.getRole() == Role.STUDENT && dto.getCourseNumber() == null) {
-            throw new IllegalArgumentException("Course number is required for student");
+        if (dto.getRole() == Role.STUDENT && dto.getCourse() == null) {
+            throw new IllegalArgumentException("Course is required for student");
         }
-        if (dto.getCourseNumber() != null && (dto.getCourseNumber() < 1 || dto.getCourseNumber() > 4)) {
-            throw new IllegalArgumentException("Course number must be between 1 and 4");
-        }
+
 
         User savedUser = userRepository.save(user);
 
         Role role = savedUser.getRole();
         switch (role) {
-            case STUDENT -> studentService.createForUser(savedUser, dto.getDirectionId(), dto.getCourseNumber());
-            case TEACHER -> teacherService.createForUserWithDetails(savedUser, dto.getAcademicTitle(), dto.getTeacherStatus(), dto.getHireDate());
+            case STUDENT -> studentService.createForUser(
+                    savedUser,
+                    dto.getGroupId(),
+                    dto.getDirectionId(),
+                    dto.getAdmissionYear(),
+                    dto.getCourse(),
+                    dto.isContractPaid(),
+                    dto.getStudentStatus(),
+                    dto.getTotalCredits(),
+                    dto.getStudentIdNumber() // если null → сгенерим внутри studentService
+            );
+            case TEACHER -> teacherService.createForUserWithDetails(
+                    savedUser,
+                    dto.getAcademicTitle(),
+                    dto.getTeacherStatus(),
+                    dto.getHireDate()
+            );
             case ADMIN -> administratorService.createForUser(savedUser);
             case METHODIST -> methodistService.createForUser(savedUser);
             case ACCOUNTANT -> accountantService.createForUser(savedUser);
@@ -123,7 +136,19 @@ public class UserServiceImpl implements UserService {
             }
         } else if (newRole == Role.TEACHER) {
             teacherService.updateTeacherDetails(savedUser.getId(), dto.getAcademicTitle(), dto.getTeacherStatus(), dto.getHireDate());
-        }
+        }else if (newRole == Role.STUDENT) {
+                studentService.updateStudentDetails(
+                        savedUser.getId(),
+                        dto.getGroupId(),
+                        dto.getDirectionId(),
+                        dto.getAdmissionYear(),
+                        dto.getCourse(),
+                        dto.isContractPaid(),
+                        dto.getStatus(),
+                        dto.getTotalCredits(),
+                        dto.getStudentIdNumber()
+                );
+            }
 
         return toDTO(savedUser);
     }

@@ -10,7 +10,6 @@
     body {
         @apply text-gray-900 dark:text-white;
 
-        /* Градиент для светлой и тёмной темы */
         @apply bg-gradient-to-b from-bgSecondary to-bgPrimary dark:from-gray-900 dark:to-gray-800;
     }
 }

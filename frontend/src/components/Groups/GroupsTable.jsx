@@ -67,8 +67,8 @@ const GroupsTable = () => {
 
     const columns = [
         { header: t("group_name"), accessor: 'name' },
-        { header: t("direction"), accessor: 'direction' },
-        { header: t("curator"), accessor: 'curator' },
+        { header: t("direction"), accessor: 'directionName' },
+        { header: t("curator"), accessor: 'curatorFullName' },
         {
             header: t("actions"),
             accessor: 'actions',
@@ -87,6 +87,7 @@ const GroupsTable = () => {
                 </div>
             ),
         },
+        { header: t("students_amount"), accessor: 'studentsCount' },
     ];
 
     return (
@@ -110,10 +111,9 @@ const GroupsTable = () => {
                                 type: 'select',
                                 options: [
                                     { label: t("all"), value: '' },
-                                    ...directions.map((r, i) => ({
-                                        label: r.label || r.name,
-                                        value: r.name || r.value,
-                                        key: i,
+                                    ...directions.map(r => ({
+                                        label: r.name,
+                                        value: r.name,
                                     }))
                                 ],
                             },

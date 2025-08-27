@@ -69,9 +69,10 @@ const TeacherTable = () => {
     };
 
     const handleEdit = (teacher) => {
-        setEditingTeacherId(teacher.id);  // передаем только ID
+        setEditingTeacherId(teacher.userId);
         setShowForm(true);
     };
+
 
     const handleCreate = () => {
         setEditingTeacherId(null);

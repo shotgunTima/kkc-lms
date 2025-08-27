@@ -104,6 +104,29 @@
   "credits_required": "Кредиттердин санын тандаңыз",
   "teachers_required": "Мугалимди тандаңыз",
   "hold_ctrl_to_select": "Бир нече тандоо үчүн ctrl басыңыз",
-  "no_teachers": "Мугалим тандалган жок"
+  "no_teachers": "Мугалим тандалган жок",
 
+  "student_status": {
+    "active": "Активдүү",
+    "expelled": "Жагылган",
+    "academic_leave": "Академиялык өргүү",
+    "suspended": "Убакытылуу токтотулган",
+    "graduated": "Бүтүргөн"
+  },
+  "course": {
+    "1": "1-курс",
+    "2": "2-курс",
+    "3": "3-курс",
+    "4": "4-курс"
+  },
+  "courses": "Курсу",
+  "student_list": "СТУДЕНТТЕРДИН ТИЗМЕСИ",
+  "student_id": "Студенттин ID",
+  "admission_year": "Кирген жылы",
+  "contract_paid": "Контракт төлөнгөн",
+  "create_student": "СТУДЕНТ ТҮЗҮҮ",
+  "update_student": "СТУДЕНТТИ ЖАҢЫЛОО",
+  "yes": "✔",
+  "no": "✘"
 }
+

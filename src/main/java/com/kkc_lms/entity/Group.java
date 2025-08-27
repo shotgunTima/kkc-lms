@@ -1,5 +1,7 @@
 package com.kkc_lms.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -17,6 +19,7 @@ public class Group {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "direction_id", nullable = false)
+    @JsonIgnoreProperties("groups")
     private Direction direction;
 
     @ManyToOne

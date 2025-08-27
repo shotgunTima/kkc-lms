@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/students")
+@RequestMapping("/api/students")
 public class StudentController {
 
     private final StudentService studentService;
@@ -43,7 +43,7 @@ public class StudentController {
             StudentDTO dto = new StudentDTO();
             dto.setId(student.getId());
             dto.setStudentIdNumber(student.getStudentIdNumber());
-            dto.setCourse(student.getCourse());
+            dto.setCourse(String.valueOf(student.getCourse()));
             if (student.getDirection() != null) {
                 dto.setDirectionId(student.getDirection().getId());
                 dto.setDirectionName(student.getDirection().getName());
@@ -93,5 +93,13 @@ public class StudentController {
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<StudentDTO> updateStudent(@PathVariable Long id,
+                                                    @Valid @RequestBody StudentCreateDTO dto) {
+        StudentDTO updated = studentService.updateStudent(id, dto);
+        return ResponseEntity.ok(updated);
+    }
+
 
 }

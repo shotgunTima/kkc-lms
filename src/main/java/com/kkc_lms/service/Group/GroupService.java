@@ -18,5 +18,7 @@ public interface GroupService {
     List<GroupDTO> distributeStudentsByCourseAndDirection(Integer courseNumber, Long directionId);
     Map<String, Object> getGroupStudents(Long groupId);
     StudentDTO transferStudentToGroup(Long studentId, Long targetGroupId, boolean force);
-  }
+    GroupDTO updateGroup(Long id, GroupCreateDTO dto);
+    List<GroupDTO> searchGroups(String search, String directionName);
+}
 

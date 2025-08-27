@@ -2,6 +2,8 @@
 package com.kkc_lms.controller;
 
 import com.kkc_lms.entity.AcademicTitles;
+import com.kkc_lms.entity.Course;
+import com.kkc_lms.entity.StudentStatus;
 import com.kkc_lms.entity.TeacherStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,4 +35,24 @@ public class EnumController {
                 ))
                 .collect(Collectors.toList());
     }
+    @GetMapping("/student-status")
+    public List<Map<String,String>> getStudentStatuses(){
+        return Arrays.stream(StudentStatus.values())
+                .map(st_status -> Map.of(
+                        "value", st_status.name(),
+                        "label", st_status.getLabel()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/courses")
+    public List<Map<String,String>> getCourses(){
+        return Arrays.stream(Course.values())
+                .map(course -> Map.of(
+                        "value", course.name(),
+                        "label", course.getLabel()
+                ))
+                .collect(Collectors.toList());
+    }
+
 }
