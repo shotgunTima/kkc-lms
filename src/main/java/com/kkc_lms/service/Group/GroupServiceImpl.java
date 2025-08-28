@@ -105,7 +105,7 @@ public class GroupServiceImpl implements GroupService {
         dto.setStudentIdNumber(student.getStudentIdNumber());
         dto.setTotalCredits(student.getTotalCredits());
         dto.setAdmissionYear(student.getAdmissionYear());
-        dto.setCourse(String.valueOf(student.getCourse()));
+        dto.setCourse(student.getCourse());
 
         if (student.getDirection() != null) {
             dto.setDirectionId(student.getDirection().getId());

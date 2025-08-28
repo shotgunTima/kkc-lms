@@ -25,5 +25,5 @@ public class StudentDTO {
     private int admissionYear;
     private boolean contractPaid;
     private StudentStatus status;
-    private String course;
+    private Course course;
 }

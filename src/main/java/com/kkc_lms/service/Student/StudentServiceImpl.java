@@ -315,7 +315,7 @@ public class StudentServiceImpl implements StudentService {
         dto.setAdmissionYear(student.getAdmissionYear());
 
         dto.setStatus(student.getStatus());
-        dto.setCourse(student.getCourse() != null ? String.valueOf(student.getCourse().getNumber()) : null);
+        dto.setCourse(Course.fromNumber(student.getCourse() != null ? student.getCourse().getNumber() : null));
         dto.setContractPaid(student.isContractPaid());
 
         return dto;

@@ -120,6 +120,10 @@
     "3": "3rd course",
     "4": "4th course"
   },
+  "FIRST": "1st course",
+  "SECOND": "2nd course",
+  "THIRD": "3rd course",
+  "FOURTH": "4th course",
   "courses": "Course",
   "student_list": "STUDENT LIST",
   "student_id": "Student ID",

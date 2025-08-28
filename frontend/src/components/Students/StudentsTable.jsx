@@ -114,7 +114,7 @@ const StudentTable = () => {
         {
             header: t('courses'),
             accessor: 'course',
-            render: val => val ? t(val) : ''
+            render: val => t(val)
         },
         {
             header: t('admission_year'),
