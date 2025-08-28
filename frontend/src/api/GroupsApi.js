@@ -26,8 +26,28 @@ export const getGroupById = (id) => {
     return axios.get(`${BASE_URL}/${id}`);
 };
 
-export const searchGroupByName = (name) => {
-    const params = {};
-    if (name) params.name = name;
-    return axios.get(`${BASE_URL}/search`, { params });
+export const distributeStudents = (courseNumber, directionId) => {
+    return axios.post(`${BASE_URL}/distribute`, null, {
+        params: { courseNumber, directionId }
+    });
 };
+
+
+export const transferStudentToGroup = (studentId, targetGroupId, force = false) => {
+    return axios.post(`${BASE_URL}/transfer-student`, null, {
+        params: { studentId, targetGroupId, force }
+    });
+};
+
+
+export const assignCurator = (groupId, curatorId) => {
+    return axios.post(`${BASE_URL}/${groupId}/assign-curator`, null, {
+        params: { curatorId }
+    });
+};
+
+
+export const assignCuratorsBulk = (assignments) => {
+    return axios.post(`${BASE_URL}/assign-curators`, assignments);
+};
+

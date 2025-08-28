@@ -1,8 +1,5 @@
 import { useEffect, useState } from 'react';
-import {
-    fetchStudents,
-    deleteStudent
-} from '../../api/StudentApi.js';
+import { fetchStudents, deleteStudent } from '../../api/StudentApi.js';
 import UserForm from '../Users/UserForm.jsx';
 import SearchInput from '../Inputs/SearchInput.jsx';
 import DataTable from '../DataTable.jsx';
@@ -10,21 +7,23 @@ import AddButton from "../Buttons/AddButton.jsx";
 import ActionButtons from "../Buttons/ActionButtons.jsx";
 import { useTranslation } from 'react-i18next';
 import ConfirmModal from "../ConfirmModal.jsx";
+import TransferStudentModal from '../../modals/TransferStudentModal.jsx';
+import {UserIcon, ArrowRightIcon, UserCheckIcon} from "lucide-react";
+
 
 const StudentTable = () => {
     const { t } = useTranslation();
-    const [showConfirm, setShowConfirm] = useState(false);
+    const [students, setStudents] = useState([]);
+    const [filters, setFilters] = useState({ search: '' });
     const [currentPage, setCurrentPage] = useState(1);
     const PAGE_SIZE = 10;
-    const [studentToDelete, setStudentToDelete] = useState(null);
-    const [students, setStudents] = useState([]);
-    const [editingStudent, setEditingStudent] = useState(null);
-    const [showForm, setShowForm] = useState(false);
-    const [filters, setFilters] = useState({ search: '' });
+
+    // единое состояние модалки
+    const [modal, setModal] = useState({ type: null, data: null });
 
     useEffect(() => {
         loadStudents();
-    }, [filters]);
+    }, []);
 
     const loadStudents = () => {
         fetchStudents()
@@ -48,64 +47,23 @@ const StudentTable = () => {
         currentPage * PAGE_SIZE
     );
 
-    const confirmDelete = id => {
-        setStudentToDelete(id);
-        setShowConfirm(true);
-    };
-
-    const handleConfirmDelete = async () => {
-        if (studentToDelete !== null) {
-            try {
-                await deleteStudent(studentToDelete);
-                loadStudents();
-            } catch (e) {
-                console.error(e);
-                alert(t('delete_error'));
-            } finally {
-                setShowConfirm(false);
-                setStudentToDelete(null);
-            }
+    const handleDelete = async (id) => {
+        try {
+            await deleteStudent(id);
+            loadStudents();
+        } catch (e) {
+            console.error(e);
+            alert(t('delete_error'));
+        } finally {
+            setModal({ type: null, data: null });
         }
     };
 
-    const handleEdit = (student) => {
-        setEditingStudent(student);
-        setShowForm(true);
-    };
-
-    const handleCreate = () => {
-        setEditingStudent(null);
-        setShowForm(true);
-    };
-
-    const handleSuccess = () => {
-        setShowForm(false);
-        setEditingStudent(null);
-        loadStudents();
-    };
-
-    const handleCancel = () => {
-        setShowForm(false);
-        setEditingStudent(null);
-    };
-
     const columns = [
-        {
-            header: t('fullname'),
-            accessor: 'fullname'
-        },
-        {
-            header: t('student_id'),
-            accessor: 'studentIdNumber',
-        },
-        {
-            header: t('direction'),
-            accessor: 'directionName'
-        },
-        {
-            header: t('group'),
-            accessor: 'groupName'
-        },
+        { header: t('fullname'), accessor: 'fullname' },
+        { header: t('student_id'), accessor: 'studentIdNumber' },
+        { header: t('direction'), accessor: 'directionName' },
+        { header: t('group'), accessor: 'groupName' },
         {
             header: t('status'),
             accessor: 'status',
@@ -116,10 +74,7 @@ const StudentTable = () => {
             accessor: 'course',
             render: val => t(val)
         },
-        {
-            header: t('admission_year'),
-            accessor: 'admissionYear'
-        },
+        { header: t('admission_year'), accessor: 'admissionYear' },
         {
             header: t('contract_paid'),
             accessor: 'contractPaid',
@@ -129,28 +84,50 @@ const StudentTable = () => {
             header: t('actions'),
             accessor: 'actions',
             render: (_, student) => (
-                <ActionButtons
-                    onEdit={() => handleEdit(student)}
-                    onDelete={() => confirmDelete(student.id)}
-                />
+                <div className="flex items-center gap-2">
+                    <ActionButtons
+                        onEdit={() => setModal({ type: 'edit', data: student })}
+                        onDelete={() => setModal({ type: 'delete', data: student })}
+                    />
+                    <button
+                        onClick={() => setModal({ type: 'transfer', data: student })}
+                        className="rounded-full p-1 text-sm transition-colors"
+                        title={t("transfer_student")}
+                    >
+                        <div className="flex items-center ">
+                            <UserIcon className="w-6 h-6 text-bgSecondary dark:text-gray-300 " />
+                            <ArrowRightIcon className="w-6 h-6 text-bgSecondary dark:text-gray-300 " />
+                        </div>
+                    </button>
+
+                </div>
             )
         }
     ];
 
     return (
         <div className="p-6">
-            {showForm && (
+
+            {modal.type === 'create' && (
                 <UserForm
-                    userId={editingStudent?.userId}
-                    studentId={editingStudent?.id}
                     fixedRole="STUDENT"
-                    onSuccess={handleSuccess}
-                    onCancel={handleCancel}
+                    onSuccess={() => { setModal({ type: null }); loadStudents(); }}
+                    onCancel={() => setModal({ type: null })}
+                />
+            )}
+
+            {modal.type === 'edit' && (
+                <UserForm
+                    userId={modal.data?.userId}
+                    studentId={modal.data?.id}
+                    fixedRole="STUDENT"
+                    onSuccess={() => { setModal({ type: null }); loadStudents(); }}
+                    onCancel={() => setModal({ type: null })}
                 />
             )}
 
             <div className="flex justify-between items-center mb-6">
-                <AddButton onClick={handleCreate} />
+                <AddButton onClick={() => setModal({ type: 'create' })} />
                 <SearchInput
                     value={filters.search}
                     onChange={newValue => handleFilterChange('search', newValue)}
@@ -171,15 +148,31 @@ const StudentTable = () => {
                 onPageChange={setCurrentPage}
             />
 
-            <ConfirmModal
-                isOpen={showConfirm}
-                onCancel={() => setShowConfirm(false)}
-                onConfirm={handleConfirmDelete}
-                title={t("confirm_delete_title")}
-                description={t("confirm_delete_description")}
-                confirmText={t("delete")}
-                cancelText={t("cancel")}
-            />
+            {/* --- Централизованные модалки --- */}
+
+
+
+            {modal.type === 'delete' && (
+                <ConfirmModal
+                    isOpen
+                    onCancel={() => setModal({ type: null })}
+                    onConfirm={() => handleDelete(modal.data?.id)}
+                    title={t("confirm_delete_title")}
+                    description={t("confirm_delete_description")}
+                    confirmText={t("delete")}
+                    cancelText={t("cancel")}
+                />
+            )}
+
+            {modal.type === 'transfer' && (
+                <TransferStudentModal
+                    isOpen
+                    initialStudentId={modal.data?.id}   // предзаполняем студента
+                    onClose={() => setModal({ type: null })}
+                    onSuccess={loadStudents}
+                />
+            )}
+
         </div>
     );
 };
