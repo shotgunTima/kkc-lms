@@ -129,16 +129,18 @@ public class UserServiceImpl implements UserService {
 
         Role newRole = savedUser.getRole();
         if (oldRole != newRole) {
+            // 🧑‍🏫 Teacher
             if (oldRole != Role.TEACHER && newRole == Role.TEACHER) {
                 teacherService.createForUserWithDetails(savedUser, dto.getAcademicTitle(), dto.getTeacherStatus(), dto.getHireDate());
             } else if (oldRole == Role.TEACHER && newRole != Role.TEACHER) {
                 teacherService.deleteByUserId(savedUser.getId());
             }
-        } else if (newRole == Role.TEACHER) {
-            teacherService.updateTeacherDetails(savedUser.getId(), dto.getAcademicTitle(), dto.getTeacherStatus(), dto.getHireDate());
-        }else if (newRole == Role.STUDENT) {
-                studentService.updateStudentDetails(
-                        savedUser.getId(),
+
+            // 🎓 Student
+            if (oldRole != Role.STUDENT && newRole == Role.STUDENT) {
+                // Создать студента
+                studentService.createForUser(
+                        savedUser,
                         dto.getGroupId(),
                         dto.getDirectionId(),
                         dto.getAdmissionYear(),
@@ -148,7 +150,27 @@ public class UserServiceImpl implements UserService {
                         dto.getTotalCredits(),
                         dto.getStudentIdNumber()
                 );
+            } else if (oldRole == Role.STUDENT && newRole != Role.STUDENT) {
+                // Удалить студента
+                studentService.deleteByUserId(savedUser.getId());
             }
+
+        } else if (newRole == Role.TEACHER) {
+            teacherService.updateTeacherDetails(savedUser.getId(), dto.getAcademicTitle(), dto.getTeacherStatus(), dto.getHireDate());
+        } else if (newRole == Role.STUDENT) {
+            studentService.updateStudentDetails(
+                    savedUser.getId(),
+                    dto.getGroupId(),
+                    dto.getDirectionId(),
+                    dto.getAdmissionYear(),
+                    dto.getCourse(),
+                    dto.isContractPaid(),
+                    dto.getStatus(),
+                    dto.getTotalCredits(),
+                    dto.getStudentIdNumber()
+            );
+        }
+
 
         return toDTO(savedUser);
     }
