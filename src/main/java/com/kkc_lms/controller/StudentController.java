@@ -43,7 +43,7 @@ public class StudentController {
             StudentDTO dto = new StudentDTO();
             dto.setId(student.getId());
             dto.setStudentIdNumber(student.getStudentIdNumber());
-            dto.setCourse(String.valueOf(student.getCourse()));
+            dto.setCourse(student.getCourse());
             if (student.getDirection() != null) {
                 dto.setDirectionId(student.getDirection().getId());
                 dto.setDirectionName(student.getDirection().getName());

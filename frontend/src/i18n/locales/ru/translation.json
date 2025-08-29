@@ -121,15 +121,35 @@
     "3": "3 курс",
     "4": "4 курс"
   },
+  "FIRST": "1 курс",
+  "SECOND": "2 курс",
+  "THIRD": "3 курс",
+  "FOURTH": "4 курс",
   "courses": "Курс",
   "student_list": "СПИСОК СТУДЕНТОВ",
   "student_id": "ID студента",
-  "admission_year": "Год поступления",
-  "contract_paid": "Контракт оплачен",
+
+  "admission_year": "Год",
+  "contract_paid": "Контракт",
   "create_student": "СОЗДАТЬ СТУДЕНТА",
   "update_student": "ОБНОВИТЬ СТУДЕНТА",
-  "yes": "✔",
-  "no": "✘"
+  "yes": "оплатил",
+  "no": "не оплатил",
+  "students_amount": "Количество студентов",
+  "transfer_student": "ПЕРЕВОД СТУДЕНТА в группу",
+  "choose_group" : "Выберите группу",
+  "choose_student" : "Выберите студента",
+  "force_transfer" : "Принудительно",
+  "transfer" : "Перевести",
+  "confirm" : "Подтвердить",
+  "distribute_students": "РАСПРЕДЕЛИТЬ СТУДЕНТОВ по группам",
+  "choose_course" : "Выберите курс",
+  "choose_direction" : "Выберите направление",
+  "choose_curator": "Выберите куратора",
+  "assign_curators_bulk": "НАЗНАЧИТЬ КУРАТОРОВ по группам",
+  "assign_curator" : "НАЗНАЧИТЬ КУРАТОРА",
+  "distribute_students_l": "Распределить студентов",
+  "assign_curators_bulk_l": "Назначить кураторов"
 
 
 

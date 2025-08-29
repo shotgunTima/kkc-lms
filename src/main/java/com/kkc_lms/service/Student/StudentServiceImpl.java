@@ -65,6 +65,8 @@ public class StudentServiceImpl implements StudentService {
         s.setTotalCredits(totalCredits);
         s.setContractPaid(contractPaid);
         s.setStatus(status != null ? status : StudentStatus.ACTIVE);
+        s.setCourse(course != null ? course : Course.FIRST);
+
 
         if (studentIdNumber == null || studentIdNumber.isBlank()) {
             s.setStudentIdNumber(generateUniqueStudentIdNumber());
@@ -271,8 +273,14 @@ public class StudentServiceImpl implements StudentService {
     @Override
     @Transactional
     public void deleteStudentById(Long id) {
-        studentRepository.deleteById(id);
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Студент не найден"));
+        Long userId = student.getUser().getId();
+
+        studentRepository.delete(student);
+        userRepository.deleteById(userId); // <-- удаляем пользователя
     }
+
 
     @Transactional
     public void deleteByUserId(Long userId) {
@@ -307,7 +315,7 @@ public class StudentServiceImpl implements StudentService {
         dto.setAdmissionYear(student.getAdmissionYear());
 
         dto.setStatus(student.getStatus());
-        dto.setCourse(student.getCourse() != null ? student.getCourse().getLabel() : null);
+        dto.setCourse(Course.fromNumber(student.getCourse() != null ? student.getCourse().getNumber() : null));
         dto.setContractPaid(student.isContractPaid());
 
         return dto;

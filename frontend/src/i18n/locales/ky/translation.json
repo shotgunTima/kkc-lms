@@ -114,19 +114,38 @@
     "graduated": "Бүтүргөн"
   },
   "course": {
-    "1": "1-курс",
-    "2": "2-курс",
-    "3": "3-курс",
-    "4": "4-курс"
+    "1": "1чи курс",
+    "2": "2чи курс",
+    "3": "3чу курс",
+    "4": "4чу курс"
   },
+  "FIRST": "1чи курс",
+  "SECOND": "2чи курс",
+  "THIRD": "3чу курс",
+  "FOURTH": "4чу курс",
   "courses": "Курсу",
   "student_list": "СТУДЕНТТЕРДИН ТИЗМЕСИ",
   "student_id": "Студенттин ID",
-  "admission_year": "Кирген жылы",
-  "contract_paid": "Контракт төлөнгөн",
-  "create_student": "СТУДЕНТ ТҮЗҮҮ",
+  "admission_year": "Кабыл алуу жылы",
+  "contract_paid": "Контракт",
+  "create_student": "СТУДЕНТТИ ЖАРАТУУ",
   "update_student": "СТУДЕНТТИ ЖАҢЫЛОО",
-  "yes": "✔",
-  "no": "✘"
+  "yes": "Төлөдү",
+  "no": "Төлөбөгөн",
+  "students_amount": "Студенттердин саны",
+  "transfer_student": "СТУДЕНТТИ ГРУППАГА КӨЧҮРҮҮ",
+  "choose_group": "Группаны тандаңыз",
+  "choose_student": "Студентти тандаңыз",
+  "force_transfer": "Мажбурлап көчүрүү",
+  "transfer": "Көчүрүү",
+  "confirm": "Тастыктоо",
+  "distribute_students": "СТУДЕНТТЕРДИ ГРУППАЛАРГА ТАРАТУУ",
+  "choose_course": "Курсту тандаңыз",
+  "choose_direction": "Багытты тандаңыз",
+  "choose_curator": "Куратору тандаңыз",
+  "assign_curators_bulk": "КУРАТОРЛОРДУ ГРУППАЛАРГА ТАШАП БЕРҮҮ",
+  "assign_curator": "КУРАТОРДУ ТАШАП БЕРҮҮ",
+  "distribute_students_l": "Студенттерди таратуу",
+  "assign_curators_bulk_l": "Кураторлорду таштап берүү"
 }
 

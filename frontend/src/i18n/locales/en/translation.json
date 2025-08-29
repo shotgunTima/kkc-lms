@@ -120,15 +120,34 @@
     "3": "3rd course",
     "4": "4th course"
   },
+  "FIRST": "1st course",
+  "SECOND": "2nd course",
+  "THIRD": "3rd course",
+  "FOURTH": "4th course",
   "courses": "Course",
   "student_list": "STUDENT LIST",
   "student_id": "Student ID",
-  "admission_year": "Admission year",
-  "contract_paid": "Contract paid",
+  "admission_year": "Admission Year",
+  "contract_paid": "Contract",
   "create_student": "CREATE STUDENT",
   "update_student": "UPDATE STUDENT",
-  "yes": "✔",
-  "no": "✘"
+  "yes": "Paid",
+  "no": "Not Paid",
+  "students_amount": "Students Amount",
+  "transfer_student": "TRANSFER STUDENT to Group",
+  "choose_group": "Choose Group",
+  "choose_student": "Choose Student",
+  "force_transfer": "Force Transfer",
+  "transfer": "Transfer",
+  "confirm": "Confirm",
+  "distribute_students": "DISTRIBUTE STUDENTS to Groups",
+  "choose_course": "Choose Course",
+  "choose_direction": "Choose Direction",
+  "choose_curator": "Choose Curator",
+  "assign_curators_bulk": "ASSIGN CURATORS to Groups",
+  "assign_curator": "ASSIGN CURATOR",
+  "distribute_students_l": "Distribute Students",
+  "assign_curators_bulk_l": "Assign Curators"
 
 
 }

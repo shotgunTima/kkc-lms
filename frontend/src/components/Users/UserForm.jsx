@@ -32,7 +32,7 @@ const UserForm = ({ userId, onSuccess, onCancel, fixedRole }) => {
         groupId: '',
         admissionYear: new Date().getFullYear(),
         contractPaid: false,
-        studentStatus: '',
+        status: '',
         course: '',
     });
 
@@ -87,7 +87,7 @@ const UserForm = ({ userId, onSuccess, onCancel, fixedRole }) => {
                 }));
                 setStudentStatusOptions(options);
                 if (options.length > 0) {
-                    setFormData(prev => ({...prev, studentStatus: prev.studentStatus || options[0].value}));
+                    setFormData(prev => ({ ...prev, status: prev.status || options[0].value }));
                 }
             })
             .catch(err => console.error("Ошибка при получении статусов студента", err));
@@ -148,6 +148,7 @@ const UserForm = ({ userId, onSuccess, onCancel, fixedRole }) => {
                             course: data.course || prev.course,
                             profileImage: data.profileImage || prev.profileImage,
                             groupId: data.groupId || prev.groupId,
+                            status: data.status || prev.status,
                         }));
                     })
                     .catch(console.error)
@@ -208,7 +209,7 @@ const UserForm = ({ userId, onSuccess, onCancel, fixedRole }) => {
                 payload.directionId = Number(formData.directionId);
                 payload.admissionYear = formData.admissionYear;
                 payload.contractPaid = formData.contractPaid;
-                payload.studentStatus = formData.studentStatus;
+                payload.status = formData.status;
                 payload.course = formData.course;
 
                 if (isEdit) await updateUser(userId, payload);
@@ -250,9 +251,12 @@ const UserForm = ({ userId, onSuccess, onCancel, fixedRole }) => {
                 <h2 className="text-xl text-textPrimary mb-5 opacity-70 dark:text-blue-200">
                     {fixedRole === 'TEACHER'
                         ? (isEdit ? t('update_teacher') : t('create_teacher'))
-                        : (isEdit ? t('update_user') : t('create_user'))
+                        : fixedRole === 'STUDENT'
+                            ? (isEdit ? t('update_student') : t('create_student'))
+                            : (isEdit ? t('update_user') : t('create_user'))
                     }
                 </h2>
+
 
                 <div className="grid grid-cols-2 gap-4">
                     <FloatingLabelInput
@@ -387,12 +391,12 @@ const UserForm = ({ userId, onSuccess, onCancel, fixedRole }) => {
                             />
 
                             <SelectField
-                                id="studentStatus"
-                                name="studentStatus"
-                                value={formData.studentStatus}
+                                id="status"
+                                name="status"
+                                value={formData.status}
                                 onChange={handleChange}
                                 options={studentStatusOptions}
-                                error={errors.studentStatus}
+                                error={errors.status}
                             />
 
                             <SelectField

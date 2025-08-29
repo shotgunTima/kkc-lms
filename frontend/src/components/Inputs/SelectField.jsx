@@ -1,28 +1,38 @@
 import { useTranslation } from 'react-i18next';
+import { useState } from 'react';
 
 const SelectField = ({ id, name, value, onChange, options = [], error, label }) => {
     const { t } = useTranslation();
+    const [isFocused, setIsFocused] = useState(false);
 
     return (
         <div className="relative w-full">
-            <label
-                htmlFor={id}
-                className="block mb-1 text-sm font-medium text-textPrimary dark:text-gray-300"
-            >
-                {label}
-            </label>
+            {label && (
+                <label
+                    htmlFor={id}
+                    className="block mb-1 text-sm font-medium text-textPrimary dark:text-gray-300"
+                >
+                    {label}
+                </label>
+            )}
             <select
                 id={id}
                 name={name}
                 value={value}
                 onChange={onChange}
-                className={`peer w-full px-4 py-2 rounded-md border bg-white text-textPrimary text-opacity-60
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setIsFocused(false)}
+                className={`
+                    w-full px-4 py-2 rounded-md border bg-white
+                    ${value || isFocused ? 'text-textPrimary text-opacity-100' : 'text-textPrimary text-opacity-60'}
                     hover:text-textPrimary hover:text-opacity-100
-                    dark:text-gray-500 dark:hover:text-gray-300 dark:bg-gray-800 dark:border-gray-500 dark:placeholder:text-gray-400
+                    dark:bg-gray-800 dark:border-gray-500 dark:text-gray-300 dark:hover:text-gray-100
                     ${error ? 'border-red-500' : 'border-bgSecondary border-opacity-50'}
-                    focus:outline-none focus:border-bgSecondary`}
+                    focus:outline-none focus:border-bgSecondary
+                    transition-colors duration-150
+                `}
             >
-                {options.map((opt) => (
+                {options.map(opt => (
                     <option key={opt.value} value={opt.value}>
                         {opt.label}
                     </option>

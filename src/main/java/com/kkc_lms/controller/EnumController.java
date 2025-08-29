@@ -49,7 +49,7 @@ public class EnumController {
     public List<Map<String,String>> getCourses(){
         return Arrays.stream(Course.values())
                 .map(course -> Map.of(
-                        "value", course.name(),
+                        "value", String.valueOf(course.getNumber()),
                         "label", course.getLabel()
                 ))
                 .collect(Collectors.toList());
