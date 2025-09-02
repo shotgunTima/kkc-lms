@@ -1,9 +1,6 @@
 package com.kkc_lms.repository;
 
-import com.kkc_lms.entity.Course;
-import com.kkc_lms.entity.Direction;
-import com.kkc_lms.entity.Group;
-import com.kkc_lms.entity.Student;
+import com.kkc_lms.entity.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -17,4 +14,9 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     List<Student> findByGroup(Group group);
     long countByGroupId(Long groupId);
     Optional<Student> findByUserId(Long userId);
+    List<Student> findAll();
+    List<Student> findAllByDirection(Direction direction);
+    List<Student> findAllByDirectionAndGroup(Direction direction, Group group);
+    List<Student> findByGroup_Id(Long groupId);
+
 }

@@ -1,6 +1,7 @@
 package com.kkc_lms.service.Student;
 
 
+import com.kkc_lms.dto.News.NewsDTO;
 import com.kkc_lms.dto.Student.StudentCreateDTO;
 import com.kkc_lms.dto.Student.StudentDTO;
 import com.kkc_lms.entity.Course;
@@ -36,4 +37,5 @@ public interface StudentService {
     List<StudentDTO> getAllStudents();
     List<Student> getStudentsByCourseAndDirection(Integer courseNumber, Long directionId);
     void deleteStudentById(Long id);
+    List<NewsDTO> getNewsForStudent(Long studentId);
 }

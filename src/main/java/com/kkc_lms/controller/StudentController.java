@@ -1,5 +1,6 @@
 package com.kkc_lms.controller;
 
+import com.kkc_lms.dto.News.NewsDTO;
 import com.kkc_lms.dto.Student.StudentDTO;
 import com.kkc_lms.dto.Student.StudentCreateDTO;
 import com.kkc_lms.entity.Student;
@@ -100,6 +101,10 @@ public class StudentController {
         StudentDTO updated = studentService.updateStudent(id, dto);
         return ResponseEntity.ok(updated);
     }
-
+    @GetMapping("/{studentId}/news")
+    public ResponseEntity<List<NewsDTO>> getNewsForStudent(@PathVariable Long studentId) {
+        List<NewsDTO> news = studentService.getNewsForStudent(studentId);
+        return ResponseEntity.ok(news);
+    }
 
 }

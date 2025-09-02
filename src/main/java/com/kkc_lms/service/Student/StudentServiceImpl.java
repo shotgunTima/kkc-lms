@@ -1,12 +1,10 @@
 package com.kkc_lms.service.Student;
 
+import com.kkc_lms.dto.News.NewsDTO;
 import com.kkc_lms.dto.Student.StudentCreateDTO;
 import com.kkc_lms.dto.Student.StudentDTO;
 import com.kkc_lms.entity.*;
-import com.kkc_lms.repository.DirectionRepository;
-import com.kkc_lms.repository.GroupRepository;
-import com.kkc_lms.repository.StudentRepository;
-import com.kkc_lms.repository.UserRepository;
+import com.kkc_lms.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +28,7 @@ public class StudentServiceImpl implements StudentService {
     private final GroupRepository groupRepository;
     private final DirectionRepository directionRepository;
     private final PasswordEncoder passwordEncoder;
+    private final NewsRecipientRepository newsRecipientRepository;
 
     @Override
     public List<Student> getStudentsByCourseAndDirection(Integer courseNumber, Long directionId) {
@@ -320,4 +319,24 @@ public class StudentServiceImpl implements StudentService {
 
         return dto;
     }
+
+    public List<NewsDTO> getNewsForStudent(Long studentId) {
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new IllegalArgumentException("Student not found"));
+
+        List<NewsRecipient> recipients = newsRecipientRepository.findAllByStudent(student);
+
+        return recipients.stream().map(r -> {
+            NewsDTO dto = new NewsDTO();
+            dto.setId(r.getNews().getId());
+            dto.setTitle(r.getNews().getTitle());
+            dto.setContent(r.getNews().getContent());
+            dto.setAttachmentUrl(r.getNews().getAttachmentUrl());
+            dto.setTargetType(r.getNews().getTargetType().name());
+            dto.setCreatedAt(r.getNews().getCreatedAt());
+            dto.setRead(r.isRead());
+            return dto;
+        }).collect(Collectors.toList());
+    }
+
 }
