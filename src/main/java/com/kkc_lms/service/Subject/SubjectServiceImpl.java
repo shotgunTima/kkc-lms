@@ -20,6 +20,11 @@ public class SubjectServiceImpl implements SubjectService {
     private final SubjectRepository subjectRepository;
     private final TeacherRepository teacherRepository;
 
+    private String generateDefaultCode() {
+        long count = subjectRepository.count() + 1; // можно sequence
+        return String.format("SUB-%04d", count);
+    }
+
     @Override
     public Subject createSubject(SubjectCreateDTO dto) {
         if (subjectRepository.existsByNameIgnoreCase(dto.getName())) {
@@ -28,6 +33,12 @@ public class SubjectServiceImpl implements SubjectService {
         Subject subject = new Subject();
         subject.setName(dto.getName());
         subject.setCredits(dto.getCredits());
+        subject.setDescription(dto.getDescription());
+        subject.setCode(
+                (dto.getCode() == null || dto.getCode().isBlank())
+                        ? generateDefaultCode()
+                        : dto.getCode().trim()
+        );
 
         Set<Teacher> teachers = new HashSet<>(teacherRepository.findAllById(dto.getTeacherIds()));
         subject.setTeachers(teachers);
@@ -60,6 +71,12 @@ public class SubjectServiceImpl implements SubjectService {
 
         subject.setName(dto.getName());
         subject.setCredits(dto.getCredits());
+        subject.setCode(
+                (dto.getCode() == null || dto.getCode().isBlank())
+                        ? subject.getCode() // оставляем старый код
+                        : dto.getCode().trim()
+        );
+        subject.setDescription(dto.getDescription());
 
         // Удаляем старые связи ManyToMany с учителями
         subject.getTeachers().forEach(teacher -> teacher.getSubjects().remove(subject));
@@ -90,6 +107,8 @@ public class SubjectServiceImpl implements SubjectService {
         dto.setId(subject.getId());
         dto.setName(subject.getName());
         dto.setCredits(subject.getCredits());
+        dto.setCode(subject.getCode());
+        dto.setDescription(subject.getDescription());
 
         Set<Teacher> teachers = subject.getTeachers() != null ? subject.getTeachers() : Set.of();
 

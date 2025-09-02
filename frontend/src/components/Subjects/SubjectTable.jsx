@@ -119,6 +119,11 @@ const SubjectTable = () => {
             render: val => Array.isArray(val) && val.length > 0 ? val.join(", ") : t('no_teachers')
         },
         {
+            header: t('description'),
+            accessor: 'description',
+            render: val => val || t('no_description')
+        },
+        {
             header: t('credits'),
             accessor: 'credits',
         },

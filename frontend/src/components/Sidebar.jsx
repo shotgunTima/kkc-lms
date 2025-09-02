@@ -9,6 +9,8 @@ const menuItems = [
     { key: 'teachers' },
     { key: 'directions' },
     { key: 'subjects' },
+    { key: 'offerings' },
+    { key: 'semesters' },
 ];
 
 

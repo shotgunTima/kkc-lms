@@ -8,5 +8,7 @@ import java.util.List;
 public class SubjectCreateDTO {
     private String name;
     private int credits;
+    private String code;
+    private String description;
     private List<Long> teacherIds; // список ID преподавателей
 }

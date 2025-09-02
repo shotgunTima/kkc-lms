@@ -149,7 +149,43 @@
   "assign_curators_bulk": "НАЗНАЧИТЬ КУРАТОРОВ по группам",
   "assign_curator" : "НАЗНАЧИТЬ КУРАТОРА",
   "distribute_students_l": "Распределить студентов",
-  "assign_curators_bulk_l": "Назначить кураторов"
+  "assign_curators_bulk_l": "Назначить кураторов",
+
+  "offerings": "Курсы",
+  "semesters": "Семестры",
+  "semester": "Семестр",
+  "create_semester": "Создать семестр",
+  "edit_semester": "Обновить семестр",
+  "semester_list": "Список семестров",
+  "term": "Время года",
+  "terms": {
+    "spring": "Весна",
+    "summer": "Лето",
+    "fall": "Осень",
+    "winter": "Зима"
+  },
+  "start_date": "Начало",
+  "end_date": "Конец",
+  "year": "Год",
+  "total_hours": "Всего часов",
+  "components": "Компонент",
+  "component_type": "Тип",
+  "add_component": "Добавить компонент",
+  "remove": "Удалить",
+  "update_offering": "Обновить курс",
+  "create_offering": "Создать курс",
+  "select_subject": "Выберите предмет",
+  "select_semester": "Выберите семестр",
+  "hours": "Часы",
+  "practical": "практ.",
+  "lecture": "лк.",
+  "lab": "лаб.",
+  "credit": "кредитов",
+  "all_credits" : "Все",
+  "capacity" : "Лимит студентов",
+  "code": "Код предмета",
+  "offering_details": "Детали курса"
+
 
 
 

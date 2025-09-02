@@ -8,6 +8,8 @@ import Directions from "./Directions.jsx";
 import {useTranslation} from "react-i18next";
 import Teachers from "./Teachers.jsx";
 import Subjects from "./Subjects.jsx";
+import Offerings from "./Offerings.jsx";
+import Semesters from "./Semesters.jsx";
 
 const Home = () => {
     const [selectedSection, setSelectedSection] = useState(null)
@@ -40,6 +42,10 @@ const Home = () => {
                                 return <Directions />
                             case 'subjects':
                                 return <Subjects />
+                            case 'offerings':
+                                return <Offerings />;
+                            case 'semesters':
+                                return <Semesters />
                             default:
                                 return <p className="text-lg text-gray-500 dark:text-gray-400">{t("select_section")}</p>
                         }

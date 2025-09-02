@@ -9,6 +9,8 @@ public class SubjectDTO {
     private Long id;
     private String name;
     private int credits;
+    private String code;
+    private String description;
     private List<Long> teacherIds;
     private List<String> teacherNames;
 }

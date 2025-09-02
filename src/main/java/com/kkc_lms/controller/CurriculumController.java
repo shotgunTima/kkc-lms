@@ -40,6 +40,12 @@ public class CurriculumController {
         return offering.toDto();
     }
 
+    @GetMapping("/offerings/with-assignments")
+    public List<OfferingWithAssignmentsDTO> getAllWithAssignments() {
+        return curriculumService.getAllWithAssignments();
+    }
+
+
     // PUT /curriculum/offerings/{id} -> update (partial)
     @PutMapping("/offerings/{id}")
     public OfferingDTO updateOffering(@PathVariable Long id, @RequestBody CreateOfferingDTO dto) {

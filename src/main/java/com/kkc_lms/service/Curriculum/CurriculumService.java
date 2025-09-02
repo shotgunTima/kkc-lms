@@ -1,4 +1,5 @@
 package com.kkc_lms.service.Curriculum;
+import com.kkc_lms.dto.OfferingWithAssignmentsDTO;
 import com.kkc_lms.entity.Course;
 import com.kkc_lms.dto.ComponentDTO;
 import com.kkc_lms.dto.CreateOfferingDTO;
@@ -112,6 +113,13 @@ public class CurriculumService {
         return offeringRepo.findBySemester(sem);
     }
 
+    public List<OfferingWithAssignmentsDTO> getAllWithAssignments() {
+        return offeringRepo.findAll().stream()
+                .map(SubjectOffering::toWithAssignmentsDto)
+                .toList();
+    }
+
+
     // По семестр+направление+курс (эффективный путь)
     public List<SubjectOffering> getOfferingsForCurriculum(Long semesterId, Long directionId, Course course) {
         return offeringRepo.findBySemesterIdAndDirectionIdAndCourse(semesterId, directionId, course);
@@ -151,6 +159,7 @@ public class CurriculumService {
      */
     @Transactional
     public SubjectOffering assignTeacherToComponent(AssignTeacherDTO dto) {
+
         SubjectComponent component = componentRepo.findById(dto.getComponentId())
                 .orElseThrow(() -> new RuntimeException("Component not found"));
         Teacher teacher = teacherRepo.findById(dto.getTeacherId())

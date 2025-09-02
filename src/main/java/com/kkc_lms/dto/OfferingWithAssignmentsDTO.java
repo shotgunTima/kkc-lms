@@ -13,4 +13,9 @@ public class OfferingWithAssignmentsDTO {
     private Integer totalHours;
     private Integer capacity;
     private List<ComponentAssignmentDTO> componentAssignments;
+    private Long subjectId;
+    private Long semesterId;
+    private Long directionId;
+    private String course;
+
 }
