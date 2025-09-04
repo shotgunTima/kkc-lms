@@ -4,7 +4,7 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import App from "./App.jsx";
-import LoginPage, { AuthProvider, ProtectedRoute } from "./auth/AuthPack.jsx";
+import {AuthProvider, LoginPage, ProtectedRoute} from "./auth/AuthPack.jsx";
 
 createRoot(document.getElementById("root")).render(
     <BrowserRouter>
