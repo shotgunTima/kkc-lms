@@ -146,6 +146,11 @@
   "assign_curators_bulk": "담당자를 그룹에 일괄 배정",
   "assign_curator": "담당자 배정",
   "distribute_students_l": "학생 배정",
-  "assign_curators_bulk_l": "담당자 일괄 배정"
+  "assign_curators_bulk_l": "담당자 일괄 배정",
+  "select_teacher": "교사 선택",
+  "schedule": "시간표",
+  "day": "요일",
+  "time": "시간",
+  "schedule_list": "시간표 목록"
 
 }

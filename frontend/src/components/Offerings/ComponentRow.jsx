@@ -1,31 +1,33 @@
-import { useEffect, useState } from 'react';
-import { fetchTeachers } from '../../api/TeachersApi.js';
+
 import SelectField from '../Inputs/SelectField.jsx';
 import FloatingLabelInput from '../Inputs/FloatingLabelInput.jsx';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
+import {useEffect, useState} from "react";
+import {fetchTeachers} from "../../api/TeachersApi.js";
+import {fetchGroups} from "../../api/GroupsApi.js";
 
 const ComponentRow = ({ index, component = {}, onChange, onRemove }) => {
     const { t } = useTranslation();
     const [teachers, setTeachers] = useState([]);
+    const [groups, setGroups] = useState([]);
 
     useEffect(() => {
         fetchTeachers()
             .then(res => setTeachers(res.data || []))
-            .catch(err => console.error("Ошибка при получении преподавателей:", err));
+            .catch(console.error);
+
+        fetchGroups()
+            .then(res => setGroups(res.data || [])) // <-- здесь правильный setGroups
+            .catch(console.error);
     }, []);
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         onChange(index, { ...component, [name]: value });
     };
 
-    const teacherOptions = (teachers || [])
-        .filter(t => t && t.fullname) // только преподаватели с ФИО
-        .map(t => ({
-            value: t.fullname,          // значение селектора — ФИО
-            label: t.fullname           // отображаемое имя — тоже ФИО
-        }));
 
     return (
         <motion.div
@@ -36,6 +38,8 @@ const ComponentRow = ({ index, component = {}, onChange, onRemove }) => {
         >
             <SelectField
                 name="type"
+                label={t('component_type')}
+                value={component.type || ''}
                 value={component.type || ''}
                 onChange={handleChange}
                 label={t('component_type')}
@@ -53,14 +57,24 @@ const ComponentRow = ({ index, component = {}, onChange, onRemove }) => {
                 value={component.hours || ''}
                 onChange={handleChange}
             />
+            <SelectField
+                name="groupId"
+                value={component.groupId || ''}
+                onChange={e => handleChange({ target: { name: 'groupId', value: e.target.value } })}
+                options={[{ value: '', label: t('choose_group') }, ...groups.map(g => ({ value: g.id, label: g.name }))]}
+            />
 
             <SelectField
-                name="teacherName"
-                value={component.teacherName || ''}
-                onChange={handleChange}
-                label={t('teachers')}
-                options={teacherOptions}
+                name="teacherId"
+                value={component.teacherId || ''}
+                onChange={(e) => handleChange({ target: { name: 'teacherId', value: e.target.value } })}
+                options={[
+                    { value: '', label: t('select_teacher') },
+                    ...(teachers || []).map(teacher => ({ value: teacher.id, label: teacher.fullname }))
+                ]}
+
             />
+
 
             <button
                 type="button"

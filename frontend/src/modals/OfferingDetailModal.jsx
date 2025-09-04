@@ -28,8 +28,8 @@ const OfferingDetailsModal = ({ isOpen, onClose, offeringId }) => {
 
         return {
             course: offering.course?.ru || offering.course?.key || offering.course || '–',
-            semester: offering.semester?.term || offering.semesterTerm || '–',
-            direction: offering.direction?.name || offering.directionName || '–',
+            semester: offering.semesterName || '–',
+            direction: offering.directionName || '–',
             subjectName: offering.subjectName || '–',
             subjectCode: offering.subjectCode || '–',
             credits: offering.credits || '–',

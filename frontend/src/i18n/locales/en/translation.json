@@ -147,7 +147,12 @@
   "assign_curators_bulk": "ASSIGN CURATORS to Groups",
   "assign_curator": "ASSIGN CURATOR",
   "distribute_students_l": "Distribute Students",
-  "assign_curators_bulk_l": "Assign Curators"
+  "assign_curators_bulk_l": "Assign Curators",
+  "select_teacher": "Select Teacher",
+  "schedule": "Schedule",
+  "day": "Day",
+  "time": "Time",
+  "schedule_list": "Schedule List"
 
 
 }

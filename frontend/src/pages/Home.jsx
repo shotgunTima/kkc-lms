@@ -10,6 +10,7 @@ import Teachers from "./Teachers.jsx";
 import Subjects from "./Subjects.jsx";
 import Offerings from "./Offerings.jsx";
 import Semesters from "./Semesters.jsx";
+import Schedule from "./Schedule.jsx";
 
 const Home = () => {
     const [selectedSection, setSelectedSection] = useState(null)
@@ -46,6 +47,8 @@ const Home = () => {
                                 return <Offerings />;
                             case 'semesters':
                                 return <Semesters />
+                            case 'schedule':
+                                return <Schedule />
                             default:
                                 return <p className="text-lg text-gray-500 dark:text-gray-400">{t("select_section")}</p>
                         }

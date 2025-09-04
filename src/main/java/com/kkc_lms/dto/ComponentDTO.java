@@ -10,4 +10,5 @@ public class ComponentDTO {
     private int hours;
     private Long teacherId;
     private String teacherName;
+    private Long groupId;
 }

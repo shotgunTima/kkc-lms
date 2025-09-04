@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { fetchAllOfferings, deleteOffering } from '../../api/CurriculumApi.js';
+import { fetchAllOfferingsWithAssignments, deleteOffering } from '../../api/CurriculumApi.js';
 import OfferingForm from './OfferingForm.jsx';
 import SearchInput from '../Inputs/SearchInput.jsx';
 import DataTable from '../DataTable.jsx';
@@ -27,8 +27,9 @@ const SubjectOfferingsTable = () => {
         setViewOfferingId(id);
         setShowDetails(true);
     };
+
     const loadOfferings = () => {
-        fetchAllOfferings()
+        fetchAllOfferingsWithAssignments()
             .then(res => setOfferings(res.data))
             .catch(console.error);
     };
@@ -98,13 +99,27 @@ const SubjectOfferingsTable = () => {
         { header: t('semester'), accessor: 'semesterName' },
         { header: t('total_hours'), accessor: 'totalHours' },
         {
-            header: t('component_type'),
-            accessor: 'components',
+            header: t('teachers'),
+            accessor: 'componentAssignments',
             render: (_, o) =>
-                o.components?.map(c => `${t(c.type.toLowerCase())} (${c.hours} ч.)`).join(', ') || '–'
-
+                o.componentAssignments?.map(c => c.teacherName || '–').join(', ') || '–'
         },
-        { header: t('capacity'), accessor: 'capacity' },
+        {
+            header: t('group'),
+            accessor: 'componentAssignments',
+            render: (_, o) =>
+                o.componentAssignments?.map(c => c.groupName || '–').join(', ') || '–'
+        },
+        {
+            header: t('component_type'),
+            accessor: 'componentAssignments',
+            render: (_, o) =>
+                o.componentAssignments?.map(c => `${t(c.type.toLowerCase())} (${c.hours} ч.)`).join(', ') || '–'
+        },
+
+
+
+
         {
             header: t('actions'),
             accessor: 'actions',

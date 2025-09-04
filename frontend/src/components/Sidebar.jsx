@@ -11,6 +11,7 @@ const menuItems = [
     { key: 'subjects' },
     { key: 'offerings' },
     { key: 'semesters' },
+    { key: 'schedule' },
 ];
 
 

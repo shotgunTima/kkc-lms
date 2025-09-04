@@ -146,6 +146,11 @@
   "assign_curators_bulk": "КУРАТОРЛОРДУ ГРУППАЛАРГА ТАШАП БЕРҮҮ",
   "assign_curator": "КУРАТОРДУ ТАШАП БЕРҮҮ",
   "distribute_students_l": "Студенттерди таратуу",
-  "assign_curators_bulk_l": "Кураторлорду таштап берүү"
+  "assign_curators_bulk_l": "Кураторлорду таштап берүү",
+  "select_teacher": "Мугалимди тандаңыз",
+  "schedule": "Расписание",
+  "day": "Апта күнү",
+  "time": "Убакыт",
+  "schedule_list": "Расписание тизмеси"
 }
 

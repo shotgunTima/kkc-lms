@@ -47,6 +47,7 @@ public class SubjectOffering {
     private Integer totalHours;
     private Integer capacity;
 
+
     @OneToMany(mappedBy = "offering", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonIgnoreProperties("offering")
     private List<SubjectComponent> components = new ArrayList<>();
@@ -110,6 +111,8 @@ public class SubjectOffering {
         dto.setSemesterId(this.getSemester().getId());
         dto.setDirectionId(this.getDirection().getId());
         dto.setCourse(this.course != null ? this.course.name() : null);
+        dto.setSemesterName(this.getSemester().getName());
+        dto.setDirectionName(this.getDirection().getName());
 
 
 

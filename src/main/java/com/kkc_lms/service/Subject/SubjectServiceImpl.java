@@ -40,10 +40,6 @@ public class SubjectServiceImpl implements SubjectService {
                         : dto.getCode().trim()
         );
 
-        Set<Teacher> teachers = new HashSet<>(teacherRepository.findAllById(dto.getTeacherIds()));
-        subject.setTeachers(teachers);
-        teachers.forEach(teacher -> teacher.getSubjects().add(subject));
-
         return subjectRepository.save(subject);
     }
 
@@ -78,15 +74,6 @@ public class SubjectServiceImpl implements SubjectService {
         );
         subject.setDescription(dto.getDescription());
 
-        // Удаляем старые связи ManyToMany с учителями
-        subject.getTeachers().forEach(teacher -> teacher.getSubjects().remove(subject));
-        subject.getTeachers().clear();
-
-        // Добавляем новые связи
-        Set<Teacher> teachers = new HashSet<>(teacherRepository.findAllById(dto.getTeacherIds()));
-        subject.setTeachers(teachers);
-        teachers.forEach(teacher -> teacher.getSubjects().add(subject));
-
         return subjectRepository.save(subject);
     }
 
@@ -94,10 +81,6 @@ public class SubjectServiceImpl implements SubjectService {
     public void deleteSubject(Long id) {
         Subject subject = subjectRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Subject not found"));
-
-        // Очищаем связи ManyToMany у учителей
-        subject.getTeachers().forEach(teacher -> teacher.getSubjects().remove(subject));
-        subject.getTeachers().clear();
 
         subjectRepository.delete(subject);
     }
@@ -109,20 +92,6 @@ public class SubjectServiceImpl implements SubjectService {
         dto.setCredits(subject.getCredits());
         dto.setCode(subject.getCode());
         dto.setDescription(subject.getDescription());
-
-        Set<Teacher> teachers = subject.getTeachers() != null ? subject.getTeachers() : Set.of();
-
-        dto.setTeacherIds(
-                teachers.stream()
-                        .map(Teacher::getId)
-                        .toList()
-        );
-
-        dto.setTeacherNames(
-                teachers.stream()
-                        .map(t -> t.getUser().getFullname())
-                        .toList()
-        );
 
         return dto;
     }

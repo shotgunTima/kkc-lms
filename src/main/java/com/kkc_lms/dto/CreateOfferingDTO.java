@@ -14,7 +14,7 @@ public class CreateOfferingDTO {
     private Integer totalHours;
     private Integer capacity;
     private List<ComponentDTO> components;
-
+    private List<Long> teacherIds;
 }
 
 

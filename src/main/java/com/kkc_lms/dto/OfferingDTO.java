@@ -15,6 +15,8 @@ public class OfferingDTO {
 
     private Long semesterId;
     private String semesterName;
+    private Long teacherId;
+    private String teacherName;
 
     private Long directionId;
     private String directionName;

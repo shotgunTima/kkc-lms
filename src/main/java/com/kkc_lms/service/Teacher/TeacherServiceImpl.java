@@ -115,10 +115,6 @@ public class TeacherServiceImpl implements TeacherService {
         Teacher teacher = teacherRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Teacher not found"));
 
-        for (Subject subject : teacher.getSubjects()) {
-            subject.getTeachers().remove(teacher);
-        }
-        teacher.getSubjects().clear();
 
         // При удалении преподавателя удаляется пользователь, так как у User cascade.ALL и orphanRemoval
         teacherRepository.delete(teacher);
@@ -150,10 +146,7 @@ public class TeacherServiceImpl implements TeacherService {
         dto.setPhonenum(teacher.getUser().getPhonenum());
         dto.setHireDate(teacher.getHireDate());
         dto.setTeacherStatus(teacher.getTeacherStatus());
-        List<String> subjectNames = teacher.getSubjects().stream()
-                .map(Subject::getName)
-                .collect(Collectors.toList());
-        dto.setSubjectNames(subjectNames);
+
         return dto;
     }
 }

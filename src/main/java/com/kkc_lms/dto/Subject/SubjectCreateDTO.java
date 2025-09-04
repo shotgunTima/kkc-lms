@@ -10,5 +10,5 @@ public class SubjectCreateDTO {
     private int credits;
     private String code;
     private String description;
-    private List<Long> teacherIds; // список ID преподавателей
+
 }

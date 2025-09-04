@@ -6,6 +6,7 @@ import Users from './pages/Users'
 import Navbar from './components/Navbar'
 import Directions from "./pages/Directions.jsx";
 import Subjects from "./pages/Subjects.jsx";
+import Schedule from "./pages/Schedule.jsx";
 
 function App() {
     return (
@@ -20,6 +21,7 @@ function App() {
                         <Route path="/users" element={<Users />} />
                         <Route path="/directions" element={<Directions />} />
                         <Route path="/subjects" element={<Subjects />} />
+                        <Route path="/schedule" element={<Schedule />} />
                     </Routes>
 
 

@@ -51,28 +51,20 @@ public class CurriculumService {
         Direction direction = directionRepo.findById(dto.getDirectionId())
                 .orElseThrow(() -> new RuntimeException("Direction not found"));
 
-        Module module = null;
-        if (dto.getModuleId() != null) {
-            module = moduleRepo.findById(dto.getModuleId())
-                    .orElseThrow(() -> new RuntimeException("Module not found"));
-        }
-
-        // парсим курс (твой enum имеет fromFlexible)
         Course course = Course.fromFlexible(dto.getCourse());
 
+        // 1. создаём сам offering
         SubjectOffering offering = new SubjectOffering();
         offering.setSubject(subject);
         offering.setSemester(semester);
         offering.setDirection(direction);
-        offering.setModule(module);
         offering.setCourse(course);
         offering.setTotalHours(dto.getTotalHours());
         offering.setCapacity(dto.getCapacity());
 
-        // Сначала сохраняем офферинг, чтобы получить id
         offering = offeringRepo.save(offering);
 
-        // Создаём компоненты если были
+        // 2. создаём компоненты
         if (dto.getComponents() != null) {
             for (ComponentDTO cDto : dto.getComponents()) {
                 SubjectComponent comp = new SubjectComponent();
@@ -80,12 +72,28 @@ public class CurriculumService {
                 comp.setType(cDto.getType());
                 comp.setHours(cDto.getHours());
                 componentRepo.save(comp);
+
+
+                if (cDto.getTeacherId() != null && cDto.getGroupId() != null) {
+                    Teacher teacher = teacherRepo.findById(cDto.getTeacherId())
+                            .orElseThrow(() -> new RuntimeException("Teacher not found: " + cDto.getTeacherId()));
+                    Group group = groupRepo.findById(cDto.getGroupId())
+                            .orElseThrow(() -> new RuntimeException("Group not found: " + cDto.getGroupId()));
+
+                    GroupComponentAssignment assign = new GroupComponentAssignment();
+                    assign.setComponent(comp);
+                    assign.setTeacher(teacher);
+                    assign.setGroup(group);
+
+                    assignmentRepo.save(assign);
+                }
+
             }
         }
 
-        // Возвращаем офферинг с компонентами (они будут подтянуты при необходимости)
         return offeringRepo.findById(offering.getId()).orElse(offering);
     }
+
 
     // Обновление офферинга (частично)
     @Transactional

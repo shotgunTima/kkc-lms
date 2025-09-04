@@ -10,6 +10,7 @@ import ComponentRow from './ComponentRow.jsx';
 import SubmitButton from '../Buttons/SubmitButton.jsx';
 import CancelButton from '../Buttons/CancelButton.jsx';
 import { useTranslation } from 'react-i18next';
+import {fetchTeachers} from "../../api/TeachersApi.js";
 
 const OfferingForm = ({ offeringId, onSuccess, onCancel }) => {
     const { t } = useTranslation();
@@ -28,6 +29,7 @@ const OfferingForm = ({ offeringId, onSuccess, onCancel }) => {
         directionId: '',
         course: '1',
         totalHours: '',
+        teacherId: '',
         capacity: '',
         components: []
     });
@@ -54,7 +56,6 @@ const OfferingForm = ({ offeringId, onSuccess, onCancel }) => {
                             type: ca.type || '',
                             hours: ca.hours || '',
                             teacherId: ca.teacherId ?? null,
-                            teacherName: ca.teacherName || '',
                         }))
                         : [{ type: 'LECTURE', hours: '', teacherId: '', teacherName: '' }];
 
@@ -75,8 +76,13 @@ const OfferingForm = ({ offeringId, onSuccess, onCancel }) => {
         }
     }, [offeringId, isEdit]);
 
+    const [teachers, setTeachers] = useState([]);
 
-
+    useEffect(() => {
+        fetchTeachers()
+            .then(res => setTeachers(res.data || []))
+            .catch(console.error);
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -115,12 +121,12 @@ const OfferingForm = ({ offeringId, onSuccess, onCancel }) => {
         if (!formData.course) newErrors.course = t('course_required');
         if (!formData.totalHours || Number(formData.totalHours) <= 0) newErrors.totalHours = t('total_hours_required');
         if (!formData.capacity || Number(formData.capacity) <= 0) newErrors.capacity = t('capacity_required');
-
         // Проверка компонентов
         if (Array.isArray(formData.components)) {
             formData.components.forEach((component, idx) => {
                 if (!component.type) newErrors[`components.${idx}.type`] = t('component_type_required');
                 if (!component.hours || Number(component.hours) <= 0) newErrors[`components.${idx}.hours`] = t('component_hours_required');
+                if (!component.teacherId && !component.groupId) newErrors[`components.${idx}.teacherId`] = t('component_teacher_required');
             });
         }
 
@@ -135,8 +141,18 @@ const OfferingForm = ({ offeringId, onSuccess, onCancel }) => {
 
         setLoading(true);
         try {
-            if (isEdit) await updateOffering(offeringId, formData);
-            else await createOffering(formData);
+            const payload = {
+                ...formData,
+                components: formData.components.map(c => ({
+                    type: c.type,
+                    hours: Number(c.hours),
+                    teacherId: c.teacherId ? Number(c.teacherId) : null,
+                    groupId: c.groupId ? Number(c.groupId) : null,
+                }))
+            };
+
+            if (isEdit) await updateOffering(offeringId, payload);
+            else await createOffering(payload);
             onSuccess?.();
         } catch (err) {
             console.error(err);
@@ -145,6 +161,7 @@ const OfferingForm = ({ offeringId, onSuccess, onCancel }) => {
             setLoading(false);
         }
     };
+
 
     return (
         <motion.div
@@ -204,6 +221,7 @@ const OfferingForm = ({ offeringId, onSuccess, onCancel }) => {
                         onChange={handleChange}
                         error={errors.totalHours}
                     />
+
                     <FloatingLabelInput
                         id="capacity"
                         label={t('capacity')}

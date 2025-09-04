@@ -17,5 +17,8 @@ public class OfferingWithAssignmentsDTO {
     private Long semesterId;
     private Long directionId;
     private String course;
+    private String semesterName;
+    private String directionName;
+
 
 }

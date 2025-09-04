@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { createSubject, fetchSubjectById, updateSubject } from '../../api/SubjectApi.js';
-import { fetchTeachers } from '../../api/TeachersApi.js';
 import { motion } from 'framer-motion';
 import SubmitButton from '../Buttons/SubmitButton.jsx';
 import CancelButton from '../Buttons/CancelButton.jsx';
@@ -15,24 +14,15 @@ const SubjectForm = ({ subjectId, onSuccess, onCancel }) => {
     const [formData, setFormData] = useState({
         name: '',
         credits: 0,
-        teacherIds: [],
         code: '',
         description: '',
     });
-    const [teachersOptions, setTeachersOptions] = useState([]);
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         setLoading(true);
 
-        const loadTeachers = fetchTeachers().then(res => {
-            const options = res.data.map(teacher => ({
-                value: Number(teacher.id),
-                label: teacher.fullname,
-            }));
-            setTeachersOptions(options);
-        });
 
         if (isEdit) {
             const loadSubject = fetchSubjectById(subjectId).then(res => {
@@ -46,13 +36,11 @@ const SubjectForm = ({ subjectId, onSuccess, onCancel }) => {
                 });
             });
 
-            Promise.all([loadTeachers, loadSubject]).finally(() => setLoading(false));
+            Promise.all([loadSubject]).finally(() => setLoading(false));
         } else {
-            loadTeachers.finally(() => {
                 setLoading(false);
                 // генерим дефолтный код на фронте
                 setFormData(prev => ({ ...prev, code: `SUB-${Math.floor(Math.random()*10000).toString().padStart(4,'0')}` }));
-            });
         }
     }, [isEdit, subjectId]);
 
@@ -68,7 +56,6 @@ const SubjectForm = ({ subjectId, onSuccess, onCancel }) => {
         const newErrors = {};
         if (!formData.name.trim()) newErrors.name = t('name_required');
         if (formData.credits <= 0) newErrors.credits = t('credits_required');
-        if (formData.teacherIds.length === 0) newErrors.teacherIds = t('teachers_required');
         if (!formData.code.trim()) newErrors.code = t('code_required');
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -142,20 +129,6 @@ const SubjectForm = ({ subjectId, onSuccess, onCancel }) => {
                         error={errors.description}
                         onChange={handleChange}
                     />
-
-                    <MultipleSelect
-                        id="teacherIds"
-                        name="teacherIds"
-                        label={t('teacher_s')}
-                        options={teachersOptions}
-                        value={formData.teacherIds}
-                        onChange={(e) => {
-                            const selected = Array.from(e.target.selectedOptions).map(o => o.value);
-                            setFormData(prev => ({ ...prev, teacherIds: selected }));
-                        }}
-                        error={errors.teacherIds}
-                    />
-
                     <div className="flex items-center gap-4 col-span-2">
                         <SubmitButton type="submit" isEdit={isEdit} loading={loading} />
                         <CancelButton onClick={onCancel} />

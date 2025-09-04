@@ -150,7 +150,6 @@
   "assign_curator" : "НАЗНАЧИТЬ КУРАТОРА",
   "distribute_students_l": "Распределить студентов",
   "assign_curators_bulk_l": "Назначить кураторов",
-
   "offerings": "Курсы",
   "semesters": "Семестры",
   "semester": "Семестр",
@@ -184,9 +183,13 @@
   "all_credits" : "Все",
   "capacity" : "Лимит студентов",
   "code": "Код предмета",
-  "offering_details": "Детали курса"
+  "offering_details": "Детали курса",
 
-
+  "select_teacher": "Выберите преподавателя",
+  "schedule": "Расписание",
+  "day":"День недели",
+  "time": "Время",
+  "schedule_list" : "Список расписании"
 
 
 }
