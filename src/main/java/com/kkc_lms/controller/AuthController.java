@@ -1,100 +1,142 @@
 package com.kkc_lms.controller;
 
-
+import com.kkc_lms.dto.Profile.ChangePasswordRequest;
 import com.kkc_lms.dto.User.LoginRequest;
-import com.kkc_lms.service.Security.CustomUserDetails;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
-
+import com.kkc_lms.entity.Role;
+import com.kkc_lms.entity.Student;
+import com.kkc_lms.entity.User;
+import com.kkc_lms.repository.StudentRepository;
+import com.kkc_lms.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    private final AuthenticationManager authenticationManager;
+    private final UserRepository userRepository;
+    private final StudentRepository studentRepository;
 
-    public AuthController(AuthenticationManager authenticationManager) {
-        this.authenticationManager = authenticationManager;
+    public AuthController(UserRepository userRepository,
+                          StudentRepository studentRepository) {
+        this.userRepository = userRepository;
+        this.studentRepository = studentRepository;
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest,
                                    HttpServletRequest request,
                                    HttpServletResponse response) {
-        try {
-            Authentication auth = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.username(), loginRequest.password())
-            );
-
-            SecurityContextHolder.getContext().setAuthentication(auth);
-            HttpSession session = request.getSession(true);
-
-            // Получаем роль из CustomUserDetails
-            Object principal = auth.getPrincipal();
-            String role = "UNKNOWN";
-            if (principal instanceof CustomUserDetails) {
-                role = ((CustomUserDetails) principal).getUser().getRole().name();
-            }
-
-            String redirect = getRedirectForRole(role);
-
-            // Если запрос от браузера (html), можно сделать редирект:
-            String accept = request.getHeader("Accept");
-            if (accept != null && accept.contains("text/html")) {
-                try {
-                    response.sendRedirect(redirect);
-                    return ResponseEntity.status(HttpStatus.FOUND).build();
-                } catch (Exception ignored) {}
-            }
-
-            // По умолчанию возвращаем JSON с ролью и рекомендацией куда идти
-            return ResponseEntity.ok(Map.of(
-                    "message", "Login successful",
-                    "username", auth.getName(),
-                    "role", role,
-                    "redirect", redirect
-            ));
-        } catch (AuthenticationException ex) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Invalid credentials"));
+        Optional<User> userOpt = userRepository.findByUsername(loginRequest.username());
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Invalid credentials"));
         }
+        User user = userOpt.get();
+
+        // проверка plain text пароля
+        if (!loginRequest.password().equals(user.getPassword())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Invalid credentials"));
+        }
+
+        // создаём сессию
+        HttpSession session = request.getSession(true);
+        session.setAttribute("user", user);
+
+        String role = user.getRole() != null ? user.getRole().name() : "UNKNOWN";
+        String redirect = getRedirectForRole(role);
+
+        return ResponseEntity.ok(Map.of(
+                "message", "Login successful",
+                "username", user.getUsername(),
+                "role", role,
+                "redirect", redirect
+        ));
     }
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request) {
-        SecurityContextHolder.clearContext();
         HttpSession session = request.getSession(false);
         if (session != null) session.invalidate();
         return ResponseEntity.ok(Map.of("message", "Logged out"));
     }
 
-    // Возвращает текущего пользователя и роль (нужен аутентифицированный запрос)
     @GetMapping("/me")
-    public ResponseEntity<?> me() {
-        var auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || !auth.isAuthenticated() || auth.getPrincipal() instanceof String) {
+    public ResponseEntity<?> meFull(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("authenticated", false));
         }
-        Object principal = auth.getPrincipal();
-        String username = auth.getName();
-        String role = "UNKNOWN";
-        if (principal instanceof CustomUserDetails) {
-            role = ((CustomUserDetails) principal).getUser().getRole().name();
+
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("authenticated", false));
         }
-        return ResponseEntity.ok(Map.of(
-                "authenticated", true,
-                "username", username,
-                "role", role
-        ));
+
+        var response = new java.util.LinkedHashMap<String, Object>();
+        response.put("authenticated", true);
+        response.put("username", user.getUsername());
+        response.put("fullname", user.getFullname());
+        response.put("email", user.getEmail());
+        response.put("role", user.getRole() != null ? user.getRole().name() : "UNKNOWN");
+
+        if (user.getRole() == Role.STUDENT) {
+            Optional<Student> studentOpt = studentRepository.findByUser(user);
+            studentOpt.ifPresent(st -> {
+                String groupName = st.getGroup() != null ? st.getGroup().getName() : null;
+                String directionName = st.getDirection() != null ? st.getDirection().getName() : null;
+
+                response.put("student", Map.of(
+                        "id", st.getId(),
+                        "studentIdNumber", st.getStudentIdNumber(),
+                        "groupName", groupName,
+                        "direction", directionName
+                ));
+            });
+        }
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest req,
+                                            HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Not authenticated"));
+        }
+
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Not authenticated"));
+        }
+
+        // проверка старого пароля
+        if (!req.oldPassword().equals(user.getPassword())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "Old password is incorrect"));
+        }
+
+        // проверка нового пароля
+        if (req.newPassword() == null || !req.newPassword().equals(req.confirmPassword())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "New passwords do not match"));
+        }
+
+        if (req.newPassword().length() < 6) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "New password too short (min 6)"));
+        }
+
+        user.setPassword(req.newPassword());
+        userRepository.save(user);
+
+        return ResponseEntity.ok(Map.of("message", "Password changed"));
     }
 
     private String getRedirectForRole(String role) {
