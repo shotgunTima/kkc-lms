@@ -2,6 +2,10 @@ package com.kkc_lms.controller;
 
 import com.kkc_lms.dto.Direction.DirectionCreateDTO;
 import com.kkc_lms.dto.Direction.DirectionDTO;
+import com.kkc_lms.entity.Direction;
+import com.kkc_lms.entity.Group;
+import com.kkc_lms.repository.DirectionRepository;
+import com.kkc_lms.repository.GroupRepository;
 import com.kkc_lms.service.Direction.DirectionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +20,18 @@ import java.util.List;
 public class DirectionController {
 
     private final DirectionService directionService;
+    private final DirectionRepository directionRepository;
+    private final GroupRepository groupRepository;
+
+    @GetMapping
+    public List<Direction> all() {
+        return directionRepository.findAll();
+    }
+
+    @GetMapping("/{id}/groups")
+    public List<Group> groups(@PathVariable Long id) {
+        return groupRepository.findAllByDirectionId(id);
+    }
 
     @PostMapping
     public ResponseEntity<DirectionDTO> createDirection(@RequestBody @Valid DirectionCreateDTO dto) {
@@ -49,4 +65,5 @@ public class DirectionController {
         directionService.deleteDirectionById(id);
         return ResponseEntity.noContent().build();
     }
+
 }

@@ -50,16 +50,20 @@ public class SecurityConfig {
         return authConfig.getAuthenticationManager();
     }
 
-    // Основная конфигурация безопасности
+    // Основная конфигурация безопасности — пока разрешаем всё
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> {}) // ваша CORS-конфигурация
+                // Используем наш CorsConfigurationSource bean
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
-                .authenticationProvider(authenticationProvider()) // регистрируем провайдер
+                .authenticationProvider(authenticationProvider())
                 .authorizeHttpRequests(auth -> auth
+                        // Разрешаем preflight и публичные эндпойнты (дублируется, но явно)
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/auth/login", "/api/auth/logout", "/api/check/public").permitAll()
+
+                        // Временно — разрешаем все запросы
                         .anyRequest().permitAll()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
@@ -67,11 +71,12 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // Ваша CORS-конфигурация (оставил как у вас)
+    // Ваша CORS-конфигурация
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:5174", "http://localhost:5173"));
+        // Укажите все origins, где запущен ваш фронтенд
+        config.setAllowedOrigins(List.of("http://localhost:5174", "http://localhost:5173", "http://localhost:5176"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);

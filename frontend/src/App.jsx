@@ -7,6 +7,9 @@ import Navbar from './components/Navbar'
 import Directions from "./pages/Directions.jsx";
 import Subjects from "./pages/Subjects.jsx";
 import Schedule from "./pages/Schedule.jsx";
+import News from "./pages/News.jsx";
+import StudentNews from "./components/News/StudentNews.jsx";
+
 
 function App() {
     return (
@@ -22,6 +25,8 @@ function App() {
                         <Route path="/directions" element={<Directions />} />
                         <Route path="/subjects" element={<Subjects />} />
                         <Route path="/schedule" element={<Schedule />} />
+                        <Route path="/news" element={<News />} />
+                        <Route path="/student/news" element={<StudentNews />} />
                     </Routes>
 
 

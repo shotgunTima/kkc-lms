@@ -38,4 +38,6 @@ public interface StudentService {
     List<Student> getStudentsByCourseAndDirection(Integer courseNumber, Long directionId);
     void deleteStudentById(Long id);
     List<NewsDTO> getNewsForStudent(Long studentId);
+
+    List<NewsDTO> getNewsForUser(Long userId);
 }
