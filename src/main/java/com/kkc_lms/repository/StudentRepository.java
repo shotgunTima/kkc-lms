@@ -18,5 +18,6 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     List<Student> findAllByDirection(Direction direction);
     List<Student> findAllByDirectionAndGroup(Direction direction, Group group);
     List<Student> findByGroup_Id(Long groupId);
+    Optional<Student> findByUser(User user);
 
 }
