@@ -10,8 +10,10 @@ import com.kkc_lms.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -30,24 +32,21 @@ public class AuthController {
         this.studentRepository = studentRepository;
     }
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest,
-                                   HttpServletRequest request,
-                                   HttpServletResponse response) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpServletRequest request) {
         Optional<User> userOpt = userRepository.findByUsername(loginRequest.username());
         if (userOpt.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("error", "Invalid credentials"));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Invalid credentials"));
         }
         User user = userOpt.get();
 
-        // проверка plain text пароля
-        if (!loginRequest.password().equals(user.getPassword())) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("error", "Invalid credentials"));
+        if (!passwordEncoder.matches(loginRequest.password(), user.getPassword())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Invalid credentials"));
         }
 
-        // создаём сессию
         HttpSession session = request.getSession(true);
         session.setAttribute("user", user);
 
@@ -61,6 +60,7 @@ public class AuthController {
                 "redirect", redirect
         ));
     }
+
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request) {
@@ -119,10 +119,10 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Not authenticated"));
         }
 
-        // проверка старого пароля
-        if (!req.oldPassword().equals(user.getPassword())) {
+        if (!passwordEncoder.matches(req.oldPassword(), user.getPassword())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "Old password is incorrect"));
         }
+
 
         // проверка нового пароля
         if (req.newPassword() == null || !req.newPassword().equals(req.confirmPassword())) {
@@ -133,7 +133,8 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "New password too short (min 6)"));
         }
 
-        user.setPassword(req.newPassword());
+        user.setPassword(passwordEncoder.encode(req.newPassword()));
+
         userRepository.save(user);
 
         return ResponseEntity.ok(Map.of("message", "Password changed"));

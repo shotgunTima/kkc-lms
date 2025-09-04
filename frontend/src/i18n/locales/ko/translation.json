@@ -151,6 +151,46 @@
   "schedule": "시간표",
   "day": "요일",
   "time": "시간",
-  "schedule_list": "시간표 목록"
+  "schedule_list": "시간표 목록",
+
+  "log_in": "로그인",
+  "remember_me": "로그인 상태 유지",
+  "forgot_password": "비밀번호를 잊으셨나요?",
+  "hours": "시간",
+  "practical": "실습",
+  "lecture": "강의",
+  "lab": "실험",
+  "credit": "학점",
+  "all_credits": "전체",
+  "capacity": "학생 수 제한",
+  "code": "과목 코드",
+  "offering_details": "강좌 세부정보",
+  "semester_list": "학기 목록",
+  "term": "학기",
+  "terms": {
+    "spring": "봄",
+    "summer": "여름",
+    "fall": "가을",
+    "winter": "겨울"
+  },
+  "start_date": "시작",
+  "end_date": "종료",
+  "year": "연도",
+  "total_hours": "총 시간",
+  "components": "구성 요소",
+  "component_type": "유형",
+  "add_component": "구성 요소 추가",
+  "remove": "삭제",
+  "update_offering": "강좌 업데이트",
+  "create_offering": "강좌 생성",
+  "select_subject": "과목 선택",
+  "select_semester": "학기 선택",
+  "offerings": "강좌",
+  "semesters": "학기",
+  "semester": "학기",
+  "create_semester": "학기 생성",
+  "edit_semester": "학기 업데이트",
+  "login_title": "로그인"
+
 
 }

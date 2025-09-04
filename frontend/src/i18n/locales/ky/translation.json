@@ -151,6 +151,48 @@
   "schedule": "Расписание",
   "day": "Апта күнү",
   "time": "Убакыт",
-  "schedule_list": "Расписание тизмеси"
+  "schedule_list": "Расписание тизмеси",
+
+  "log_in": "Кирүү",
+  "remember_me": "Эсимде сактоо",
+  "forgot_password": "Сырсөздү унуттунузбу?",
+  "hours": "Саат",
+  "practical": "практ.",
+  "lecture": "лек.",
+  "lab": "лаб.",
+  "credit": "кредит",
+  "all_credits": "Баары",
+  "capacity": "Студенттер лимити",
+  "code": "Пән коду",
+  "offering_details": "Курс тууралуу маалымат",
+  "semester_list": "Семестрлер тизмеси",
+  "term": "Мезгил",
+  "terms": {
+    "spring": "Жай",
+    "summer": "Жай",
+    "fall": "Күз",
+    "winter": "Кыш"
+  },
+  "start_date": "Баштоо",
+  "end_date": "Аяктоо",
+  "year": "Жыл",
+  "total_hours": "Жалпы саат",
+  "components": "Компонент",
+  "component_type": "Тип",
+  "add_component": "Компонент кошуу",
+  "remove": "Өчүрүү",
+  "update_offering": "Курсту жаңылоо",
+  "create_offering": "Курс түзүү",
+  "select_subject": "Пәнди тандаңыз",
+  "select_semester": "Семестрди тандаңыз",
+  "offerings": "Курстар",
+  "semesters": "Семестрлер",
+  "semester": "Семестр",
+  "create_semester": "Семестр түзүү",
+  "login_title": "Системага кирүү",
+  "edit_semester": "Семестрди жаңылоо"
+
+
+
 }
 

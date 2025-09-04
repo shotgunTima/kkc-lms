@@ -1,6 +1,7 @@
 import helloIcon from '../assets/helloIcon.svg'
 import { motion } from 'framer-motion'
 import {useTranslation} from "react-i18next";
+import {useAuth} from "../auth/AuthPack.jsx";
 
 const menuItems = [
     { key: 'users' },
@@ -17,6 +18,7 @@ const menuItems = [
 
 const Sidebar = ({ selectedKey, onSelect }) => {
     const {t} = useTranslation();
+    const { user } = useAuth();
     return (
         <motion.div
             initial={{ opacity: 0, x: -100 }}
@@ -28,7 +30,8 @@ const Sidebar = ({ selectedKey, onSelect }) => {
                 <img src={helloIcon} alt="icon" className="-mx-3 w-12 h-12 dark:opacity-80 " />
                 <div className="flex flex-col leading-tight text-white dark:text-opacity-70 font-semibold text-xl">
                     <span>{t("hello")},</span>
-                    <span>Фамилия Имя</span>
+                    <span>{user?.username || t("guest")}</span>
+
                 </div>
             </div>
 

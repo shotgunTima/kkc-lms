@@ -2,9 +2,11 @@ import { Link} from 'react-router-dom'
 import logo from '../assets/bKKClogo.svg';
 import {motion} from 'framer-motion'
 import SettingsMenu from "./SettingsMenu.jsx";
+import { useAuth } from "../auth/AuthPack.jsx";
 
 const Navbar = () => {
 
+    const {logout } = useAuth();
 
     return (
         <motion.div
@@ -21,8 +23,18 @@ const Navbar = () => {
                     transition-transform duration-300 transform hover:scale-110 hover:-translate-y-1" />
 
                 </Link>
-                <div className="flex items-center space-x-4">
-                    <SettingsMenu />
+
+
+                <div className="flex items-center gap-4">
+                    <div className="flex items-center space-x-4">
+                        <SettingsMenu />
+                    </div>
+                    <button
+                        onClick={logout}
+                        className="bg-red-500 px-3 py-1 rounded hover:bg-red-600"
+                    >
+                        Выйти
+                    </button>
                 </div>
             </div>
 
