@@ -152,7 +152,48 @@
   "schedule": "Schedule",
   "day": "Day",
   "time": "Time",
-  "schedule_list": "Schedule List"
+  "schedule_list": "Schedule List",
+  "log_in": "Log In",
+  "remember_me": "Remember me",
+  "forgot_password": "Forgot password?",
+  "hours": "Hours",
+  "practical": "pract.",
+  "lecture": "lec.",
+  "lab": "lab.",
+  "credit": "credits",
+  "all_credits": "All",
+  "capacity": "Student limit",
+  "code": "Subject code",
+  "offering_details": "Course details",
+  "semester_list": "Semester list",
+  "term": "Term",
+  "terms": {
+    "spring": "Spring",
+    "summer": "Summer",
+    "fall": "Fall",
+    "winter": "Winter"
+  },
+  "start_date": "Start",
+  "end_date": "End",
+  "year": "Year",
+  "total_hours": "Total hours",
+  "components": "Component",
+  "component_type": "Type",
+  "add_component": "Add component",
+  "remove": "Remove",
+  "update_offering": "Update course",
+  "create_offering": "Create course",
+  "select_subject": "Select subject",
+  "select_semester": "Select semester",
+  "offerings": "Courses",
+  "semesters": "Semesters",
+  "semester": "Semester",
+  "create_semester": "Create semester",
+  "login_title": "Login",
+  "edit_semester": "Update semester"
+
+
+
 
 
 }

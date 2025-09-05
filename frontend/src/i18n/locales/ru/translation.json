@@ -128,7 +128,6 @@
   "courses": "Курс",
   "student_list": "СПИСОК СТУДЕНТОВ",
   "student_id": "ID студента",
-
   "admission_year": "Год",
   "contract_paid": "Контракт",
   "create_student": "СОЗДАТЬ СТУДЕНТА",
@@ -185,11 +184,15 @@
   "code": "Код предмета",
   "offering_details": "Детали курса",
 
+  "log_in": "Войти",
+  "remember_me": "Запомнить меня",
+  "forgot_password": "Забыли пароль?",
   "select_teacher": "Выберите преподавателя",
   "schedule": "Расписание",
-  "day":"День недели",
+  "day": "День недели",
   "time": "Время",
-  "schedule_list" : "Список расписании"
+  "schedule_list": "Список расписаний",
+  "login_title": "Вход в систему"
 
 
 }
