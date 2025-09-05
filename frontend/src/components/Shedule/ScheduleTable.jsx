@@ -13,13 +13,54 @@ const times = [
 ];
 
 // sampleData с полем week
+// sampleData с полем week (0 = обе недели, 1 = первая, 2 = вторая)
 const sampleData = [
-    { id: 1, day: 'Пн', time: '10:00-11:20', type: 'Лк.', subject: 'Тестирование ПО', teacher: 'Мусина И.Р.', place: '1-корпус, ауд.1/306', week: 0 },
-    { id: 2, day: 'Вт', time: '13:00-14:20', type: 'Лк.', subject: 'Тестирование ПО', teacher: 'Мусина И.Р.', place: '1-корпус, ауд.1/306', week: 0 },
-    { id: 3, day: 'Вт', time: '15:00-16:20', type: '[2] Лб.', subject: 'Тестирование ПО', teacher: 'Мусина И.Р.', place: '2-корпус, ауд.2/403', week: 0 },
-    { id: 4, day: 'Ср', time: '15:00-16:20', type: '[2] Лб.', subject: 'Тестирование ПО', teacher: 'Мусина И.Р.', place: '2-корпус, ауд.2/403', week: 0 },
-    { id: 5, day: 'Ср', time: '16:30-17:50', type: '[2] Лб.', subject: 'Тестирование ПО', teacher: 'Мусина И.Р.', place: '2-корпус, ауд.2/403', week: 1 },
+    {
+        id: 1,
+        day: 'Пн',
+        time: '10:00-11:20',
+        type: 'Лк.',
+        subject: 'Introduction to Programming',
+        teacher: 'John Teacher',
+        place: '1-корпус, ауд.1/101',
+        week: 0, // для всех недель
+        group: 'CS-101',
+    },
+    {
+        id: 2,
+        day: 'Вт',
+        time: '13:00-14:20',
+        type: 'Лк.',
+        subject: 'Introduction to Programming',
+        teacher: 'John Teacher',
+        place: '1-корпус, ауд.1/101',
+        week: 0,
+        group: 'CS-102',
+    },
+    {
+        id: 3,
+        day: 'Ср',
+        time: '15:00-16:20',
+        type: 'Лб.',
+        subject: 'Introduction to Programming',
+        teacher: 'John Teacher',
+        place: '2-корпус, ауд.2/201',
+        week: 1, // только первая неделя
+        group: 'CS-101',
+    },
+    {
+        id: 4,
+        day: 'Ср',
+        time: '16:30-17:50',
+        type: 'Лб.',
+        subject: 'Introduction to Programming',
+        teacher: 'John Teacher',
+        place: '2-корпус, ауд.2/202',
+        week: 2, // только вторая неделя
+        group: 'CS-102',
+    },
 ];
+
 
 const daysOrder = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
 
