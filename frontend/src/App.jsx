@@ -12,7 +12,6 @@ import StudentNews from "./components/News/StudentNews.jsx";
 
 
 import { ThemeProvider } from './context/ThemeContext';
-import News from "./pages/News.jsx"; // <- импортируем
 
 function App() {
     return (

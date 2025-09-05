@@ -23,10 +23,11 @@ public class DirectionController {
     private final DirectionRepository directionRepository;
     private final GroupRepository groupRepository;
 
-    @GetMapping
+    @GetMapping("/entities")
     public List<Direction> all() {
         return directionRepository.findAll();
     }
+
 
     @GetMapping("/{id}/groups")
     public List<Group> groups(@PathVariable Long id) {
@@ -50,6 +51,7 @@ public class DirectionController {
     public ResponseEntity<List<DirectionDTO>> getAllDirections() {
         return ResponseEntity.ok(directionService.getAllDirections());
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<DirectionDTO> updateDirection(
