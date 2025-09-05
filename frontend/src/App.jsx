@@ -7,9 +7,15 @@ import Navbar from './components/Navbar';
 import Directions from "./pages/Directions.jsx";
 import Subjects from "./pages/Subjects.jsx";
 import Schedule from "./pages/Schedule.jsx";
+import News from "./pages/News.jsx";
+import StudentNews from "./components/News/StudentNews.jsx";
+
 
 import { ThemeProvider } from './context/ThemeContext';
-import News from "./pages/News.jsx"; // <- импортируем
+import NewsPage from "./pages/NewsPage";
+
+
+
 
 function App() {
     return (
@@ -25,7 +31,9 @@ function App() {
                         <Route path="/directions" element={<Directions />} />
                         <Route path="/subjects" element={<Subjects />} />
                         <Route path="/schedule" element={<Schedule />} />
-                        <Route path="/news" element={<News/>} />
+                        <Route path="/news" element={<News />} />
+                        <Route path="/student/news" element={<StudentNews />} />
+                        <Route path="/news" element={<NewsPage />} />
                     </Routes>
                 </main>
             </div>

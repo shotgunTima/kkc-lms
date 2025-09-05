@@ -6,11 +6,11 @@ import com.kkc_lms.dto.Student.StudentDTO;
 import com.kkc_lms.entity.*;
 import com.kkc_lms.repository.*;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
@@ -29,6 +29,7 @@ public class StudentServiceImpl implements StudentService {
     private final DirectionRepository directionRepository;
     private final PasswordEncoder passwordEncoder;
     private final NewsRecipientRepository newsRecipientRepository;
+    private final NewsRepository newsRepository;
 
     @Override
     public List<Student> getStudentsByCourseAndDirection(Integer courseNumber, Long directionId) {
@@ -338,5 +339,28 @@ public class StudentServiceImpl implements StudentService {
             return dto;
         }).collect(Collectors.toList());
     }
+    @Override
+    @Transactional(readOnly = true)
+    public List<NewsDTO> getNewsForUser(Long userId) {
+        Student student = studentRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Student not found for userId: " + userId));
 
+        Long dirId = student.getDirection() != null ? student.getDirection().getId() : null;
+        Long groupId = student.getGroup() != null ? student.getGroup().getId() : null;
+
+        List<News> news = newsRepository.findForStudentNullable(dirId, groupId);
+
+        return news.stream().map(n -> {
+            NewsDTO dto = new NewsDTO();
+            dto.setId(n.getId());
+            dto.setTitle(n.getTitle());
+            dto.setContent(n.getContent());
+            dto.setAttachmentUrl(n.getAttachmentUrl());
+            dto.setTargetType(n.getTargetType() != null ? n.getTargetType().name() : null);
+            dto.setCreatedAt(n.getCreatedAt());
+            dto.setRead(false); // если у вас есть таблица news_recipient, вы можете проверить и установить флаг
+            return dto;
+        }).collect(Collectors.toList());
+    }
 }
+
