@@ -1,4 +1,6 @@
-// src/components/Sidebar.jsx
+// -----------------------------
+// Sidebar.jsx (restored + renamed 'news' -> 'Новостная лента')
+// -----------------------------
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import helloIcon from "../assets/helloIcon.svg";
@@ -53,7 +55,7 @@ const Sidebar = ({ selectedKey, onSelect }) => {
                                     selectedKey === item.key ? "text-bgSecondary" : "text-textPrimary hover:text-bgSecondary"
                                 } dark:text-white dark:text-opacity-80`}
                             >
-                                {t(item.key)}
+                                {item.key === 'news' ? "Новостная лента" : t(item.key)}
                             </motion.button>
                         </li>
                     ))}
@@ -69,7 +71,7 @@ const Sidebar = ({ selectedKey, onSelect }) => {
                                     selectedKey === "news" ? "text-bgSecondary" : "text-textPrimary hover:text-bgSecondary"
                                 } dark:text-white dark:text-opacity-80`}
                             >
-                                {t("news")}
+                                {"Новостная лента"}
                             </motion.button>
                         </li>
                     )}
@@ -96,3 +98,13 @@ const Sidebar = ({ selectedKey, onSelect }) => {
 };
 
 export default Sidebar;
+
+
+// -----------------------------
+// NewsPage.jsx (restored original)
+// -----------------------------
+
+
+// -----------------------------
+// News.jsx (restored + added Telegram button)
+// -----------------------------

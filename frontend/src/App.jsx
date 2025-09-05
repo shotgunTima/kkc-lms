@@ -12,6 +12,10 @@ import StudentNews from "./components/News/StudentNews.jsx";
 
 
 import { ThemeProvider } from './context/ThemeContext';
+import NewsPage from "./pages/NewsPage";
+
+
+
 
 function App() {
     return (
@@ -29,6 +33,7 @@ function App() {
                         <Route path="/schedule" element={<Schedule />} />
                         <Route path="/news" element={<News />} />
                         <Route path="/student/news" element={<StudentNews />} />
+                        <Route path="/news" element={<NewsPage />} />
                     </Routes>
                 </main>
             </div>

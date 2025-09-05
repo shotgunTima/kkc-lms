@@ -5,7 +5,7 @@ import com.kkc_lms.dto.News.NewsDTO;
 import com.kkc_lms.entity.News;
 import com.kkc_lms.service.News.NewsService;
 import com.kkc_lms.service.Student.StudentService;
-import com.kkc_lms.service.Security.CustomUserDetails; // <-- ваш класс
+import com.kkc_lms.service.Security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -36,8 +36,10 @@ public class NewsController {
         }
 
         Object principal = authentication.getPrincipal();
+        System.out.println(">>> Principal class = " + principal.getClass().getName()); // 🔎 debug
+
         if (!(principal instanceof CustomUserDetails)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unexpected principal type");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unexpected principal type: " + principal);
         }
 
         Long userId = ((CustomUserDetails) principal).getUser().getId();
