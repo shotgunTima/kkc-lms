@@ -8,7 +8,9 @@ import { useAuth } from "../context/AuthContext"; // обязательно
 
 const Sidebar = ({ selectedKey, onSelect }) => {
     const { t } = useTranslation();
-    const { user } = useAuth() || {}; // безопасно получаем user (может быть null)
+    const { user } = useAuth() || {};
+    console.log("USER:", user);
+
 
     // защитные флаги — если user ещё не загружен, считаем, что не авторизован
     const isStudent = user && (user.role === "STUDENT" || user.role === "ROLE_STUDENT");
@@ -39,7 +41,7 @@ const Sidebar = ({ selectedKey, onSelect }) => {
                 <img src={helloIcon} alt="icon" className="-mx-3 w-12 h-12 dark:opacity-80 " />
                 <div className="flex flex-col leading-tight text-white dark:text-opacity-70 font-semibold text-xl">
                     <span>{t("hello")},</span>
-                    <span>{user?.fullname || "Фамилия Имя"}</span>
+                    <span>{user?.username || "Гость"}</span>
                 </div>
             </div>
 
